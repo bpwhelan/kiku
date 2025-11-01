@@ -16,3 +16,4 @@ shadow.adoptedStyleSheets = [sheet];
 render(() => <App ankiFields={exampleFields} />, shadow);
 
 document.documentElement.setAttribute("data-theme", "coffee");
+root.setAttribute("data-theme", "coffee");

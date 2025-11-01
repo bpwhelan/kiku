@@ -1,6 +1,7 @@
 export type AnkiFields = {
 	FreqSort: string;
 	Frequency: string;
+
 	Expression: string;
 	ExpressionFurigana: string;
 	ExpressionReading: string;
@@ -8,22 +9,34 @@ export type AnkiFields = {
 	ExpressionAudio: string;
 	SentenceAudio: string;
 	Picture: string;
+
 	Sentence: string;
 	SentenceFurigana: string;
+
 	DefinitionPicture: string;
 	SelectionText: string;
 	MainDefinition: string;
 	Glossary: string;
 	MiscInfo: string;
 	Tags: string;
+
+	// === Variants (for furigana/kana helpers) ===
+	"furigana:ExpressionFurigana": string;
+	"kana:ExpressionFurigana": string;
+	"furigana:Sentence": string;
+	"furigana:SentenceFurigana": string;
+	"kana:SentenceFurigana": string;
 };
 
 export const exampleFields: AnkiFields = {
 	FreqSort: "27056",
 	Frequency:
 		'<ul style="text-align: left;"><li>JPDB: 14171</li><li>Anime &amp; J-drama: 25407</li><li>Wikipedia: 134746</li><li>Innocent Ranked: 32798</li></ul>',
-	Expression: "十中八九",
+	Expression: "十中八九`",
 	ExpressionFurigana: "十中八九[じっちゅうはっく]",
+	"furigana:ExpressionFurigana":
+		"<ruby><rb>十中八九</rb><rt>じっちゅうはっく</rt></ruby>",
+	"kana:ExpressionFurigana": "じっちゅうはっく",
 	ExpressionReading: "じっちゅうはっく",
 	PitchPosition:
 		'<span style="display:inline;"><span>[</span><span>5</span><span>]</span></span>',
@@ -36,6 +49,12 @@ export const exampleFields: AnkiFields = {
 		'<b>十中八九　</b>せこい小遣い稼ぎだと思う<br>Hey there! Thanks a lot for downloading Lapis! Please refer to it\'s <a href="https://github.com/donkuri/lapis">documentation</a> to learn more about the note type!',
 	SentenceFurigana:
 		'<b> 十中八九[じっちゅうはっく]　</b>せこい 小遣[こづか]い 稼[かせ]ぎだと 思[おも]う<br>Hey there! Thanks a lot for downloading Lapis! Please refer to it\'s <a href="https://github.com/donkuri/lapis">documentation</a> to learn more about the note type!',
+	"furigana:Sentence":
+		'<b>十中八九　</b>せこい小遣い稼ぎだと思う<br>Hey there! Thanks a lot for downloading Lapis! Please refer to it\'s <a href="https://github.com/donkuri/lapis">documentation</a> to learn more about the note type!',
+	"furigana:SentenceFurigana":
+		'<b><ruby><rb>十中八九</rb><rt>じっちゅうはっく</rt></ruby>　</b>せこい<ruby><rb>小遣</rb><rt>こづか</rt></ruby>い<ruby><rb>稼</rb><rt>かせ</rt></ruby>ぎだと<ruby><rb>思</rb><rt>おも</rt></ruby>う<br>Hey there! Thanks a lot for downloading Lapis! Please refer to it\'s <a href="https://github.com/donkuri/lapis">documentation</a> to learn more about the note type!',
+	"kana:SentenceFurigana":
+		'<b>じっちゅうはっく　</b>せこいこづかいかせぎだとおもう<br>Hey there! Thanks a lot for downloading Lapis! Please refer to it\'s <a href="https://github.com/donkuri/lapis">documentation</a> to learn more about the note type!',
 	DefinitionPicture: "",
 	SelectionText: "",
 	MainDefinition:
