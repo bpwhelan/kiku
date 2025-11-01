@@ -1,8 +1,16 @@
 /* @refresh reload */
 import { render } from "solid-js/web";
-import "./index.css";
+import "./reviewer.css";
+import "./reviewer.css";
+
 import App from "./App.tsx";
+import tailwind from "./tailwind.css?inline";
 
 const root = document.getElementById("root");
+if (!root) throw new Error("root not found");
+const shadow = root.attachShadow({ mode: "closed" });
 
-render(() => <App />, root!);
+const style = document.createElement("style");
+style.textContent = tailwind;
+shadow.appendChild(style);
+render(() => <App />, shadow);
