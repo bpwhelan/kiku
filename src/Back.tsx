@@ -1,3 +1,4 @@
+import { CircleChevronDown } from "lucide-solid";
 import { createSignal, onMount } from "solid-js";
 import { Layout } from "./components/Layout";
 import type { AnkiBackFields } from "./types";
@@ -17,6 +18,17 @@ export function Back(props: { ankiFields: AnkiBackFields }) {
 
   return (
     <Layout>
+      <div class="flex justify-end flex-row">
+        <div class="flex gap-2 items-center relative hover:[&_>_#frequency]:block h-5 text-secondary-content/50">
+          <div innerHTML={props.ankiFields.FreqSort}></div>
+          <CircleChevronDown class="h-full w-full" />
+          <div
+            id="frequency"
+            class="absolute top-0 translate-y-8 right-0 w-fit [&_li]:text-nowrap bg-base-200 p-4 rounded-lg hidden"
+            innerHTML={props.ankiFields.Frequency}
+          ></div>
+        </div>
+      </div>
       <div class="flex rounded-lg gap-4 sm:h-56 flex-col sm:flex-row">
         <div class="flex-1 bg-base-200 p-4 rounded-lg flex flex-col items-center justify-center">
           <div
@@ -45,7 +57,7 @@ export function Back(props: { ankiFields: AnkiBackFields }) {
         ></div>
       </div>
       <div>
-        <div class="text-end text-base-content/25">
+        <div class="text-end text-secondary-content/50">
           {definitionPage() === 0 ? "Main definition" : "Glossary"}
         </div>
         <div class="relative bg-base-200 p-4 border-s-4 text-base sm:text-xl rounded-lg [&_ol]:list-inside [&_ul]:list-inside">
