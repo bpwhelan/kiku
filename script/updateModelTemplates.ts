@@ -23,11 +23,13 @@ async function main() {
   const modelName = "Kiku"; // ← change to your note type name
   const frontPath = join(import.meta.dirname, "../src/front.html");
   const backPath = join(import.meta.dirname, "../src/back.html");
+  const stylePath = join(import.meta.dirname, "../dist/_kiku.css");
 
   // Read your local HTML templates
-  const [front, back] = await Promise.all([
+  const [front, back, style] = await Promise.all([
     readFile(frontPath, "utf8"),
     readFile(backPath, "utf8"),
+    readFile(stylePath, "utf8"),
   ]);
 
   // Send them to AnkiConnect
@@ -47,6 +49,16 @@ async function main() {
   console.log(
     `✅ Updated Anki model "${modelName}" templates from ${frontPath} and ${backPath}`,
   );
+
+  const result2 = await callAnki("updateModelStyling", {
+    model: {
+      name: modelName,
+      css: style,
+    },
+  });
+
+  console.log(result2);
+  console.log(`✅ Updated Anki model "${modelName}" style from ${stylePath}`);
 }
 
 main().catch((err) => {

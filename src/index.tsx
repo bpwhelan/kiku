@@ -5,7 +5,7 @@ import { type AnkiFields, exampleFields } from "./types.ts";
 import "./tailwind.css";
 import { Front } from "./Front.tsx";
 
-export function init({
+export async function init({
   ankiFields,
   side,
 }: {
@@ -15,13 +15,22 @@ export function init({
   const root = document.getElementById("root");
   if (!root) throw new Error("root not found");
 
-  const link = document.createElement("link");
-  link.rel = "stylesheet";
-  link.href = import.meta.env.DEV ? "/src/tailwind.css" : "_kiku.css";
-
   const shadow = root.attachShadow({ mode: "closed" });
-  document.head.appendChild(link);
-  shadow.appendChild(link.cloneNode());
+
+  if (import.meta.env.DEV) {
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = "/src/tailwind.css";
+    const link2 = link.cloneNode();
+    document.head.appendChild(link);
+    shadow.appendChild(link2);
+  } else {
+    const qa = document.getElementById("qa");
+    const style = qa?.querySelector("style");
+    if (style) {
+      shadow.appendChild(style.cloneNode(true));
+    }
+  }
 
   document.documentElement.setAttribute("data-theme", "coffee");
   root.setAttribute("data-theme", "coffee");
