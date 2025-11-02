@@ -1,11 +1,3 @@
-<div id="root">
-  <div class="min-h-screen">
-    <h1 class="text-4xl font-bold underline text-blue-600">
-      Hello world from Shadow DOM!
-    </h1>
-  </div>
-</div>
-
 <script type="text/html" data-field="FreqSort">
   {{FreqSort}}
 </script>
@@ -85,17 +77,18 @@
   {{Tags}}
 </script>
 
-<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+<div id="root"></div>
 
-<script type="text/javascript">
+<script type="module">
   const fieldScripts = document.querySelectorAll('script[type="text/html"]');
-
   const fields = Object.fromEntries(
     Array.from(fieldScripts).map((el) => [
       el.dataset.field,
       el.innerHTML.trim(),
     ]),
   );
-
   console.log(fields);
+
+  import { init } from "./_kiku.js";
+  init({ ankiFields: fields });
 </script>

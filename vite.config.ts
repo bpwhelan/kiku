@@ -8,7 +8,7 @@ export default defineConfig({
 		minify: false,
 		lib: {
 			entry: "src/index.tsx",
-			fileName: "kiku",
+			fileName: "_kiku",
 			formats: ["es"],
 		},
 	},
