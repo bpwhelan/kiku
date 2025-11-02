@@ -34,5 +34,10 @@ export function init({
 }
 
 if (import.meta.env.DEV) {
-  init({ ankiFields: exampleFields, side: "back" });
+  const params = new Proxy(new URLSearchParams(window.location.search), {
+    get: (searchParams, prop) => searchParams.get(prop as string),
+  });
+  // @ts-expect-error
+  const side = params.side;
+  init({ ankiFields: exampleFields, side: side ?? "back" });
 }
