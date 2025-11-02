@@ -48,46 +48,48 @@ export function Back(props: { ankiFields: AnkiBackFields }) {
           innerHTML={props.ankiFields.Picture}
         ></div>
       </div>
-      <div class="flex flex-col gap-4 items-center text-center">
-        <div
-          class="text-2xl sm:text-4xl [&_b]:text-secondary-content"
-          ref={sentenceEl}
-          innerHTML={
-            props.ankiFields["furigana:SentenceFurigana"] ??
-            props.ankiFields["furigana:Sentence"]
-          }
-        ></div>
-      </div>
-      <div>
-        <div class="text-end text-secondary-content/50">
-          {definitionPage() === 0 ? "Main definition" : "Glossary"}
+      <div class="flex sm:flex-col gap-8 flex-col-reverse">
+        <div class="flex flex-col gap-4 items-center text-center">
+          <div
+            class="text-2xl sm:text-4xl [&_b]:text-secondary-content"
+            ref={sentenceEl}
+            innerHTML={
+              props.ankiFields["furigana:SentenceFurigana"] ??
+              props.ankiFields["furigana:Sentence"]
+            }
+          ></div>
         </div>
-        <div class="relative bg-base-200 p-4 border-s-4 text-base sm:text-xl rounded-lg [&_ol]:list-inside [&_ul]:list-inside">
-          <div
-            style={{
-              display: definitionPage() === 0 ? "block" : "none",
-            }}
-            innerHTML={props.ankiFields.MainDefinition}
-          ></div>
-          <div
-            style={{
-              display: definitionPage() === 1 ? "block" : "none",
-            }}
-            innerHTML={props.ankiFields.Glossary}
-          ></div>
+        <div>
+          <div class="text-end text-secondary-content/50">
+            {definitionPage() === 0 ? "Main definition" : "Glossary"}
+          </div>
+          <div class="relative bg-base-200 p-4 border-s-4 text-base sm:text-xl rounded-lg [&_ol]:list-inside [&_ul]:list-inside">
+            <div
+              style={{
+                display: definitionPage() === 0 ? "block" : "none",
+              }}
+              innerHTML={props.ankiFields.MainDefinition}
+            ></div>
+            <div
+              style={{
+                display: definitionPage() === 1 ? "block" : "none",
+              }}
+              innerHTML={props.ankiFields.Glossary}
+            ></div>
 
-          <button
-            class="cursor-pointer w-8 h-full absolute top-0 left-0 hover:bg-white/10"
-            on:click={() =>
-              setDefinitionPage((prev) => Math.abs((prev - 1) % 2))
-            }
-          ></button>
-          <button
-            class="cursor-pointer w-8 h-full absolute top-0 right-0 hover:bg-white/10"
-            on:click={() =>
-              setDefinitionPage((prev) => Math.abs((prev + 1) % 2))
-            }
-          ></button>
+            <button
+              class="cursor-pointer w-8 h-full absolute top-0 left-0 hover:bg-white/10"
+              on:click={() =>
+                setDefinitionPage((prev) => Math.abs((prev - 1) % 2))
+              }
+            ></button>
+            <button
+              class="cursor-pointer w-8 h-full absolute top-0 right-0 hover:bg-white/10"
+              on:click={() =>
+                setDefinitionPage((prev) => Math.abs((prev + 1) % 2))
+              }
+            ></button>
+          </div>
         </div>
       </div>
       <div class="flex gap-4 items-center justify-center">
