@@ -13,33 +13,40 @@ function App(props: { ankiFields: AnkiFields }) {
 	});
 
 	return (
-		<div class="max-w-4xl mx-auto flex flex-col gap-8">
-			<div class="flex rounded-lg gap-4 h-56">
-				<div class="flex-1 bg-base-200 rounded-lg flex flex-col items-center justify-center">
+		<div class="max-w-4xl mx-auto overflow-auto px-2">
+			<div
+				class="flex flex-col gap-8"
+				style={{
+					"max-height": "calc(100vh - 4em)",
+				}}
+			>
+				<div class="flex rounded-lg gap-4 h-56">
+					<div class="flex-1 bg-base-200 rounded-lg flex flex-col items-center justify-center">
+						<div
+							class="text-3xl"
+							innerHTML={props.ankiFields["kana:ExpressionFurigana"]}
+						></div>
+						<div class="text-6xl" innerHTML={props.ankiFields.Expression}></div>
+						<div class="text-3xl">{/* TODO: pitch  */}</div>
+					</div>
 					<div
-						class="text-3xl"
-						innerHTML={props.ankiFields["kana:ExpressionFurigana"]}
+						class="[&_>_img]:h-full [&_>_img]:rounded-lg"
+						innerHTML={props.ankiFields.Picture}
 					></div>
-					<div class="text-6xl" innerHTML={props.ankiFields.Expression}></div>
-					<div class="text-3xl">{/* TODO: pitch  */}</div>
 				</div>
-				<div
-					class="[&_>_img]:h-full [&_>_img]:rounded-lg"
-					innerHTML={props.ankiFields.Picture}
-				></div>
-			</div>
-			<div class="flex flex-col gap-4 items-center text-center">
-				<div
-					class="text-4xl"
-					ref={sentenceEl}
-					innerHTML={
-						props.ankiFields["furigana:SentenceFurigana"] ??
-						props.ankiFields["furigana:Sentence"]
-					}
-				></div>
-			</div>
-			<div class="bg-base-200 p-4 border-s-4 text-xl rounded-lg [&_ol]:list-inside [&_ul]:list-inside">
-				<div innerHTML={props.ankiFields.MainDefinition}></div>
+				<div class="flex flex-col gap-4 items-center text-center">
+					<div
+						class="text-4xl [&_b]:text-secondary-content"
+						ref={sentenceEl}
+						innerHTML={
+							props.ankiFields["furigana:SentenceFurigana"] ??
+							props.ankiFields["furigana:Sentence"]
+						}
+					></div>
+				</div>
+				<div class="bg-base-200 p-4 border-s-4 text-xl rounded-lg [&_ol]:list-inside [&_ul]:list-inside">
+					<div innerHTML={props.ankiFields.MainDefinition}></div>
+				</div>
 			</div>
 		</div>
 	);
