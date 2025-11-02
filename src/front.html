@@ -1,13 +1,21 @@
 <!-- biome-ignore format: this looks nicer -->
 <div style="display: none" id="anki-fields">
 <script type="text/html" data-field="Expression"> {{Expression}} </script>
-<script type="text/html" data-field="ExpressionAudio"> {{ExpressionAudio}} </script>
-<script type="text/html" data-field="SentenceAudio"> {{SentenceAudio}} </script>
 <script type="text/html" data-field="Hint"> {{Hint}} </script>
 <script type="text/html" data-field="IsWordAndSentenceCard"> {{IsWordAndSentenceCard}} </script>
 <script type="text/html" data-field="IsClickCard"> {{IsClickCard}} </script>
 <script type="text/html" data-field="IsSentenceCard"> {{IsSentenceCard}} </script>
+
 <script type="text/html" data-field="IsAudioCard"> {{IsAudioCard}} </script>
+{{#IsAudioCard}}
+<script type="text/html" data-field="ExpressionAudio"> {{ExpressionAudio}} </script>
+<script type="text/html" data-field="SentenceAudio"> {{SentenceAudio}} </script>
+{{/IsAudioCard}}
+{{^IsAudioCard}}
+<script type="text/html" data-field="ExpressionAudio"></script>
+<script type="text/html" data-field="SentenceAudio"></script>
+{{/IsAudioCard}}
+
 <script type="text/html" data-field="kanji:Sentence"> {{kanji:Sentence}} </script>
 </div>
 

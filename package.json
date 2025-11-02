@@ -13,7 +13,8 @@
     "lint:write": "biome lint --write .",
     "check": "biome check .",
     "check:write": "biome check --write .",
-    "copyDist": "bash ./script/copyDist.sh"
+    "copyDist": "node ./script/copyDist.ts",
+    "updateModelTemplates": "node ./script/updateModelTemplates.ts"
   },
   "dependencies": {
     "solid-js": "^1.9.9"
