@@ -7,7 +7,7 @@ export function Layout(props: { children: JSX.Element }) {
       <div
         class="flex flex-col gap-6"
         style={{
-          "max-height": `calc(100vh - ${isMobile() ? "2em" : "4em"})`,
+          height: `calc(100vh - ${isMobile() ? "2em" : "4em"})`,
         }}
       >
         {props.children}
