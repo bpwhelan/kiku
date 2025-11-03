@@ -56,12 +56,14 @@ export function Back(props: { ankiFields: AnkiBackFields }) {
                 innerHTML={props.ankiFields.FreqSort}
                 class="text-base-content/50"
               ></div>
-              <CircleChevronDownIcon class="h-full w-full text-base-content/50" />
-              <div
-                id="frequency"
-                class="absolute z-10 top-0 translate-y-6 right-2 w-fit [&_li]:text-nowrap [&_li]:whitespace-nowrap bg-base-300/90 p-4 rounded-lg hidden"
-                innerHTML={props.ankiFields.Frequency}
-              ></div>
+              <Show when={props.ankiFields.Frequency}>
+                <CircleChevronDownIcon class="h-full w-full text-base-content/50" />
+                <div
+                  id="frequency"
+                  class="absolute z-10 top-0 translate-y-6 right-2 w-fit [&_li]:text-nowrap [&_li]:whitespace-nowrap bg-base-300/90 p-4 rounded-lg hidden"
+                  innerHTML={props.ankiFields.Frequency}
+                ></div>
+              </Show>
             </div>
           </div>
           <div class="flex rounded-lg gap-4 sm:h-56 flex-col sm:flex-row">
