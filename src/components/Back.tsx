@@ -14,7 +14,9 @@ export function Back(props: { ankiFields: AnkiBackFields }) {
   let sentenceEl: HTMLDivElement | undefined;
   let expressionAudioRef: HTMLDivElement | undefined;
   let sentenceAudioRef: HTMLDivElement | undefined;
-  const [definitionPage, setDefinitionPage] = createSignal(0);
+  const [definitionPage, setDefinitionPage] = createSignal(
+    props.ankiFields.SelectionText ? 0 : 1,
+  );
   const [showSettings, setShowSettings] = createSignal(false);
 
   const tags = props.ankiFields.Tags.split(" ");
@@ -120,18 +122,28 @@ export function Back(props: { ankiFields: AnkiBackFields }) {
             </div>
             <div>
               <div class="text-end text-base-content/50">
-                {definitionPage() === 0 ? "Main definition" : "Glossary"}
+                <Switch>
+                  <Match when={definitionPage() === 0}>Selection text</Match>
+                  <Match when={definitionPage() === 1}>Main definition</Match>
+                  <Match when={definitionPage() === 2}>Glossary</Match>
+                </Switch>
               </div>
               <div class="relative bg-base-200 p-4 border-s-4 text-base sm:text-xl rounded-lg [&_ol]:list-inside [&_ul]:list-inside">
                 <div
                   style={{
                     display: definitionPage() === 0 ? "block" : "none",
                   }}
-                  innerHTML={props.ankiFields.MainDefinition}
+                  innerHTML={props.ankiFields.SelectionText}
                 ></div>
                 <div
                   style={{
                     display: definitionPage() === 1 ? "block" : "none",
+                  }}
+                  innerHTML={props.ankiFields.MainDefinition}
+                ></div>
+                <div
+                  style={{
+                    display: definitionPage() === 2 ? "block" : "none",
                   }}
                   innerHTML={props.ankiFields.Glossary}
                 ></div>
@@ -139,13 +151,13 @@ export function Back(props: { ankiFields: AnkiBackFields }) {
                 <button
                   class="cursor-pointer w-8 h-full absolute top-0 left-0 hover:bg-base-content/10"
                   on:click={() =>
-                    setDefinitionPage((prev) => Math.abs((prev - 1) % 2))
+                    setDefinitionPage((prev) => Math.abs((prev - 1) % 3))
                   }
                 ></button>
                 <button
                   class="cursor-pointer w-8 h-full absolute top-0 right-0 hover:bg-base-content/10"
                   on:click={() =>
-                    setDefinitionPage((prev) => Math.abs((prev + 1) % 2))
+                    setDefinitionPage((prev) => Math.abs((prev + 1) % 3))
                   }
                 ></button>
               </div>
