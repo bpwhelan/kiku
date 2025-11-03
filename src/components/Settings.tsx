@@ -1,7 +1,15 @@
 import { BoltIcon } from "lucide-solid";
-import { getTheme, nextTheme, setTheme } from "../util/theme";
+import { For } from "solid-js";
+import {
+  type DaisyUITheme,
+  daisyUIThemes,
+  getTheme,
+  nextTheme,
+  setTheme,
+} from "../util/theme";
 
 export function Settings(props: { onHomeClick: () => void }) {
+  let formEl: HTMLFormElement | undefined;
   return (
     <>
       <div class="flex flex-row justify-start">
@@ -12,13 +20,34 @@ export function Settings(props: { onHomeClick: () => void }) {
           ></BoltIcon>
         </div>
       </div>
-      <div></div>
-      <button
-        class="btn text-nowrap btn-sm"
-        on:click={() => setTheme(nextTheme(getTheme()))}
-      >
-        Next Theme
-      </button>
+      <div class="flex flex-col gap-2">
+        <div class="text-2xl font-bold">Theme</div>
+        <form
+          ref={formEl}
+          class="grid grid-cols-[repeat(auto-fit,minmax(100px,1fr))] gap-2"
+          on:change={() => {
+            const input = formEl?.querySelector(
+              "input[name=theme-buttons]:checked",
+            ) as HTMLInputElement;
+            const value = input?.value;
+            if (value) setTheme(value as DaisyUITheme);
+          }}
+        >
+          <For each={daisyUIThemes}>
+            {(theme) => {
+              return (
+                <input
+                  type="radio"
+                  name="theme-buttons"
+                  class="btn theme-controller join-item"
+                  aria-label={theme}
+                  value={theme}
+                />
+              );
+            }}
+          </For>
+        </form>
+      </div>
     </>
   );
 }
