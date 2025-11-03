@@ -25,15 +25,15 @@ export function Back(props: { ankiFields: AnkiBackFields }) {
   return (
     <Layout>
       <div class="flex justify-between flex-row">
-        <div class="relative h-5 text-secondary-content/50">
+        <div class="relative h-5 ">
           <BoltIcon
-            class="h-full w-full cursor-pointer"
+            class="h-full w-full cursor-pointer text-base-content/50"
             on:click={() => setShowSettings(!showSettings())}
           ></BoltIcon>
           <Show when={showSettings()}>
-            <div class="absolute top-0 translate-y-6 left-2 bg-secondary text-secondary-content p-4 rounded-lg">
+            <div class="absolute top-0 translate-y-6 left-2 bg-base-300 p-4 rounded-lg">
               <button
-                class="btn text-nowrap"
+                class="btn text-nowrap btn-sm"
                 on:click={() => setTheme(nextTheme(theme()))}
               >
                 Next Theme
@@ -41,12 +41,15 @@ export function Back(props: { ankiFields: AnkiBackFields }) {
             </div>
           </Show>
         </div>
-        <div class="flex gap-2 items-center relative hover:[&_>_#frequency]:block h-5 text-secondary-content/50">
-          <div innerHTML={props.ankiFields.FreqSort}></div>
-          <CircleChevronDownIcon class="h-full w-full" />
+        <div class="flex gap-2 items-center relative hover:[&_>_#frequency]:block h-5">
+          <div
+            innerHTML={props.ankiFields.FreqSort}
+            class="text-base-content/50"
+          ></div>
+          <CircleChevronDownIcon class="h-full w-full text-base-content/50" />
           <div
             id="frequency"
-            class="absolute top-0 translate-y-6 right-2 w-fit [&_li]:text-nowrap bg-secondary text-secondary-content p-4 rounded-lg hidden"
+            class="absolute top-0 translate-y-6 right-2 w-fit [&_li]:text-nowrap bg-base-300 p-4 rounded-lg hidden"
             innerHTML={props.ankiFields.Frequency}
           ></div>
         </div>
@@ -71,7 +74,7 @@ export function Back(props: { ankiFields: AnkiBackFields }) {
       <div class="flex sm:flex-col gap-8 flex-col-reverse">
         <div class="flex flex-col gap-4 items-center text-center">
           <div
-            class="text-2xl sm:text-4xl [&_b]:text-secondary-content"
+            class="text-2xl sm:text-4xl [&_b]:text-primary"
             ref={sentenceEl}
             innerHTML={
               props.ankiFields["furigana:SentenceFurigana"] ??
@@ -80,7 +83,7 @@ export function Back(props: { ankiFields: AnkiBackFields }) {
           ></div>
         </div>
         <div>
-          <div class="text-end text-secondary-content/50">
+          <div class="text-end text-base-content/50">
             {definitionPage() === 0 ? "Main definition" : "Glossary"}
           </div>
           <div class="relative bg-base-200 p-4 border-s-4 text-base sm:text-xl rounded-lg [&_ol]:list-inside [&_ul]:list-inside">
@@ -122,9 +125,7 @@ export function Back(props: { ankiFields: AnkiBackFields }) {
         <For each={tags}>
           {(tag) => {
             return (
-              <div class="bg-secondary text-secondary-content p-1 rounded-sm text-sm">
-                {tag}
-              </div>
+              <div class="badge badge-primary badge-sm opacity-75">{tag}</div>
             );
           }}
         </For>
