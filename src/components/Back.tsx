@@ -137,13 +137,13 @@ export function Back(props: { ankiFields: AnkiBackFields }) {
                 ></div>
 
                 <button
-                  class="cursor-pointer w-8 h-full absolute top-0 left-0 hover:bg-white/10"
+                  class="cursor-pointer w-8 h-full absolute top-0 left-0 hover:bg-base-content/10"
                   on:click={() =>
                     setDefinitionPage((prev) => Math.abs((prev - 1) % 2))
                   }
                 ></button>
                 <button
-                  class="cursor-pointer w-8 h-full absolute top-0 right-0 hover:bg-white/10"
+                  class="cursor-pointer w-8 h-full absolute top-0 right-0 hover:bg-base-content/10"
                   on:click={() =>
                     setDefinitionPage((prev) => Math.abs((prev + 1) % 2))
                   }
