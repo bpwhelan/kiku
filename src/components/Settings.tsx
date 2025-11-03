@@ -1,9 +1,8 @@
 import { ArrowLeftIcon, RefreshCwIcon } from "lucide-solid";
 import { createSignal, For, Match, onMount, Show, Switch } from "solid-js";
 import { AnkiConnect } from "../util/ankiConnect";
-import { capitalize } from "../util/capitalize";
 import type { KikuConfig } from "../util/config";
-import { isMobile } from "../util/general";
+import { capitalize, isMobile } from "../util/general";
 import { type DaisyUITheme, daisyUIThemes, setTheme } from "../util/theme";
 
 export function Settings(props: {

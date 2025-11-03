@@ -1,7 +1,6 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 
-/** Simple helper for calling AnkiConnect API */
 async function callAnki<T extends string>(
   action: string,
   params: Record<string, unknown> = {},
@@ -20,7 +19,7 @@ async function callAnki<T extends string>(
 }
 
 async function main() {
-  const modelName = "Kiku"; // ← change to your note type name
+  const modelName = "Kiku";
   const frontPath = join(import.meta.dirname, "../src/front.html");
   const backPath = join(import.meta.dirname, "../src/back.html");
   const stylePath = join(import.meta.dirname, "../dist/_kiku.css");

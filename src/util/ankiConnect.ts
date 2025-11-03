@@ -1,6 +1,6 @@
-import { base64 } from "./base64";
 import type { KikuConfig } from "./config";
 import { env } from "./env";
+import { base64 } from "./general";
 
 export const AnkiConnect = {
   call: async (action: string, params: Record<string, unknown> = {}) => {
