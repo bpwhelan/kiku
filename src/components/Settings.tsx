@@ -5,7 +5,10 @@ import { capitalize } from "../util/capitalize";
 import type { KikuConfig } from "../util/config";
 import { type DaisyUITheme, daisyUIThemes, setTheme } from "../util/theme";
 
-export function Settings(props: { onHomeClick: () => void }) {
+export function Settings(props: {
+  onBackClick?: () => void;
+  onCancelClick?: () => void;
+}) {
   const [currentTheme, setCurrentTheme] = createSignal<DaisyUITheme>(
     document.documentElement.getAttribute("data-theme") as DaisyUITheme,
   );
@@ -47,7 +50,7 @@ export function Settings(props: { onHomeClick: () => void }) {
         <div class="h-5">
           <ArrowLeftIcon
             class="h-full w-full cursor-pointer text-base-content/50"
-            on:click={props.onHomeClick}
+            on:click={props.onBackClick}
           ></ArrowLeftIcon>
         </div>
         <div class="flex flex-row gap-2 items-center">
@@ -120,7 +123,9 @@ export function Settings(props: { onHomeClick: () => void }) {
         </div>
       </div>
       <div class="flex flex-row gap-2 justify-end">
-        <button class="btn btn-secondary">Cancel</button>
+        <button class="btn btn-secondary" on:click={props.onCancelClick}>
+          Cancel
+        </button>
         <button
           class="btn btn-primary"
           classList={{

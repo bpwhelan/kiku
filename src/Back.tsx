@@ -24,7 +24,10 @@ export function Back(props: { ankiFields: AnkiBackFields }) {
     <Layout>
       <Switch>
         <Match when={showSettings()}>
-          <Settings onHomeClick={() => setShowSettings(false)} />
+          <Settings
+            onBackClick={() => setShowSettings(false)}
+            onCancelClick={() => setShowSettings(false)}
+          />
         </Match>
         <Match when={!showSettings()}>
           <div class="flex justify-between flex-row">
