@@ -17,3 +17,7 @@ body {
     margin-right: 0;
   }
 }
+
+.gutter-stable {
+  scrollbar-gutter: stable;
+}
