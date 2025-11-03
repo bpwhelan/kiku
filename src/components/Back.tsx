@@ -20,6 +20,7 @@ export function Back(props: { ankiFields: AnkiBackFields }) {
   );
   const [showSettings, setShowSettings] = createSignal(false);
   const [ready, setReady] = createSignal(false);
+  const [showImageModal, setShowImageModal] = createSignal(false);
 
   const tags = props.ankiFields.Tags.split(" ");
   const isNsfw = tags.map((tag) => tag.toLowerCase()).includes("nsfw");
@@ -145,10 +146,11 @@ export function Back(props: { ankiFields: AnkiBackFields }) {
             </div>
 
             <div
-              class="sm:[&_img]:h-full [&_img]:rounded-lg [&_img]:object-contain [&_img]:h-48 [&_img]:mx-auto bg-base-200 rounded-lg transition-[filter] hover:filter-none"
+              class="sm:[&_img]:h-full [&_img]:rounded-lg [&_img]:object-contain [&_img]:h-48 [&_img]:mx-auto bg-base-200 rounded-lg transition-[filter] hover:filter-none cursor-pointer"
               classList={{
                 "filter blur-[16px] brightness-50": isNsfw,
               }}
+              on:click={() => setShowImageModal(true)}
             >
               {img}
             </div>
@@ -213,7 +215,7 @@ export function Back(props: { ankiFields: AnkiBackFields }) {
                   <div innerHTML={props.ankiFields.MiscInfo}></div>
                 </div>
               )}
-              <div class="flex gap-4 items-center justify-center">
+              <div class="flex gap-2 items-center justify-center">
                 {tags.map((tag) => {
                   return (
                     <div class="badge badge-primary badge-sm opacity-75">
@@ -241,6 +243,12 @@ export function Back(props: { ankiFields: AnkiBackFields }) {
           )}
         </>
       )}
+      {ready() && showImageModal() && img && (
+        <ImageModal
+          img={img.cloneNode()}
+          on:click={() => setShowImageModal(false)}
+        />
+      )}
     </Layout>
   );
 }
@@ -251,5 +259,16 @@ function NotePlayIcon(props: { "on:click"?: () => void }) {
       class="bg-primary rounded-full text-primary-content p-1 w-8 h-8 cursor-pointer"
       on:click={props["on:click"]}
     />
+  );
+}
+
+function ImageModal(props: { img: Node; "on:click"?: () => void }) {
+  return (
+    <div
+      class="absolute top-0 left-0 w-full h-full p-4 sm:p-8 bg-black/75 bg-opacity-50 flex justify-center items-center"
+      on:click={props["on:click"]}
+    >
+      {props.img}
+    </div>
   );
 }
