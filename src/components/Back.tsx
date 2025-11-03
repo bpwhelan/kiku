@@ -14,10 +14,12 @@ export function Back(props: { ankiFields: AnkiBackFields }) {
   let sentenceEl: HTMLDivElement | undefined;
   let expressionAudioRef: HTMLDivElement | undefined;
   let sentenceAudioRef: HTMLDivElement | undefined;
+
   const [definitionPage, setDefinitionPage] = createSignal(
     props.ankiFields.SelectionText ? 0 : 1,
   );
   const [showSettings, setShowSettings] = createSignal(false);
+  const [ready, setReady] = createSignal(false);
 
   const tags = props.ankiFields.Tags.split(" ");
 
@@ -28,6 +30,9 @@ export function Back(props: { ankiFields: AnkiBackFields }) {
         el.classList.add(..."[&_rt]:invisible hover:[&_rt]:visible".split(" "));
       });
     }
+    setTimeout(() => {
+      setReady(true);
+    }, 200);
   });
 
   const temp = document.createElement("div");
@@ -39,7 +44,6 @@ export function Back(props: { ankiFields: AnkiBackFields }) {
     props.ankiFields.MainDefinition,
     props.ankiFields.Glossary,
   ];
-
   const availablePagesCount = pages.filter((page) => page?.trim()).length;
 
   return (
@@ -52,27 +56,29 @@ export function Back(props: { ankiFields: AnkiBackFields }) {
           />
         </Match>
         <Match when={!showSettings()}>
-          <div class="flex justify-between flex-row">
-            <div class="relative h-5 ">
-              <BoltIcon
-                class="h-full w-full cursor-pointer text-base-content/50"
-                on:click={() => setShowSettings(!showSettings())}
-              ></BoltIcon>
-            </div>
-            <div class="flex gap-2 items-center relative hover:[&_>_#frequency]:block h-5">
-              <div
-                innerHTML={props.ankiFields.FreqSort}
-                class="text-base-content/50"
-              ></div>
-              <Show when={props.ankiFields.Frequency}>
-                <CircleChevronDownIcon class="h-full w-full text-base-content/50" />
+          <div class="flex justify-between flex-row h-5 min-h-5">
+            <Show when={ready()}>
+              <div class="relative">
+                <BoltIcon
+                  class="h-full w-full cursor-pointer text-base-content/50"
+                  on:click={() => setShowSettings(!showSettings())}
+                ></BoltIcon>
+              </div>
+              <div class="flex gap-2 items-center relative hover:[&_>_#frequency]:block">
                 <div
-                  id="frequency"
-                  class="absolute z-10 top-0 translate-y-6 right-2 w-fit [&_li]:text-nowrap [&_li]:whitespace-nowrap bg-base-300/90 p-4 rounded-lg hidden"
-                  innerHTML={props.ankiFields.Frequency}
+                  innerHTML={props.ankiFields.FreqSort}
+                  class="text-base-content/50"
                 ></div>
-              </Show>
-            </div>
+                <Show when={props.ankiFields.Frequency}>
+                  <CircleChevronDownIcon class="h-full w-full text-base-content/50" />
+                  <div
+                    id="frequency"
+                    class="absolute z-10 top-0 translate-y-6 right-2 w-fit [&_li]:text-nowrap [&_li]:whitespace-nowrap bg-base-300/90 p-4 rounded-lg hidden"
+                    innerHTML={props.ankiFields.Frequency}
+                  ></div>
+                </Show>
+              </div>
+            </Show>
           </div>
           <div class="flex rounded-lg gap-4 sm:h-56 flex-col sm:flex-row">
             <div class="flex-1 bg-base-200 p-4 rounded-lg flex flex-col items-center justify-center">
@@ -85,36 +91,38 @@ export function Back(props: { ankiFields: AnkiBackFields }) {
                 innerHTML={props.ankiFields.Expression}
               ></div>
               <div class="text-3xl">{/* TODO: pitch  */}</div>
-              <div class="flex gap-2 pt-4">
-                <div
-                  style={{
-                    width: "0",
-                    height: "0",
-                    overflow: "hidden",
-                  }}
-                  ref={expressionAudioRef}
-                  innerHTML={props.ankiFields.ExpressionAudio}
-                ></div>
-                <div
-                  style={{
-                    width: "0",
-                    height: "0",
-                    overflow: "hidden",
-                  }}
-                  ref={sentenceAudioRef}
-                  innerHTML={props.ankiFields.SentenceAudio}
-                ></div>
-                <Show when={!isMobile()}>
-                  <NotePlayIcon
-                    on:click={() => {
-                      expressionAudioRef?.querySelector("a")?.click();
+              <div class="flex gap-2 pt-4 h-8">
+                <Show when={ready()}>
+                  <div
+                    style={{
+                      width: "0",
+                      height: "0",
+                      overflow: "hidden",
                     }}
-                  ></NotePlayIcon>
-                  <NotePlayIcon
-                    on:click={() => {
-                      sentenceAudioRef?.querySelector("a")?.click();
+                    ref={expressionAudioRef}
+                    innerHTML={props.ankiFields.ExpressionAudio}
+                  ></div>
+                  <div
+                    style={{
+                      width: "0",
+                      height: "0",
+                      overflow: "hidden",
                     }}
-                  ></NotePlayIcon>
+                    ref={sentenceAudioRef}
+                    innerHTML={props.ankiFields.SentenceAudio}
+                  ></div>
+                  <Show when={!isMobile()}>
+                    <NotePlayIcon
+                      on:click={() => {
+                        expressionAudioRef?.querySelector("a")?.click();
+                      }}
+                    ></NotePlayIcon>
+                    <NotePlayIcon
+                      on:click={() => {
+                        sentenceAudioRef?.querySelector("a")?.click();
+                      }}
+                    ></NotePlayIcon>
+                  </Show>
                 </Show>
               </div>
             </div>
@@ -160,7 +168,7 @@ export function Back(props: { ankiFields: AnkiBackFields }) {
                       <div innerHTML={props.ankiFields.Glossary}></div>
                     </Match>
                   </Switch>
-                  <Show when={availablePagesCount > 1}>
+                  <Show when={availablePagesCount > 1 && ready()}>
                     <button
                       class="cursor-pointer w-8 h-full absolute top-0 left-0 hover:bg-base-content/10"
                       on:click={() => {
@@ -192,38 +200,39 @@ export function Back(props: { ankiFields: AnkiBackFields }) {
               </div>
             </Show>
           </div>
-
-          <Show when={props.ankiFields.MiscInfo}>
-            <div class="flex gap-2 items-center justify-center bg-base-200 p-2 rounded-lg text-sm">
-              <InfoIcon class="h-5 w-5" />
-              <div innerHTML={props.ankiFields.MiscInfo}></div>
-            </div>
-          </Show>
-          <div class="flex gap-4 items-center justify-center">
-            <For each={tags}>
-              {(tag) => {
-                return (
-                  <div class="badge badge-primary badge-sm opacity-75">
-                    {tag}
-                  </div>
-                );
-              }}
-            </For>
-          </div>
-
-          <Show when={isMobile()}>
-            <div class="absolute bottom-4 left-4 flex flex-col gap-2 items-center">
-              <NotePlayIcon
-                on:click={() => {
-                  expressionAudioRef?.querySelector("a")?.click();
+          <Show when={ready()}>
+            <Show when={props.ankiFields.MiscInfo}>
+              <div class="flex gap-2 items-center justify-center bg-base-200 p-2 rounded-lg text-sm">
+                <InfoIcon class="h-5 w-5" />
+                <div innerHTML={props.ankiFields.MiscInfo}></div>
+              </div>
+            </Show>
+            <div class="flex gap-4 items-center justify-center">
+              <For each={tags}>
+                {(tag) => {
+                  return (
+                    <div class="badge badge-primary badge-sm opacity-75">
+                      {tag}
+                    </div>
+                  );
                 }}
-              ></NotePlayIcon>
-              <NotePlayIcon
-                on:click={() => {
-                  sentenceAudioRef?.querySelector("a")?.click();
-                }}
-              ></NotePlayIcon>
+              </For>
             </div>
+
+            <Show when={isMobile()}>
+              <div class="absolute bottom-4 left-4 flex flex-col gap-2 items-center">
+                <NotePlayIcon
+                  on:click={() => {
+                    expressionAudioRef?.querySelector("a")?.click();
+                  }}
+                ></NotePlayIcon>
+                <NotePlayIcon
+                  on:click={() => {
+                    sentenceAudioRef?.querySelector("a")?.click();
+                  }}
+                ></NotePlayIcon>
+              </div>
+            </Show>
           </Show>
         </Match>
       </Switch>

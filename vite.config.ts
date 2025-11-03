@@ -28,7 +28,6 @@ export default defineConfig({
     serveAnkiCollectionMediaPlugin(),
   ],
   build: {
-    minify: false,
     lib: {
       entry: "src/index.tsx",
       fileName: "_kiku",
