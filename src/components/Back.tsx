@@ -32,7 +32,7 @@ export function Back(props: { ankiFields: AnkiBackFields }) {
     }
     setTimeout(() => {
       setReady(true);
-    }, 200);
+    }, 150);
   });
 
   const temp = document.createElement("div");
@@ -45,6 +45,12 @@ export function Back(props: { ankiFields: AnkiBackFields }) {
     props.ankiFields.Glossary,
   ];
   const availablePagesCount = pages.filter((page) => page?.trim()).length;
+  const page = () => pages[definitionPage()];
+  const pageType = () => {
+    if (definitionPage() === 0) return "Selection text";
+    if (definitionPage() === 1) return "Main definition";
+    if (definitionPage() === 2) return "Glossary";
+  };
 
   return (
     <Layout>
@@ -91,7 +97,13 @@ export function Back(props: { ankiFields: AnkiBackFields }) {
                 innerHTML={props.ankiFields.Expression}
               ></div>
               <div class="text-3xl">{/* TODO: pitch  */}</div>
-              <div class="flex gap-2 pt-4 h-8">
+              <div
+                class="flex gap-2"
+                classList={{
+                  "h-8": !isMobile(),
+                  "pt-4": !isMobile(),
+                }}
+              >
                 <Show when={ready()}>
                   <div
                     style={{
@@ -144,30 +156,10 @@ export function Back(props: { ankiFields: AnkiBackFields }) {
             <Show when={availablePagesCount > 0}>
               <div>
                 <Show when={availablePagesCount > 1}>
-                  <div class="text-end text-base-content/50">
-                    <Switch>
-                      <Match when={definitionPage() === 0}>
-                        Selection text
-                      </Match>
-                      <Match when={definitionPage() === 1}>
-                        Main definition
-                      </Match>
-                      <Match when={definitionPage() === 2}>Glossary</Match>
-                    </Switch>
-                  </div>
+                  <div class="text-end text-base-content/50">{pageType()}</div>
                 </Show>
                 <div class="relative bg-base-200 p-4 border-s-4 text-base sm:text-xl rounded-lg [&_ol]:list-inside [&_ul]:list-inside">
-                  <Switch>
-                    <Match when={definitionPage() === 0}>
-                      <div innerHTML={props.ankiFields.SelectionText}></div>
-                    </Match>
-                    <Match when={definitionPage() === 1}>
-                      <div innerHTML={props.ankiFields.MainDefinition}></div>
-                    </Match>
-                    <Match when={definitionPage() === 2}>
-                      <div innerHTML={props.ankiFields.Glossary}></div>
-                    </Match>
-                  </Switch>
+                  <div innerHTML={page()}></div>
                   <Show when={availablePagesCount > 1 && ready()}>
                     <button
                       class="cursor-pointer w-8 h-full absolute top-0 left-0 hover:bg-base-content/10"

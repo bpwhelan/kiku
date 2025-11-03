@@ -60,5 +60,5 @@ if (import.meta.env.DEV) {
   });
   // @ts-expect-error
   const side = params.side;
-  init({ ankiFields: exampleFields3, side: side ?? "back" });
+  init({ ankiFields: exampleFields2, side: side ?? "back" });
 }
