@@ -53,7 +53,7 @@ export function Back(props: { ankiFields: AnkiBackFields }) {
               <CircleChevronDownIcon class="h-full w-full text-base-content/50" />
               <div
                 id="frequency"
-                class="absolute top-0 translate-y-6 right-2 w-fit [&_li]:text-nowrap bg-base-300 p-4 rounded-lg hidden"
+                class="absolute z-10 top-0 translate-y-6 right-2 w-fit [&_li]:text-nowrap [&_li]:whitespace-nowrap bg-base-300/90 p-4 rounded-lg hidden"
                 innerHTML={props.ankiFields.Frequency}
               ></div>
             </div>

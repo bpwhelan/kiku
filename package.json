@@ -15,7 +15,8 @@
     "check": "biome check .",
     "check:write": "biome check --write .",
     "copyDist": "node ./script/copyDist.ts",
-    "updateNoteType": "node ./script/updateNoteType.ts"
+    "updateNoteType": "node ./script/updateNoteType.ts",
+    "apply": "pnpm run build && pnpm run copyDist && pnpm run updateNoteType"
   },
   "dependencies": {
     "lucide-solid": "^0.552.0",
