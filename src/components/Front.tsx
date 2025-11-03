@@ -1,5 +1,5 @@
-import { Layout } from "./components/Layout";
-import type { AnkiFrontFields } from "./types";
+import type { AnkiFrontFields } from "../types";
+import { Layout } from "./Layout";
 
 export function Front(props: { ankiFields: AnkiFrontFields }) {
   return (

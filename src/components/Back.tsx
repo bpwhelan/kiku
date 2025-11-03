@@ -1,8 +1,8 @@
 import { BoltIcon, CircleChevronDownIcon, InfoIcon } from "lucide-solid";
 import { createSignal, For, Match, onMount, Show, Switch } from "solid-js";
-import { Layout } from "./components/Layout";
-import { Settings } from "./components/Settings";
-import type { AnkiBackFields } from "./types";
+import type { AnkiBackFields } from "../types";
+import { Layout } from "./Layout";
+import { Settings } from "./Settings";
 
 export function Back(props: { ankiFields: AnkiBackFields }) {
   let sentenceEl: HTMLDivElement | undefined;

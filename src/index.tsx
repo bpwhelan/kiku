@@ -1,9 +1,9 @@
 /* @refresh reload */
 import { render } from "solid-js/web";
-import { Back } from "./Back.tsx";
+import { Back } from "./components/Back.tsx";
 import { type AnkiFields, exampleFields } from "./types.ts";
 import "./tailwind.css";
-import { Front } from "./Front.tsx";
+import { Front } from "./components/Front.tsx";
 import { defaultConfig, type KikuConfig } from "./util/config.ts";
 import { env } from "./util/env.ts";
 
