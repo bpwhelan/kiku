@@ -1,27 +1,17 @@
 import { ArrowLeftIcon, RefreshCwIcon } from "lucide-solid";
-import {
-  createEffect,
-  createSignal,
-  For,
-  Match,
-  onMount,
-  Show,
-  Switch,
-} from "solid-js";
+import { createSignal, For, Match, onMount, Show, Switch } from "solid-js";
 import { AnkiConnect } from "../util/ankiConnect";
 import type { KikuConfig } from "../util/config";
-import { type OnlineFont, onlineFonts, setOnlineFont } from "../util/fonts";
+import { type OnlineFont, onlineFonts } from "../util/fonts";
 import { capitalize, isMobile } from "../util/general";
-import { type DaisyUITheme, daisyUIThemes, setTheme } from "../util/theme";
+import { daisyUIThemes } from "../util/theme";
+import { useConfig } from "./Context";
 
 export function Settings(props: {
   onBackClick?: () => void;
   onCancelClick?: () => void;
 }) {
-  const [currentTheme, setCurrentTheme] = createSignal<DaisyUITheme>(
-    document.documentElement.getAttribute("data-theme") as DaisyUITheme,
-  );
-  const [currentFont, setCurrentFont] = createSignal<string>("");
+  const [config, setConfig] = useConfig();
   const [isAnkiConnectAvailable, setIsAnkiConnectAvailable] =
     createSignal(false);
 
@@ -41,8 +31,8 @@ export function Settings(props: {
     const payload: KikuConfig = {
       //TODO: configurable
       ankiConnectPort: 8765,
-      theme: currentTheme(),
-      font: currentFont(),
+      theme: config.theme,
+      font: config.font,
     };
     try {
       await AnkiConnect.saveConfig(payload);
@@ -53,14 +43,6 @@ export function Settings(props: {
       );
     }
   };
-
-  createEffect(() => {
-    setTheme(currentTheme());
-    const font = onlineFonts.includes(currentFont() as OnlineFont)
-      ? currentFont()
-      : undefined;
-    if (font) setOnlineFont(font as OnlineFont);
-  });
 
   const [toastMessage, setToastMessage] = createSignal("");
   const [toastType, setToastType] = createSignal<"success" | "error">(
@@ -130,10 +112,10 @@ export function Settings(props: {
                 <div
                   class="border-base-content/20 hover:border-base-content/40 overflow-hidden rounded-lg border outline-2 outline-offset-2"
                   classList={{
-                    "outline-2": theme === currentTheme(),
+                    "outline-2": theme === config.theme,
                   }}
                   on:click={() => {
-                    setCurrentTheme(theme);
+                    setConfig("theme", theme);
                   }}
                 >
                   <div class="bg-base-100 text-base-content w-full cursor-pointer">
@@ -182,14 +164,12 @@ export function Settings(props: {
           class="fieldset"
           on:change={(e) => {
             const target = e.target as HTMLSelectElement;
-            if (onlineFonts.includes(target.value as OnlineFont)) {
-              setCurrentFont(target.value);
-            }
+            setConfig("font", target.value);
           }}
         >
           <legend class="fieldset-legend">Online Font</legend>
           <select class="select">
-            {!currentFont() && (
+            {!onlineFonts.includes(config.font as OnlineFont) && (
               <option selected disabled>
                 Select a font
               </option>
@@ -197,7 +177,7 @@ export function Settings(props: {
             <For each={onlineFonts}>
               {(font) => {
                 return (
-                  <option value={font} selected={currentFont() === font}>
+                  <option value={font} selected={config.font === font}>
                     {font}
                   </option>
                 );

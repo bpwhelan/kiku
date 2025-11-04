@@ -1,15 +1,12 @@
 /* @refresh reload */
 import { render } from "solid-js/web";
 import { Back } from "./components/Back.tsx";
-import {
-  type AnkiFields,
-  exampleFields,
-  exampleFields2,
-  exampleFields3,
-} from "./types.ts";
+import { type AnkiFields, exampleFields2 } from "./types.ts";
 import "./tailwind.css";
+import { createStore } from "solid-js/store";
+import { ConfigContextProvider } from "./components/Context.tsx";
 import { Front } from "./components/Front.tsx";
-import { defaultConfig, type KikuConfig } from "./util/config.ts";
+import type { KikuConfig } from "./util/config.ts";
 import { type OnlineFont, onlineFonts, setOnlineFont } from "./util/fonts.ts";
 import { env } from "./util/general.ts";
 
@@ -24,11 +21,11 @@ export async function init({
   if (!root) throw new Error("root not found");
 
   const shadow = root.attachShadow({ mode: "closed" });
-  let config: KikuConfig;
+  const config_ = (await (
+    await fetch(env.KIKU_CONFIG_FILE)
+  ).json()) as KikuConfig;
 
   if (import.meta.env.DEV) {
-    config = defaultConfig;
-
     const link = document.createElement("link");
     link.rel = "stylesheet";
     link.href = "/src/tailwind.css";
@@ -36,8 +33,6 @@ export async function init({
     document.head.appendChild(link);
     shadow.appendChild(link2);
   } else {
-    config = await (await fetch(env.KIKU_CONFIG_FILE)).json();
-
     const qa = document.getElementById("qa");
     const style = qa?.querySelector("style");
     if (style) {
@@ -45,16 +40,32 @@ export async function init({
     }
   }
 
-  document.documentElement.setAttribute("data-theme", config.theme);
-  root.setAttribute("data-theme", config.theme);
-  if (onlineFonts.includes(config.font as OnlineFont)) {
-    setOnlineFont(config.font as OnlineFont);
+  document.documentElement.setAttribute("data-theme", config_.theme);
+  root.setAttribute("data-theme", config_.theme);
+  if (onlineFonts.includes(config_.font as OnlineFont)) {
+    setOnlineFont(config_.font as OnlineFont);
   }
 
+  const [config, setConfig] = createStore(config_);
+
   if (side === "front") {
-    render(() => <Front ankiFields={ankiFields} />, shadow);
+    render(
+      () => (
+        <ConfigContextProvider value={[config, setConfig]}>
+          <Front ankiFields={ankiFields} />
+        </ConfigContextProvider>
+      ),
+      shadow,
+    );
   } else if (side === "back") {
-    render(() => <Back ankiFields={ankiFields} />, shadow);
+    render(
+      () => (
+        <ConfigContextProvider value={[config, setConfig]}>
+          <Back ankiFields={ankiFields} />
+        </ConfigContextProvider>
+      ),
+      shadow,
+    );
   }
 }
 
