@@ -1,11 +1,14 @@
 import { createSignal } from "solid-js";
 import type { AnkiFrontFields } from "../types";
+import { useConfig } from "./Context";
 import { Layout } from "./Layout";
 import { NotePlayIcon } from "./NotePlayIcon";
 
 export function Front(props: { ankiFields: AnkiFrontFields }) {
   let expressionAudioRef: HTMLDivElement | undefined;
   let sentenceAudioRef: HTMLDivElement | undefined;
+
+  const [config] = useConfig();
   const [clicked, setClicked] = createSignal(false);
 
   const hiddenStyle = {
@@ -27,7 +30,7 @@ export function Front(props: { ankiFields: AnkiFrontFields }) {
       >
         <div class="flex-1 bg-base-200 p-4 rounded-lg flex flex-col items-center justify-center">
           <div
-            class="text-5xl sm:text-6xl"
+            class={`${config.fontSizeBaseExpression} ${config.fontSizeSmExpression}`}
             classList={{
               "border-b-2 border-dotted border-base-content/50":
                 !!props.ankiFields.IsClickCard,
@@ -47,7 +50,7 @@ export function Front(props: { ankiFields: AnkiFrontFields }) {
         (props.ankiFields.IsClickCard && clicked())) && (
         <div class="flex flex-col gap-4 items-center text-center">
           <div
-            class="text-2xl sm:text-4xl [&_b]:text-base-content-primary"
+            class={`[&_b]:text-base-content-primary ${config.fontSizeBaseSentence} ${config.fontSizeSmSentence}`}
             innerHTML={props.ankiFields["kanji:Sentence"]}
           ></div>
         </div>
@@ -79,7 +82,9 @@ export function Front(props: { ankiFields: AnkiFrontFields }) {
       )}
 
       {props.ankiFields.Hint && (
-        <div class="flex gap-2 items-center justify-center text-center text-lg sm:text-2xl border-t-1">
+        <div
+          class={`flex gap-2 items-center justify-center text-center border-t-1 ${config.fontSizeBaseHint} ${config.fontSizeSmHint}`}
+        >
           <div innerHTML={props.ankiFields.Hint}></div>
         </div>
       )}

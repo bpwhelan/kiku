@@ -113,14 +113,18 @@ export function Back(props: { ankiFields: AnkiBackFields }) {
           <div class="flex rounded-lg gap-4 sm:h-56 flex-col sm:flex-row">
             <div class="flex-1 bg-base-200 p-4 rounded-lg flex flex-col items-center justify-center">
               <div
-                class="text-5xl sm:text-6xl"
+                class={`${config.fontSizeBaseExpression} ${config.fontSizeSmExpression}`}
                 innerHTML={
                   props.ankiFields.ExpressionFurigana
                     ? props.ankiFields["furigana:ExpressionFurigana"]
                     : props.ankiFields.Expression
                 }
               ></div>
-              <div class="text-3xl">{/* TODO: pitch  */}</div>
+              <div
+                class={`${config.fontSizeBasePitch} ${config.fontSizeSmPitch}`}
+              >
+                {/* TODO: pitch  */}
+              </div>
               <div
                 class="flex gap-2"
                 classList={{
@@ -171,7 +175,7 @@ export function Back(props: { ankiFields: AnkiBackFields }) {
           <div class="flex sm:flex-col gap-8 flex-col-reverse">
             <div class="flex flex-col gap-4 items-center text-center">
               <div
-                class="text-2xl sm:text-4xl [&_b]:text-base-content-primary"
+                class={`[&_b]:text-base-content-primary ${config.fontSizeBaseSentence} ${config.fontSizeSmSentence}`}
                 ref={sentenceEl}
                 innerHTML={
                   props.ankiFields["furigana:SentenceFurigana"] ??
@@ -223,7 +227,9 @@ export function Back(props: { ankiFields: AnkiBackFields }) {
           {ready() && (
             <>
               {props.ankiFields.MiscInfo && (
-                <div class="flex gap-2 items-center justify-center bg-base-200 p-2 rounded-lg text-sm">
+                <div
+                  class={`flex gap-2 items-center justify-center bg-base-200 p-2 rounded-lg ${config.fontSizeBaseMiscInfo} ${config.fontSizeSmMiscInfo}`}
+                >
                   <InfoIcon class="h-5 w-5" />
                   <div innerHTML={props.ankiFields.MiscInfo}></div>
                 </div>
