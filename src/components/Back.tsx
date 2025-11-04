@@ -20,18 +20,19 @@ const Lazy = {
   ImageModal: lazy(async () => ({
     default: (await import("./_kiku_lazy")).ImageModal,
   })),
+  BackBody: lazy(async () => ({
+    default: (await import("./_kiku_lazy")).BackBody,
+  })),
 };
 
+let relax = false;
+
 export function Back() {
-  let sentenceEl: HTMLDivElement | undefined;
   const expressionAudioRefSignal = createSignal<HTMLDivElement | undefined>();
   const sentenceAudioRefSignal = createSignal<HTMLDivElement | undefined>();
   const [config] = useConfig();
 
   const ankiFields = useAnkiField() as AnkiBackFields;
-  const [definitionPage, setDefinitionPage] = createSignal(
-    ankiFields.SelectionText ? 0 : 1,
-  );
   const [showSettings, setShowSettings] = createSignal(false);
   const [ready, setReady] = createSignal(false);
   const [showImageModal, setShowImageModal] = createSignal(false);
@@ -40,33 +41,15 @@ export function Back() {
   const isNsfw = tags.map((tag) => tag.toLowerCase()).includes("nsfw");
 
   onMount(() => {
-    if (sentenceEl) {
-      const ruby = sentenceEl.querySelectorAll("ruby");
-      ruby.forEach((el) => {
-        el.classList.add(..."[&_rt]:invisible hover:[&_rt]:visible".split(" "));
-      });
-    }
     setTimeout(() => {
       setReady(true);
-    }, 150);
+      relax = true;
+    }, 100);
   });
 
   const temp = document.createElement("div");
   temp.innerHTML = ankiFields.Picture ?? "";
   const img = temp.querySelector("img");
-
-  const pages = [
-    ankiFields.SelectionText,
-    ankiFields.MainDefinition,
-    ankiFields.Glossary,
-  ];
-  const availablePagesCount = pages.filter((page) => page?.trim()).length;
-  const page = () => pages[definitionPage()];
-  const pageType = () => {
-    if (definitionPage() === 0) return "Selection text";
-    if (definitionPage() === 1) return "Main definition";
-    if (definitionPage() === 2) return "Glossary";
-  };
 
   return (
     <Layout>
@@ -83,7 +66,12 @@ export function Back() {
               <Lazy.BackHeader onSettingsClick={() => setShowSettings(true)} />
             )}
           </div>
-          <div class="flex rounded-lg gap-4 sm:h-56 flex-col sm:flex-row">
+          <div
+            class="flex rounded-lg gap-4 sm:h-56 flex-col sm:flex-row"
+            classList={{
+              "animate-fade-in": relax,
+            }}
+          >
             <div class="flex-1 bg-base-200 p-4 rounded-lg flex flex-col items-center justify-center">
               <div
                 class={`${config.fontSizeBaseExpression} ${config.fontSizeSmExpression}`}
@@ -124,58 +112,7 @@ export function Back() {
               {img}
             </div>
           </div>
-          <div class="flex sm:flex-col gap-8 flex-col-reverse">
-            <div class="flex flex-col gap-4 items-center text-center">
-              <div
-                class={`[&_b]:text-base-content-primary ${config.fontSizeBaseSentence} ${config.fontSizeSmSentence}`}
-                ref={sentenceEl}
-                innerHTML={
-                  ankiFields["furigana:SentenceFurigana"] ??
-                  ankiFields["furigana:Sentence"]
-                }
-              ></div>
-            </div>
-            {availablePagesCount > 0 && (
-              <div>
-                {availablePagesCount > 1 && (
-                  <div class="text-end text-base-content/50">{pageType()}</div>
-                )}
-                <div class="relative bg-base-200 p-4 border-s-4 border-primary text-base sm:text-xl rounded-lg [&_ol]:list-inside [&_ul]:list-inside">
-                  <div innerHTML={page()}></div>
-                  {availablePagesCount > 1 && ready() && (
-                    <>
-                      <button
-                        class="cursor-pointer w-8 h-full absolute top-0 left-0 hover:bg-base-content/10"
-                        on:click={() => {
-                          setDefinitionPage((prev) => {
-                            let next = (prev - 1 + pages.length) % pages.length;
-                            for (let i = 0; i < pages.length; i++) {
-                              if (pages[next]?.trim()) break;
-                              next = (next - 1 + pages.length) % pages.length;
-                            }
-                            return next;
-                          });
-                        }}
-                      ></button>
-                      <button
-                        class="cursor-pointer w-8 h-full absolute top-0 right-0 hover:bg-base-content/10"
-                        on:click={() => {
-                          setDefinitionPage((prev) => {
-                            let next = (prev + 1) % pages.length;
-                            for (let i = 0; i < pages.length; i++) {
-                              if (pages[next]?.trim()) break;
-                              next = (next + 1) % pages.length;
-                            }
-                            return next;
-                          });
-                        }}
-                      ></button>
-                    </>
-                  )}
-                </div>
-              </div>
-            )}
-          </div>
+          {ready() && <Lazy.BackBody />}
           {ready() && (
             <>
               <Lazy.BackFooter tags={tags} />

@@ -12,22 +12,24 @@ export default function BackHeader(props: { onSettingsClick?: () => void }) {
     <>
       <div class="flex gap-2 items-center animate-fade-in-sm">
         <BoltIcon
-          class="h-full w-full cursor-pointer text-base-content/50"
+          class="size-5 cursor-pointer text-base-content/50"
           on:click={props.onSettingsClick}
         ></BoltIcon>
-        <PaintbrushIcon
-          class="h-full w-full cursor-pointer text-base-content/50"
+        <div
+          class="flex gap-2 items-center cursor-pointer"
           on:click={() => {
             setConfig("theme", nextTheme());
           }}
-        ></PaintbrushIcon>
-        <div class="text-base-content/50">{capitalize(config.theme)}</div>
+        >
+          <PaintbrushIcon class="size-5 cursor-pointer text-base-content/50"></PaintbrushIcon>
+          <div class="text-base-content/50">{capitalize(config.theme)}</div>
+        </div>
       </div>
       <div class="flex gap-2 items-center relative hover:[&_>_#frequency]:block animate-fade-in-sm">
         <div innerHTML={ankiFields.FreqSort} class="text-base-content/50"></div>
         {ankiFields.Frequency && (
           <>
-            <CircleChevronDownIcon class="h-full w-full text-base-content/50" />
+            <CircleChevronDownIcon class="size-5 text-base-content/50" />
             <div
               id="frequency"
               class="absolute z-10 top-0 translate-y-6 right-2 w-fit [&_li]:text-nowrap [&_li]:whitespace-nowrap bg-base-300/90 p-4 rounded-lg hidden"
