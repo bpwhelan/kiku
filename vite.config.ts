@@ -42,24 +42,24 @@ export default defineConfig({
       formats: ["es"],
     },
     copyPublicDir: false,
-    minify: false,
+    cssCodeSplit: false,
+    cssMinify: false,
+    minify: true,
     rolldownOptions: {
       output: {
         advancedChunks: {
           groups: [
             {
               test: (id) => {
-                const result = /node_modules\/solid-js/.test(id);
+                const result = /node_modules/.test(id);
                 return result;
               },
-              name: "_kiku_solid-js",
+              name: "_kiku_libs",
             },
             {
               test: (id) => {
                 const result =
-                  /src\/util/.test(id) ||
-                  /src\/components\/shared/.test(id) ||
-                  /node_modules/.test(id);
+                  /src\/util/.test(id) || /src\/components\/shared/.test(id);
                 return result;
               },
               name: "_kiku_shared",
@@ -67,7 +67,7 @@ export default defineConfig({
           ],
         },
         chunkFileNames: "[name].js",
-        // minify: true,
+        minify: true,
       },
     },
   },
