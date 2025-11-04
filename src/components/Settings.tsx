@@ -334,15 +334,19 @@ function FontSizeSettingsFieldset(props: {
   label: string;
 }) {
   const [config, setConfig] = useConfig();
-  const breakpoint = props.configKey.startsWith("fontSizeBase") ? "" : "sm:";
+  const breakpoint: TailwindBreakpoint | undefined = props.configKey.startsWith(
+    "fontSizeBase",
+  )
+    ? undefined
+    : "sm";
   return (
     <fieldset
       class="fieldset"
       on:change={(e) => {
         const target = e.target as HTMLSelectElement;
         const value = target.value as TailwindFontSizeLabel;
-        const tailwindFontSize = getTailwindFontSize(value);
-        setConfig(props.configKey, `${breakpoint}${tailwindFontSize}`);
+        const tailwindFontSize = getTailwindFontSize(value, breakpoint);
+        setConfig(props.configKey, tailwindFontSize);
       }}
     >
       <legend class="fieldset-legend">
@@ -362,7 +366,7 @@ function FontSizeSettingsFieldset(props: {
                 value={label}
                 selected={
                   config[props.configKey] ===
-                  `${breakpoint}${getTailwindFontSize(label)}`
+                  getTailwindFontSize(label, breakpoint)
                 }
               >
                 {label}
