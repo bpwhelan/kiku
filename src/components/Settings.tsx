@@ -223,7 +223,7 @@ export function Settings(props: {
         </button>
       </div>
       <Show when={showToast()}>
-        <div class="toast">
+        <div class="toast toast-top toast-center">
           <div
             class="alert"
             classList={{
