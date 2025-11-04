@@ -7,6 +7,9 @@ const Lazy = {
   AudioButtons: lazy(async () => ({
     default: (await import("./_kiku_lazy")).AudioButtons,
   })),
+  CacheJoyoKanji: lazy(async () => ({
+    default: (await import("./_kiku_lazy")).CacheJoyoKanji,
+  })),
 };
 
 export function Front() {
@@ -26,60 +29,63 @@ export function Front() {
   });
 
   return (
-    <Layout>
-      <div class="flex justify-end flex-row">
-        <div class="flex gap-2 items-center relative hover:[&_>_#frequency]:block h-5 text-secondary-content/50"></div>
-      </div>
-
-      <div
-        class="flex rounded-lg gap-4 sm:h-56 flex-col sm:flex-row"
-        on:click={() => setClicked((prev) => !prev)}
-      >
-        <div class="flex-1 bg-base-200 p-4 rounded-lg flex flex-col items-center justify-center">
-          <div
-            class={`${config.fontSizeBaseExpression} ${config.fontSizeSmExpression}`}
-            classList={{
-              "border-b-2 border-dotted border-base-content/50":
-                !!ankiFields.IsClickCard,
-            }}
-            innerHTML={
-              !ankiFields.IsSentenceCard && !ankiFields.IsAudioCard
-                ? ankiFields.Expression
-                : "?"
-            }
-          ></div>
+    <>
+      <Lazy.CacheJoyoKanji />
+      <Layout>
+        <div class="flex justify-end flex-row">
+          <div class="flex gap-2 items-center relative hover:[&_>_#frequency]:block h-5 text-secondary-content/50"></div>
         </div>
-      </div>
 
-      {(ankiFields.IsAudioCard ||
-        ankiFields.IsSentenceCard ||
-        ankiFields.IsWordAndSentenceCard ||
-        (ankiFields.IsClickCard && clicked())) && (
-        <div class="flex flex-col gap-4 items-center text-center">
-          <div
-            class={`[&_b]:text-base-content-primary ${config.fontSizeBaseSentence} ${config.fontSizeSmSentence}`}
-            innerHTML={ankiFields["kanji:Sentence"]}
-          ></div>
-        </div>
-      )}
-
-      {ready() && ankiFields.IsAudioCard && (
-        <div class="flex gap-4 justify-center">
-          <Lazy.AudioButtons
-            position={3}
-            expressionAudioRefSignal={expressionAudioRefSignal}
-            sentenceAudioRefSignal={sentenceAudioRefSignal}
-          />
-        </div>
-      )}
-
-      {ankiFields.Hint && (
         <div
-          class={`flex gap-2 items-center justify-center text-center border-t-1 ${config.fontSizeBaseHint} ${config.fontSizeSmHint}`}
+          class="flex rounded-lg gap-4 sm:h-56 flex-col sm:flex-row"
+          on:click={() => setClicked((prev) => !prev)}
         >
-          <div innerHTML={ankiFields.Hint}></div>
+          <div class="flex-1 bg-base-200 p-4 rounded-lg flex flex-col items-center justify-center">
+            <div
+              class={`${config.fontSizeBaseExpression} ${config.fontSizeSmExpression}`}
+              classList={{
+                "border-b-2 border-dotted border-base-content/50":
+                  !!ankiFields.IsClickCard,
+              }}
+              innerHTML={
+                !ankiFields.IsSentenceCard && !ankiFields.IsAudioCard
+                  ? ankiFields.Expression
+                  : "?"
+              }
+            ></div>
+          </div>
         </div>
-      )}
-    </Layout>
+
+        {(ankiFields.IsAudioCard ||
+          ankiFields.IsSentenceCard ||
+          ankiFields.IsWordAndSentenceCard ||
+          (ankiFields.IsClickCard && clicked())) && (
+          <div class="flex flex-col gap-4 items-center text-center">
+            <div
+              class={`[&_b]:text-base-content-primary ${config.fontSizeBaseSentence} ${config.fontSizeSmSentence}`}
+              innerHTML={ankiFields["kanji:Sentence"]}
+            ></div>
+          </div>
+        )}
+
+        {ready() && ankiFields.IsAudioCard && (
+          <div class="flex gap-4 justify-center">
+            <Lazy.AudioButtons
+              position={3}
+              expressionAudioRefSignal={expressionAudioRefSignal}
+              sentenceAudioRefSignal={sentenceAudioRefSignal}
+            />
+          </div>
+        )}
+
+        {ankiFields.Hint && (
+          <div
+            class={`flex gap-2 items-center justify-center text-center border-t-1 ${config.fontSizeBaseHint} ${config.fontSizeSmHint}`}
+          >
+            <div innerHTML={ankiFields.Hint}></div>
+          </div>
+        )}
+      </Layout>
+    </>
   );
 }
