@@ -48,9 +48,7 @@ export async function init({
 
     document.documentElement.setAttribute("data-theme", config_.theme);
     root.setAttribute("data-theme", config_.theme);
-    if (onlineFonts.includes(config_.font as OnlineFont)) {
-      setOnlineFont(config_.font as OnlineFont);
-    }
+    setOnlineFont(config_.onlineFont as OnlineFont);
 
     const [config, setConfig] = createStore(config_);
 

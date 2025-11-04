@@ -1,7 +1,7 @@
 import { createContext, createEffect, type JSX, useContext } from "solid-js";
 import type { SetStoreFunction, Store } from "solid-js/store";
 import type { KikuConfig } from "../util/config";
-import { type OnlineFont, onlineFonts, setOnlineFont } from "../util/fonts";
+import { type OnlineFont, setOnlineFont, setSystemFont } from "../util/fonts";
 import { setTheme } from "../util/theme";
 
 const ConfigContext =
@@ -12,12 +12,11 @@ export function ConfigContextProvider(props: {
   value: [Store<KikuConfig>, SetStoreFunction<KikuConfig>];
 }) {
   const [config] = props.value;
+  console.log("DEBUG[868]: config=", config);
   createEffect(() => {
     setTheme(config.theme);
-    const font = onlineFonts.includes(config.font as OnlineFont)
-      ? config.font
-      : undefined;
-    if (font) setOnlineFont(font as OnlineFont);
+    setOnlineFont(config.onlineFont as OnlineFont);
+    if (config.systemFont) setSystemFont(config.systemFont);
   });
 
   return (

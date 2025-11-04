@@ -41,3 +41,10 @@ export function setOnlineFont(font: OnlineFont) {
     root.style.fontFamily = font;
   }
 }
+
+export function setSystemFont(font: string) {
+  const root = document.getElementById("root");
+  if (root) {
+    root.style.fontFamily = font;
+  }
+}

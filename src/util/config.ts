@@ -1,13 +1,16 @@
+import type { OnlineFont } from "./fonts";
 import type { DaisyUITheme } from "./theme";
 
 export type KikuConfig = {
   theme: DaisyUITheme;
-  font: string;
+  onlineFont: OnlineFont;
+  systemFont: string;
   ankiConnectPort: number;
 };
 
 export const defaultConfig: KikuConfig = {
   theme: "coffee",
-  font: "Noto Serif JP",
+  onlineFont: "Noto Serif JP",
+  systemFont: "",
   ankiConnectPort: 8765,
 };

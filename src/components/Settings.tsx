@@ -1,7 +1,7 @@
 import { ArrowLeftIcon, RefreshCwIcon } from "lucide-solid";
 import { createSignal, For, Match, onMount, Show, Switch } from "solid-js";
 import { AnkiConnect } from "../util/ankiConnect";
-import type { KikuConfig } from "../util/config";
+import { defaultConfig, type KikuConfig } from "../util/config";
 import { type OnlineFont, onlineFonts } from "../util/fonts";
 import { capitalize, isMobile } from "../util/general";
 import { daisyUIThemes } from "../util/theme";
@@ -31,8 +31,13 @@ export function Settings(props: {
     const payload: KikuConfig = {
       //TODO: configurable
       ankiConnectPort: 8765,
-      theme: config.theme,
-      font: config.font,
+      theme: config.theme ? config.theme : defaultConfig.theme,
+      onlineFont: config.onlineFont
+        ? config.onlineFont
+        : defaultConfig.onlineFont,
+      systemFont: config.systemFont
+        ? config.systemFont
+        : defaultConfig.systemFont,
     };
     try {
       await AnkiConnect.saveConfig(payload);
@@ -160,31 +165,47 @@ export function Settings(props: {
       </div>
       <div class="flex flex-col gap-2">
         <div class="text-2xl font-bold">Font</div>
-        <fieldset
-          class="fieldset"
-          on:change={(e) => {
-            const target = e.target as HTMLSelectElement;
-            setConfig("font", target.value);
-          }}
-        >
-          <legend class="fieldset-legend">Online Font</legend>
-          <select class="select">
-            {!onlineFonts.includes(config.font as OnlineFont) && (
-              <option selected disabled>
-                Select a font
-              </option>
-            )}
-            <For each={onlineFonts}>
-              {(font) => {
-                return (
-                  <option value={font} selected={config.font === font}>
-                    {font}
-                  </option>
-                );
+        <div class="grid grid-cols-[repeat(auto-fit,minmax(250px,1fr))] rounded-box gap-4">
+          <fieldset
+            class="fieldset"
+            on:change={(e) => {
+              const target = e.target as HTMLSelectElement;
+              setConfig("onlineFont", target.value as OnlineFont);
+            }}
+          >
+            <legend class="fieldset-legend">Online Font</legend>
+            <select class="select w-full">
+              <For each={onlineFonts}>
+                {(font) => {
+                  return (
+                    <option value={font} selected={config.onlineFont === font}>
+                      {font}
+                    </option>
+                  );
+                }}
+              </For>
+            </select>
+          </fieldset>
+          <fieldset class="fieldset">
+            <legend class="fieldset-legend">System Font</legend>
+            <input
+              type="text"
+              class="input w-full"
+              placeholder="Segoe UI"
+              value={config.systemFont}
+              on:input={(e) => {
+                setConfig("systemFont", (e.target as HTMLInputElement).value);
               }}
-            </For>
-          </select>
-        </fieldset>
+            />
+            <p class="label">Overrides online font when specified</p>
+          </fieldset>
+        </div>
+      </div>
+      <div class="flex flex-col gap-2">
+        <div class="text-2xl font-bold">Debug</div>
+        <pre class="text-xs bg-base-200 p-4 rounded-lg">
+          {JSON.stringify({ ...config }, null, 2)}
+        </pre>
       </div>
       <div class="flex flex-row gap-2 justify-end">
         <button class="btn btn-secondary" on:click={props.onCancelClick}>
