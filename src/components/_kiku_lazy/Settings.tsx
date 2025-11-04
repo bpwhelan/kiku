@@ -1,18 +1,18 @@
 import { ArrowLeftIcon, RefreshCwIcon, UndoIcon } from "lucide-solid";
 import { createSignal, For, Match, onMount, Show, Switch } from "solid-js";
-import { AnkiConnect } from "#/util/ankiConnect";
+import { defaultConfig, type KikuConfig } from "#/util/config";
+import { type OnlineFont, onlineFonts } from "#/util/fonts";
+import { isMobile } from "#/util/general";
+import { daisyUIThemes } from "#/util/theme";
+import { useConfig } from "../shared/Context";
+import { AnkiConnect } from "./util/ankiConnect";
+import { capitalize } from "./util/general";
 import {
-  defaultConfig,
   getTailwindFontSize,
-  type KikuConfig,
   type TailwindBreakpoint,
   type TailwindFontSizeLabel,
   tailwindFontSizeLabel,
-} from "#/util/config";
-import { type OnlineFont, onlineFonts } from "#/util/fonts";
-import { capitalize, isMobile } from "#/util/general";
-import { daisyUIThemes } from "#/util/theme";
-import { useConfig } from "../shared/Context";
+} from "./util/tailwind";
 
 export default function Settings(props: {
   onBackClick?: () => void;

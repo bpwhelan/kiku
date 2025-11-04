@@ -44,11 +44,25 @@ export default defineConfig({
       formats: ["es"],
     },
     copyPublicDir: false,
-
+    minify: false,
     rolldownOptions: {
       output: {
         advancedChunks: {
           groups: [
+            {
+              test: (id) => {
+                const result = /node_modules\/solid-js/.test(id);
+                return result;
+              },
+              name: "_kiku_solid-js",
+            },
+            {
+              test: (id) => {
+                const result = /node_modules\/lucide-solid/.test(id);
+                return result;
+              },
+              name: "_kiku_lucide-solid",
+            },
             {
               test: (id) => {
                 const result =
@@ -62,6 +76,7 @@ export default defineConfig({
           ],
         },
         chunkFileNames: "[name].js",
+        // minify: true,
       },
     },
   },
