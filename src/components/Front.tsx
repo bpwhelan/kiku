@@ -1,23 +1,29 @@
-import { createSignal } from "solid-js";
+import { createSignal, lazy, onMount } from "solid-js";
 import type { AnkiFrontFields } from "../types";
 import { Layout } from "./Layout";
 import { useAnkiField, useConfig } from "./shared/Context";
-import { NotePlayIcon } from "./shared/NotePlayIcon";
+
+const Lazy = {
+  AudioButtons: lazy(async () => ({
+    default: (await import("./_kiku_lazy")).AudioButtons,
+  })),
+};
 
 export function Front() {
-  let expressionAudioRef: HTMLDivElement | undefined;
-  let sentenceAudioRef: HTMLDivElement | undefined;
+  const expressionAudioRefSignal = createSignal<HTMLDivElement | undefined>();
+  const sentenceAudioRefSignal = createSignal<HTMLDivElement | undefined>();
 
   const [config] = useConfig();
   const ankiFields = useAnkiField() as AnkiFrontFields;
+
+  const [ready, setReady] = createSignal(false);
   const [clicked, setClicked] = createSignal(false);
 
-  const hiddenStyle = {
-    position: "absolute",
-    width: "0",
-    height: "0",
-    overflow: "hidden",
-  } as const;
+  onMount(() => {
+    setTimeout(() => {
+      setReady(true);
+    }, 150);
+  });
 
   return (
     <Layout>
@@ -57,28 +63,13 @@ export function Front() {
         </div>
       )}
 
-      {ankiFields.IsAudioCard && (
+      {ready() && ankiFields.IsAudioCard && (
         <div class="flex gap-4 justify-center">
-          <div
-            style={hiddenStyle}
-            ref={expressionAudioRef}
-            innerHTML={ankiFields.ExpressionAudio}
-          ></div>
-          <div
-            style={hiddenStyle}
-            ref={sentenceAudioRef}
-            innerHTML={ankiFields.SentenceAudio}
-          ></div>
-          <NotePlayIcon
-            on:click={() => {
-              expressionAudioRef?.querySelector("a")?.click();
-            }}
-          ></NotePlayIcon>
-          <NotePlayIcon
-            on:click={() => {
-              sentenceAudioRef?.querySelector("a")?.click();
-            }}
-          ></NotePlayIcon>
+          <Lazy.AudioButtons
+            position={3}
+            expressionAudioRefSignal={expressionAudioRefSignal}
+            sentenceAudioRefSignal={sentenceAudioRefSignal}
+          />
         </div>
       )}
 

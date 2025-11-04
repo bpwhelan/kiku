@@ -14,8 +14,8 @@ const Lazy = {
   BackFooter: lazy(async () => ({
     default: (await import("./_kiku_lazy")).BackFooter,
   })),
-  BackPlayButton: lazy(async () => ({
-    default: (await import("./_kiku_lazy")).BackPlayButton,
+  AudioButtons: lazy(async () => ({
+    default: (await import("./_kiku_lazy")).AudioButtons,
   })),
 };
 
@@ -102,7 +102,7 @@ export function Back() {
                 }}
               >
                 {ready() && (
-                  <Lazy.BackPlayButton
+                  <Lazy.AudioButtons
                     position={1}
                     expressionAudioRefSignal={expressionAudioRefSignal}
                     sentenceAudioRefSignal={sentenceAudioRefSignal}
@@ -176,7 +176,7 @@ export function Back() {
           {ready() && (
             <>
               <Lazy.BackFooter tags={tags} />
-              <Lazy.BackPlayButton
+              <Lazy.AudioButtons
                 position={2}
                 expressionAudioRefSignal={expressionAudioRefSignal}
                 sentenceAudioRefSignal={sentenceAudioRefSignal}

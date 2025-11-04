@@ -2,12 +2,21 @@ import type { Signal } from "solid-js";
 import type { AnkiBackFields } from "#/types";
 import { isMobile } from "#/util/general";
 import { useAnkiField } from "../shared/Context";
-import { NotePlayIcon } from "../shared/NotePlayIcon";
+import { PlayIcon } from "./Icons";
+
+export function NotePlayIcon(props: { "on:click"?: () => void }) {
+  return (
+    <PlayIcon
+      class="bg-primary rounded-full text-primary-content p-1 w-8 h-8 cursor-pointer"
+      on:click={props["on:click"]}
+    />
+  );
+}
 
 export default function BackPlayButton(props: {
   expressionAudioRefSignal: Signal<HTMLDivElement | undefined>;
   sentenceAudioRefSignal: Signal<HTMLDivElement | undefined>;
-  position: 1 | 2;
+  position: 1 | 2 | 3;
 }) {
   const ankiFields = useAnkiField() as AnkiBackFields;
   const [expressionAudioRef, setExpressionAudioRef] =
@@ -19,7 +28,7 @@ export default function BackPlayButton(props: {
     overflow: "hidden",
   } as const;
 
-  if (props.position === 1)
+  if (props.position === 1 || props.position === 3)
     return (
       <>
         <div
@@ -32,20 +41,21 @@ export default function BackPlayButton(props: {
           ref={setSentenceAudioRef}
           innerHTML={ankiFields.SentenceAudio}
         ></div>
-        {!isMobile() && (
-          <>
-            <NotePlayIcon
-              on:click={() => {
-                expressionAudioRef()?.querySelector("a")?.click();
-              }}
-            ></NotePlayIcon>
-            <NotePlayIcon
-              on:click={() => {
-                sentenceAudioRef()?.querySelector("a")?.click();
-              }}
-            ></NotePlayIcon>
-          </>
-        )}
+        {!isMobile() ||
+          (props.position === 3 && (
+            <>
+              <NotePlayIcon
+                on:click={() => {
+                  expressionAudioRef()?.querySelector("a")?.click();
+                }}
+              ></NotePlayIcon>
+              <NotePlayIcon
+                on:click={() => {
+                  sentenceAudioRef()?.querySelector("a")?.click();
+                }}
+              ></NotePlayIcon>
+            </>
+          ))}
       </>
     );
 
