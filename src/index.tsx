@@ -6,8 +6,8 @@ import "./tailwind.css";
 import { createStore } from "solid-js/store";
 import { ConfigContextProvider } from "./components/Context.tsx";
 import { Front } from "./components/Front.tsx";
-import type { KikuConfig } from "./util/config.ts";
-import { type OnlineFont, onlineFonts, setOnlineFont } from "./util/fonts.ts";
+import { type KikuConfig, validateConfig } from "./util/config.ts";
+import { type OnlineFont, setOnlineFont } from "./util/fonts.ts";
 import { env } from "./util/general.ts";
 
 export async function init({
@@ -24,9 +24,9 @@ export async function init({
     const shadow = root.attachShadow({ mode: "closed" });
     let config_: KikuConfig;
     try {
-      config_ = (await (
-        await fetch(env.KIKU_CONFIG_FILE)
-      ).json()) as KikuConfig;
+      config_ = validateConfig(
+        await (await fetch(env.KIKU_CONFIG_FILE)).json(),
+      );
     } catch (e) {
       throw new Error("Failed to load config", { cause: e });
     }

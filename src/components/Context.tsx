@@ -12,7 +12,6 @@ export function ConfigContextProvider(props: {
   value: [Store<KikuConfig>, SetStoreFunction<KikuConfig>];
 }) {
   const [config] = props.value;
-  console.log("DEBUG[868]: config=", config);
   createEffect(() => {
     setTheme(config.theme);
     setOnlineFont(config.onlineFont as OnlineFont);
