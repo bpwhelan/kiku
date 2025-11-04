@@ -92,7 +92,7 @@ export default function Settings(props: {
 
   return (
     <>
-      <div class="flex flex-row justify-between items-center">
+      <div class="flex flex-row justify-between items-center animate-fade-in">
         <div class="h-5">
           <ArrowLeftIcon
             class="h-full w-full cursor-pointer text-base-content/50"
@@ -124,7 +124,7 @@ export default function Settings(props: {
           )}
         </div>
       </div>
-      <div class="flex flex-col gap-4">
+      <div class="flex flex-col gap-4 animate-fade-in">
         <div class="text-2xl font-bold">Theme</div>
         <div class="grid grid-cols-[repeat(auto-fit,minmax(150px,1fr))] rounded-box gap-4 p-2">
           {daisyUIThemes.map((theme) => {
@@ -174,7 +174,7 @@ export default function Settings(props: {
           })}
         </div>
       </div>
-      <div class="flex flex-col gap-4">
+      <div class="flex flex-col gap-4 animate-fade-in">
         <div class="text-2xl font-bold">Font</div>
         <div class="grid grid-cols-[repeat(auto-fit,minmax(250px,1fr))] rounded-box gap-4">
           <fieldset
@@ -211,13 +211,13 @@ export default function Settings(props: {
         </div>
       </div>
       <FontSizeSettings />
-      <div class="flex flex-col gap-4">
+      <div class="flex flex-col gap-4 animate-fade-in">
         <div class="text-2xl font-bold">Debug</div>
         <pre class="text-xs bg-base-200 p-4 rounded-lg">
           {JSON.stringify({ ...config }, null, 2)}
         </pre>
       </div>
-      <div class="flex flex-row gap-2 justify-end">
+      <div class="flex flex-row gap-2 justify-end animate-fade-in">
         <button class="btn btn-secondary" on:click={props.onCancelClick}>
           Cancel
         </button>
@@ -251,7 +251,7 @@ export default function Settings(props: {
 
 function FontSizeSettings() {
   return (
-    <div class="flex flex-col gap-4">
+    <div class="flex flex-col gap-4 animate-fade-in">
       <div class="text-2xl font-bold">Font Size</div>
       <div>
         <div class="text-lg font-bold">Mobile</div>

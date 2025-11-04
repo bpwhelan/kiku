@@ -7,7 +7,7 @@ import { PlayIcon } from "./Icons";
 export function NotePlayIcon(props: { "on:click"?: () => void }) {
   return (
     <PlayIcon
-      class="bg-primary rounded-full text-primary-content p-1 w-8 h-8 cursor-pointer"
+      class="bg-primary rounded-full text-primary-content p-1 w-8 h-8 cursor-pointer animate-fade-in-sm"
       on:click={props["on:click"]}
     />
   );

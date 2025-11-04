@@ -10,7 +10,7 @@ export default function BackHeader(props: { onSettingsClick?: () => void }) {
 
   return (
     <>
-      <div class="flex gap-2 items-center">
+      <div class="flex gap-2 items-center animate-fade-in-sm">
         <BoltIcon
           class="h-full w-full cursor-pointer text-base-content/50"
           on:click={props.onSettingsClick}
@@ -23,7 +23,7 @@ export default function BackHeader(props: { onSettingsClick?: () => void }) {
         ></PaintbrushIcon>
         <div class="text-base-content/50">{capitalize(config.theme)}</div>
       </div>
-      <div class="flex gap-2 items-center relative hover:[&_>_#frequency]:block">
+      <div class="flex gap-2 items-center relative hover:[&_>_#frequency]:block animate-fade-in-sm">
         <div innerHTML={ankiFields.FreqSort} class="text-base-content/50"></div>
         {ankiFields.Frequency && (
           <>
