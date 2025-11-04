@@ -44,12 +44,16 @@ export function Back() {
     setTimeout(() => {
       setReady(true);
       relax = true;
-    }, 100);
+    }, 50);
   });
 
-  const temp = document.createElement("div");
-  temp.innerHTML = ankiFields.Picture ?? "";
-  const img = temp.querySelector("img");
+  let prefetch = document.getElementById("prefetch-picture");
+  if (import.meta.env.DEV) {
+    prefetch = document.createElement("div");
+    prefetch.innerHTML = ankiFields.Picture ?? "";
+  }
+  if (!prefetch) throw new Error("Prefetch picture not found");
+  const img = prefetch.querySelector("img");
 
   return (
     <Layout>

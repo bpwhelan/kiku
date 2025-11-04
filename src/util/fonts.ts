@@ -53,3 +53,5 @@ export function setSystemFont(font: string) {
     root.style.fontFamily = font;
   }
 }
+
+//TODO: preload all japanese character
