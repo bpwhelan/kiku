@@ -17,55 +17,87 @@ export async function init({
   ankiFields: AnkiFields;
   side: "front" | "back";
 }) {
-  const root = document.getElementById("root");
-  if (!root) throw new Error("root not found");
+  try {
+    const root = document.getElementById("root");
+    if (!root) throw new Error("root not found");
 
-  const shadow = root.attachShadow({ mode: "closed" });
-  const config_ = (await (
-    await fetch(env.KIKU_CONFIG_FILE)
-  ).json()) as KikuConfig;
-
-  if (import.meta.env.DEV) {
-    const link = document.createElement("link");
-    link.rel = "stylesheet";
-    link.href = "/src/tailwind.css";
-    const link2 = link.cloneNode();
-    document.head.appendChild(link);
-    shadow.appendChild(link2);
-  } else {
-    const qa = document.getElementById("qa");
-    const style = qa?.querySelector("style");
-    if (style) {
-      shadow.appendChild(style.cloneNode(true));
+    const shadow = root.attachShadow({ mode: "closed" });
+    let config_: KikuConfig;
+    try {
+      config_ = (await (
+        await fetch(env.KIKU_CONFIG_FILE)
+      ).json()) as KikuConfig;
+    } catch (e) {
+      throw new Error("Failed to load config", { cause: e });
     }
-  }
 
-  document.documentElement.setAttribute("data-theme", config_.theme);
-  root.setAttribute("data-theme", config_.theme);
-  if (onlineFonts.includes(config_.font as OnlineFont)) {
-    setOnlineFont(config_.font as OnlineFont);
-  }
+    if (import.meta.env.DEV) {
+      const link = document.createElement("link");
+      link.rel = "stylesheet";
+      link.href = "/src/tailwind.css";
+      const link2 = link.cloneNode();
+      document.head.appendChild(link);
+      shadow.appendChild(link2);
+    } else {
+      const qa = document.getElementById("qa");
+      const style = qa?.querySelector("style");
+      if (style) {
+        shadow.appendChild(style.cloneNode(true));
+      }
+    }
 
-  const [config, setConfig] = createStore(config_);
+    document.documentElement.setAttribute("data-theme", config_.theme);
+    root.setAttribute("data-theme", config_.theme);
+    if (onlineFonts.includes(config_.font as OnlineFont)) {
+      setOnlineFont(config_.font as OnlineFont);
+    }
 
-  if (side === "front") {
-    render(
-      () => (
-        <ConfigContextProvider value={[config, setConfig]}>
-          <Front ankiFields={ankiFields} />
-        </ConfigContextProvider>
-      ),
-      shadow,
-    );
-  } else if (side === "back") {
-    render(
-      () => (
-        <ConfigContextProvider value={[config, setConfig]}>
-          <Back ankiFields={ankiFields} />
-        </ConfigContextProvider>
-      ),
-      shadow,
-    );
+    const [config, setConfig] = createStore(config_);
+
+    if (side === "front") {
+      render(
+        () => (
+          <ConfigContextProvider value={[config, setConfig]}>
+            <Front ankiFields={ankiFields} />
+          </ConfigContextProvider>
+        ),
+        shadow,
+      );
+    } else if (side === "back") {
+      render(
+        () => (
+          <ConfigContextProvider value={[config, setConfig]}>
+            <Back ankiFields={ankiFields} />
+          </ConfigContextProvider>
+        ),
+        shadow,
+      );
+    }
+  } catch (e) {
+    document.body.style.margin = "0";
+    document.body.style.padding = "0";
+    document.body.style.height = "100vh";
+    document.body.style.width = "100vw";
+    document.body.style.display = "flex";
+    document.body.style.flexDirection = "column";
+    document.body.style.justifyContent = "center";
+    document.body.style.alignItems = "center";
+    document.body.style.backgroundColor = "#000000";
+    document.body.style.color = "#ff0000";
+    document.body.style.textAlign = "center";
+
+    const error =
+      e instanceof Error
+        ? `
+      <span>Failed to render card.</span>
+      <span><b>Error Name:</b> ${e.name}</span>
+      <span><b>Error Message:</b> ${e.message}</span>
+      <span><b>Error Cause:</b> ${e.cause ?? "N/A"}</span>
+      <span><b>Error Stack:</b><br><pre style="white-space: pre-wrap; background: #f3f4f6; padding: 8px;">${e.stack}</pre></span>
+    `
+        : `<span>Something went wrong.</span>`;
+
+    document.body.innerHTML = error;
   }
 }
 
