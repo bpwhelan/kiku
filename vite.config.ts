@@ -4,7 +4,6 @@ import tailwindcss from "@tailwindcss/vite";
 import express from "express";
 import { defineConfig, type PluginOption } from "vite";
 import circularDpendency from "vite-plugin-circular-dependency";
-import lucidePreprocess from "vite-plugin-lucide-preprocess";
 import solid from "vite-plugin-solid";
 
 function serveAnkiCollectionMediaPlugin(): PluginOption {
@@ -23,7 +22,6 @@ function serveAnkiCollectionMediaPlugin(): PluginOption {
 
 export default defineConfig({
   plugins: [
-    lucidePreprocess(),
     solid(),
     tailwindcss(),
     serveAnkiCollectionMediaPlugin(),

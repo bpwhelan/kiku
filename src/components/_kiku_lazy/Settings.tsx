@@ -1,4 +1,4 @@
-import { createSignal, For, Match, onMount, Show, Switch } from "solid-js";
+import { createSignal, onMount } from "solid-js";
 import { defaultConfig, type KikuConfig } from "#/util/config";
 import { type OnlineFont, onlineFonts } from "#/util/fonts";
 import { isMobile } from "#/util/general";
@@ -100,12 +100,14 @@ export default function Settings(props: {
           ></ArrowLeftIcon>
         </div>
         <div class="flex flex-row gap-2 items-center">
-          <Switch>
-            <Match when={isAnkiConnectAvailable()}>
+          {isAnkiConnectAvailable() && (
+            <>
               <div class="text-sm">AnkiConnect is available</div>
               <div class="status status-success"></div>
-            </Match>
-            <Match when={!isAnkiConnectAvailable()}>
+            </>
+          )}
+          {!isAnkiConnectAvailable() && (
+            <>
               <RefreshCwIcon
                 class="h-5 w-5 cursor-pointer text-base-content/50"
                 on:click={async () => {
@@ -118,63 +120,58 @@ export default function Settings(props: {
               />
               <div class="text-sm">AnkiConnect is not available</div>
               <div class="status status-error animate-ping"></div>
-            </Match>
-          </Switch>
+            </>
+          )}
         </div>
       </div>
       <div class="flex flex-col gap-4">
         <div class="text-2xl font-bold">Theme</div>
         <div class="grid grid-cols-[repeat(auto-fit,minmax(150px,1fr))] rounded-box gap-4 p-2">
-          <For each={daisyUIThemes}>
-            {(theme) => {
-              return (
-                <div
-                  class="border-base-content/20 hover:border-base-content/40 overflow-hidden rounded-lg border outline-2 outline-offset-2"
-                  classList={{
-                    "outline-2": theme === config.theme,
-                  }}
-                  on:click={() => {
-                    setConfig("theme", theme);
-                  }}
-                >
-                  <div class="bg-base-100 text-base-content w-full cursor-pointer">
-                    <div
-                      class="grid grid-cols-5 grid-rows-3"
-                      data-theme={theme}
-                    >
-                      <div class="bg-base-200 col-start-1 row-span-2 row-start-1"></div>
-                      <div class="bg-base-300 col-start-1 row-start-3"></div>
-                      <div class="bg-base-100 col-span-4 col-start-2 row-span-3 row-start-1 flex flex-col gap-1 p-2">
-                        <div class="font-bold">{capitalize(theme)}</div>
-                        <div class="flex flex-wrap gap-1">
-                          <div class="bg-primary flex aspect-square w-5 items-center justify-center rounded lg:w-6">
-                            <div class="text-primary-content text-sm font-bold">
-                              A
-                            </div>
+          {daisyUIThemes.map((theme) => {
+            return (
+              <div
+                class="border-base-content/20 hover:border-base-content/40 overflow-hidden rounded-lg border outline-2 outline-offset-2"
+                classList={{
+                  "outline-2": theme === config.theme,
+                }}
+                on:click={() => {
+                  setConfig("theme", theme);
+                }}
+              >
+                <div class="bg-base-100 text-base-content w-full cursor-pointer">
+                  <div class="grid grid-cols-5 grid-rows-3" data-theme={theme}>
+                    <div class="bg-base-200 col-start-1 row-span-2 row-start-1"></div>
+                    <div class="bg-base-300 col-start-1 row-start-3"></div>
+                    <div class="bg-base-100 col-span-4 col-start-2 row-span-3 row-start-1 flex flex-col gap-1 p-2">
+                      <div class="font-bold">{capitalize(theme)}</div>
+                      <div class="flex flex-wrap gap-1">
+                        <div class="bg-primary flex aspect-square w-5 items-center justify-center rounded lg:w-6">
+                          <div class="text-primary-content text-sm font-bold">
+                            A
                           </div>
-                          <div class="bg-secondary flex aspect-square w-5 items-center justify-center rounded lg:w-6">
-                            <div class="text-secondary-content text-sm font-bold">
-                              A
-                            </div>
+                        </div>
+                        <div class="bg-secondary flex aspect-square w-5 items-center justify-center rounded lg:w-6">
+                          <div class="text-secondary-content text-sm font-bold">
+                            A
                           </div>
-                          <div class="bg-accent flex aspect-square w-5 items-center justify-center rounded lg:w-6">
-                            <div class="text-accent-content text-sm font-bold">
-                              A
-                            </div>
+                        </div>
+                        <div class="bg-accent flex aspect-square w-5 items-center justify-center rounded lg:w-6">
+                          <div class="text-accent-content text-sm font-bold">
+                            A
                           </div>
-                          <div class="bg-neutral flex aspect-square w-5 items-center justify-center rounded lg:w-6">
-                            <div class="text-neutral-content text-sm font-bold">
-                              A
-                            </div>
+                        </div>
+                        <div class="bg-neutral flex aspect-square w-5 items-center justify-center rounded lg:w-6">
+                          <div class="text-neutral-content text-sm font-bold">
+                            A
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              );
-            }}
-          </For>
+              </div>
+            );
+          })}
         </div>
       </div>
       <div class="flex flex-col gap-4">
@@ -189,15 +186,13 @@ export default function Settings(props: {
           >
             <legend class="fieldset-legend">Online Font</legend>
             <select class="select w-full">
-              <For each={onlineFonts}>
-                {(font) => {
-                  return (
-                    <option value={font} selected={config.onlineFont === font}>
-                      {font}
-                    </option>
-                  );
-                }}
-              </For>
+              {onlineFonts.map((font) => {
+                return (
+                  <option value={font} selected={config.onlineFont === font}>
+                    {font}
+                  </option>
+                );
+              })}
             </select>
           </fieldset>
           <fieldset class="fieldset">
@@ -237,7 +232,7 @@ export default function Settings(props: {
           Save
         </button>
       </div>
-      <Show when={showToast()}>
+      {showToast() && (
         <div class="toast toast-top toast-center">
           <div
             class="alert"
@@ -249,7 +244,7 @@ export default function Settings(props: {
             <span>{toastMessage()}</span>
           </div>
         </div>
-      </Show>
+      )}
     </>
   );
 }
@@ -317,21 +312,19 @@ function FontSizeSettingsFieldset(props: {
         />
       </legend>
       <select class="select w-full">
-        <For each={tailwindFontSizeLabel}>
-          {(label) => {
-            return (
-              <option
-                value={label}
-                selected={
-                  config[props.configKey] ===
-                  getTailwindFontSize(label, breakpoint)
-                }
-              >
-                {label}
-              </option>
-            );
-          }}
-        </For>
+        {tailwindFontSizeLabel.map((label) => {
+          return (
+            <option
+              value={label}
+              selected={
+                config[props.configKey] ===
+                getTailwindFontSize(label, breakpoint)
+              }
+            >
+              {label}
+            </option>
+          );
+        })}
       </select>
     </fieldset>
   );

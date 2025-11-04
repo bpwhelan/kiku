@@ -45,9 +45,6 @@ importers:
       vite-plugin-circular-dependency:
         specifier: ^0.5.0
         version: 0.5.0
-      vite-plugin-lucide-preprocess:
-        specifier: ^1.4.5
-        version: 1.4.5(rolldown-vite@7.1.14(@types/node@24.9.2)(jiti@2.6.1))
       vite-plugin-solid:
         specifier: ^2.11.8
         version: 2.11.10(rolldown-vite@7.1.14(@types/node@24.9.2)(jiti@2.6.1))(solid-js@1.9.10)
@@ -1057,11 +1054,6 @@ packages:
   vite-plugin-circular-dependency@0.5.0:
     resolution: {integrity: sha512-7SQX1IZbf5to/S3A3/syfntRNg20Cth6KgTCwHpNZIcuDCtPclV2Bwvdd9HWG+alKZ04mmdlchNOPQgBl7/vQQ==}
 
-  vite-plugin-lucide-preprocess@1.4.5:
-    resolution: {integrity: sha512-JF6bcWjV4kn7NOAb8cc4hhTtnYbpE0uJb4bB0yqpJtbGOYL0pamj0b8UuRzKAgov61e6MXXBSdk9bf6OgxvNVQ==}
-    peerDependencies:
-      vite: '>=5'
-
   vite-plugin-solid@2.11.10:
     resolution: {integrity: sha512-Yr1dQybmtDtDAHkii6hXuc1oVH9CPcS/Zb2jN/P36qqcrkNnVPsMTzQ06jyzFPFjj3U1IYKMVt/9ZqcwGCEbjw==}
     peerDependencies:
@@ -2038,11 +2030,6 @@ snapshots:
       chalk: 4.1.2
     transitivePeerDependencies:
       - rollup
-
-  vite-plugin-lucide-preprocess@1.4.5(rolldown-vite@7.1.14(@types/node@24.9.2)(jiti@2.6.1)):
-    dependencies:
-      magic-string: 0.30.21
-      vite: rolldown-vite@7.1.14(@types/node@24.9.2)(jiti@2.6.1)
 
   vite-plugin-solid@2.11.10(rolldown-vite@7.1.14(@types/node@24.9.2)(jiti@2.6.1))(solid-js@1.9.10):
     dependencies:
