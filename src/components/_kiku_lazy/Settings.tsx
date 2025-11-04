@@ -1,10 +1,10 @@
-import { ArrowLeftIcon, RefreshCwIcon, UndoIcon } from "lucide-solid";
 import { createSignal, For, Match, onMount, Show, Switch } from "solid-js";
 import { defaultConfig, type KikuConfig } from "#/util/config";
 import { type OnlineFont, onlineFonts } from "#/util/fonts";
 import { isMobile } from "#/util/general";
 import { daisyUIThemes } from "#/util/theme";
 import { useConfig } from "../shared/Context";
+import { ArrowLeftIcon, RefreshCwIcon, UndoIcon } from "./Icons";
 import { AnkiConnect } from "./util/ankiConnect";
 import { capitalize } from "./util/general";
 import {

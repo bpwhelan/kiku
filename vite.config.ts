@@ -58,13 +58,6 @@ export default defineConfig({
             },
             {
               test: (id) => {
-                const result = /node_modules\/lucide-solid/.test(id);
-                return result;
-              },
-              name: "_kiku_lucide-solid",
-            },
-            {
-              test: (id) => {
                 const result =
                   /src\/util/.test(id) ||
                   /src\/components\/shared/.test(id) ||

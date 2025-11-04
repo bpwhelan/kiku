@@ -1,6 +1,6 @@
-import { InfoIcon } from "lucide-solid";
 import type { AnkiBackFields } from "#/types";
 import { useAnkiField, useConfig } from "../shared/Context";
+import { InfoIcon } from "./Icons";
 
 export default function BackFooter(props: { tags: string[] }) {
   const ankiFields = useAnkiField() as AnkiBackFields;

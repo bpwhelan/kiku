@@ -19,7 +19,6 @@
     "apply": "pnpm run build && pnpm run copyDist && pnpm run updateNoteType"
   },
   "dependencies": {
-    "lucide-solid": "^0.552.0",
     "solid-js": "^1.9.9"
   },
   "devDependencies": {
