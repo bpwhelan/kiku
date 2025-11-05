@@ -232,10 +232,14 @@ export default function Settings(props: {
                   <ClipboardCopyIcon
                     class="size-5 text-base-content-calm cursor-pointer"
                     on:click={() => {
-                      navigator.clipboard.writeText(
-                        JSON.stringify({ ...config }, null, 2),
-                      );
-                      toast.success("Copied to clipboard!");
+                      navigator.clipboard
+                        .writeText(JSON.stringify({ ...config }, null, 2))
+                        .then(() => {
+                          toast.success("Copied to clipboard!");
+                        })
+                        .catch(() => {
+                          toast.error("Failed to copy to clipboard!");
+                        });
                     }}
                   />
                 </div>
@@ -250,10 +254,14 @@ export default function Settings(props: {
                   <ClipboardCopyIcon
                     class="size-5 text-base-content-calm cursor-pointer"
                     on:click={() => {
-                      navigator.clipboard.writeText(
-                        JSON.stringify({ ...ankiFields }, null, 2),
-                      );
-                      toast.success("Copied to clipboard!");
+                      navigator.clipboard
+                        .writeText(JSON.stringify({ ...ankiFields }, null, 2))
+                        .then(() => {
+                          toast.success("Copied to clipboard!");
+                        })
+                        .catch(() => {
+                          toast.error("Failed to copy to clipboard!");
+                        });
                     }}
                   />
                 </div>
