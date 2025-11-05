@@ -39,16 +39,20 @@ export default function BackPlayButton(props: {
         </div>
         {(!isMobile() || props.position === 3) && (
           <>
-            <NotePlayIcon
-              on:click={() => {
-                expressionAudioRef()?.querySelector("a")?.click();
-              }}
-            ></NotePlayIcon>
-            <NotePlayIcon
-              on:click={() => {
-                sentenceAudioRef()?.querySelector("a")?.click();
-              }}
-            ></NotePlayIcon>
+            {ankiFields.ExpressionAudio && (
+              <NotePlayIcon
+                on:click={() => {
+                  expressionAudioRef()?.querySelector("a")?.click();
+                }}
+              ></NotePlayIcon>
+            )}
+            {ankiFields.SentenceAudio && (
+              <NotePlayIcon
+                on:click={() => {
+                  sentenceAudioRef()?.querySelector("a")?.click();
+                }}
+              ></NotePlayIcon>
+            )}
           </>
         )}
       </>
