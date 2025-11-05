@@ -34,7 +34,7 @@ export function Back() {
   const { ankiFields, ankiFieldNodes } = useAnkiField<"back">();
   const [showSettings, setShowSettings] = createSignal(false);
   const [ready, setReady] = createSignal(false);
-  const [showImageModal, setShowImageModal] = createSignal(false);
+  const [showImageModal, setShowImageModal] = createSignal<undefined | Node>();
 
   const tags = ankiFields.Tags.split(" ");
   const isNsfw = tags.map((tag) => tag.toLowerCase()).includes("nsfw");
@@ -46,11 +46,11 @@ export function Back() {
     }, 50);
   });
 
-  const prefetch = document.createElement("div");
+  const tempDiv = document.createElement("div");
   ankiFieldNodes.Picture.forEach((node) => {
-    prefetch.appendChild(node);
+    tempDiv.appendChild(node);
   });
-  const img = prefetch.querySelector("img");
+  const picture = tempDiv.querySelector("img");
 
   return (
     <Layout>
@@ -107,12 +107,16 @@ export function Back() {
               classList={{
                 "filter blur-[16px] brightness-50": isNsfw,
               }}
-              on:click={() => setShowImageModal(true)}
+              on:click={() => picture && setShowImageModal(picture)}
             >
-              {img}
+              {picture}
             </div>
           </div>
-          {ready() && <Lazy.BackBody />}
+          {ready() && (
+            <Lazy.BackBody
+              onDefinitionPictureClick={(node) => setShowImageModal(node)}
+            />
+          )}
           {ready() && (
             <>
               <Lazy.BackFooter tags={tags} />
@@ -125,11 +129,11 @@ export function Back() {
           )}
         </>
       )}
-      {ready() && img && (
+      {ready() && picture && (
         <Lazy.ImageModal
-          show={showImageModal()}
-          img={img.cloneNode()}
-          on:click={() => setShowImageModal(false)}
+          show={!!showImageModal()}
+          img={showImageModal()?.cloneNode()}
+          on:click={() => setShowImageModal(undefined)}
         />
       )}
     </Layout>

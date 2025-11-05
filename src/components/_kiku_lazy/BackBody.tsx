@@ -1,7 +1,9 @@
 import { createSignal, onMount } from "solid-js";
 import { useAnkiField, useConfig } from "../shared/Context";
 
-export default function BackBody() {
+export default function BackBody(props: {
+  onDefinitionPictureClick?: (node: Node) => void;
+}) {
   let sentenceEl: HTMLDivElement | undefined;
   const [config] = useConfig();
   const { ankiFields, ankiFieldNodes } = useAnkiField<"back">();
@@ -49,6 +51,12 @@ export default function BackBody() {
     }
   });
 
+  const tempDiv = document.createElement("div");
+  ankiFieldNodes.DefinitionPicture.forEach((node) => {
+    tempDiv.appendChild(node);
+  });
+  const definitionPicture = tempDiv.querySelector("img");
+
   return (
     <div class="flex sm:flex-col gap-8 flex-col-reverse animate-fade-in">
       <div class="flex flex-col gap-4 items-center text-center">
@@ -67,7 +75,18 @@ export default function BackBody() {
             <div class="text-end text-base-content/50">{pageType()}</div>
           )}
           <div class="relative bg-base-200 p-4 border-s-4 border-primary text-base sm:text-xl rounded-lg [&_ol]:list-inside [&_ul]:list-inside">
-            <div>
+            <div class="overflow-auto">
+              {ankiFields.DefinitionPicture && (
+                <div
+                  class="max-w-1/3 float-end [&_img]:rounded-sm ps-2 cursor-pointer"
+                  on:click={() =>
+                    definitionPicture &&
+                    props.onDefinitionPictureClick?.(definitionPicture)
+                  }
+                >
+                  {definitionPicture}
+                </div>
+              )}
               {Array.from(pageNode()).map((node) => node.cloneNode(true))}
             </div>
             {pagesWithContent.length > 1 && (

@@ -1,5 +1,5 @@
 export default function ImageModal(props: {
-  img: Node;
+  img: Node | undefined;
   "on:click"?: () => void;
   show: boolean;
 }) {

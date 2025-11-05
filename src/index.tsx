@@ -5,6 +5,7 @@ import {
   type AnkiFieldNodes,
   type AnkiFields,
   exampleFields4,
+  exampleFields5,
 } from "./types.ts";
 import "./tailwind.css";
 import { createStore } from "solid-js/store";
@@ -26,7 +27,7 @@ export async function init({ side }: { side: "front" | "back" }) {
       document.querySelectorAll("#anki-fields > div");
 
     if (import.meta.env.DEV) {
-      divs = Object.entries(exampleFields4).map(([key, value]) => {
+      divs = Object.entries(exampleFields5).map(([key, value]) => {
         const div = document.createElement("div");
         div.dataset.field = key;
         div.innerHTML = value;

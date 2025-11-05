@@ -219,3 +219,36 @@ export const exampleFields4: AnkiFields = {
   "furigana:SentenceFurigana": "",
   "kana:SentenceFurigana": ""
 }
+
+// biome-ignore format: this looks nicer
+export const exampleFields5: AnkiFields = {
+  "Expression": "鼓",
+  "ExpressionFurigana": "鼓[つづみ]",
+  "ExpressionReading": "つづみ",
+  "ExpressionAudio": "<a class=\"replay-button soundLink\" href=\"#\" onclick=\"pycmd('play:a:0'); return false;\">\n    <svg class=\"playImage\" viewBox=\"0 0 64 64\" version=\"1.1\">\n        <circle cx=\"32\" cy=\"32\" r=\"29\"></circle>\n        <path d=\"M56.502,32.301l-37.502,20.101l0.329,-40.804l37.173,20.703Z\"></path>\n    </svg>\n</a>",
+  "SelectionText": "",
+  "MainDefinition": "<div style=\"text-align: left;\" class=\"yomitan-glossary\"><i>(★, Jitendex.org [2025-06-01])</i> <span><div><span data-sc-code=\"n\" title=\"noun (common) (futsuumeishi)\" style=\"font-weight: bold; font-size: 0.8em; color: white; background-color: rgb(86, 86, 86); vertical-align: text-bottom; border-radius: 0.3em; margin-right: 0.25em; padding: 0.2em 0.3em; word-break: keep-all; cursor: help;\">noun</span><div><ul data-sc-content=\"glossary\" style=\"padding-left: 0px; list-style-type: none;\"><li>hand drum</li></ul></div></div><div data-sc-content=\"attribution\" style=\"font-size: 0.7em; text-align: right;\"><a href=\"https://www.edrdg.org/jmwsgi/entr.py?svc=jmdict&amp;q=1267900\"><span>JMdict</span><span style=\"display:none;\"></span></a></div></span></div>",
+  "DefinitionPicture": "<img alt=\"鼓 - Wikipedia\" src=\"paste-28b2da635b78620a0131d8df5ac754dcaf87fe52.jpg\">",
+  "Sentence": "それからみんなで一緒に寮に帰って、みくりのお雑煮と苺華のおせちに舌<b>鼓</b>を打ったのだった。",
+  "SentenceFurigana": "<span class=\"term\">それから</span><span class=\"term\">みんな</span><span class=\"term\">で</span><span class=\"term\"><ruby>一緒<rt>いっしょ</rt></ruby>に</span><span class=\"term\"><ruby>寮<rt>りょう</rt></ruby></span><span class=\"term\">に</span><span class=\"term\"><ruby>帰<rt>かえ</rt></ruby>って、</span><span class=\"term\">みくり</span><span class=\"term\">の</span><span class=\"term\">お<ruby>雑煮<rt>ぞうに</rt></ruby></span><span class=\"term\">と</span><span class=\"term\"><ruby>苺<rt>いちご</rt></ruby></span><span class=\"term\"><ruby>華<rt>はな</rt></ruby></span><span class=\"term\">の</span><span class=\"term\">おせち</span><span class=\"term\">に</span><span class=\"term\"><ruby>舌鼓<rt>したつづみ</rt></ruby>を<ruby>打<rt>う</rt></ruby>った</span><span class=\"term\">のだ</span><span class=\"term\">った</span><span class=\"term\"><ruby>。<rt>まる</rt></ruby></span>",
+  "SentenceAudio": "",
+  "Picture": "<img src=\"AmairoChocolata_2025-09-13-02-58-27-616.webp\">",
+  "Glossary": "<div style=\"text-align: left;\" class=\"yomitan-glossary\"><i>(★, Jitendex.org [2025-06-01])</i> <span><div><span data-sc-code=\"n\" title=\"noun (common) (futsuumeishi)\" style=\"font-weight: bold; font-size: 0.8em; color: white; background-color: rgb(86, 86, 86); vertical-align: text-bottom; border-radius: 0.3em; margin-right: 0.25em; padding: 0.2em 0.3em; word-break: keep-all; cursor: help;\">noun</span><div><ul data-sc-content=\"glossary\" style=\"padding-left: 0px; list-style-type: none;\"><li>hand drum</li></ul></div></div><div data-sc-content=\"attribution\" style=\"font-size: 0.7em; text-align: right;\"><a href=\"https://www.edrdg.org/jmwsgi/entr.py?svc=jmdict&amp;q=1267900\"><span>JMdict</span><span style=\"display:none;\"></span></a></div></span></div>",
+  "Hint": "",
+  "IsWordAndSentenceCard": "",
+  "IsClickCard": "",
+  "IsSentenceCard": "",
+  "IsAudioCard": "",
+  "PitchPosition": "",
+  "PitchCategories": "",
+  "Frequency": "<ul style=\"text-align: left;\"><li>Shonen: 18351</li><li>Netflix Freq: ★★★ (8614)</li><li>Anime &amp; J-drama: 20350</li><li>Youtube: 45427</li><li>VN: 30015</li><li>ICR: 11007</li><li>Narou: 34853</li><li>CC100: 39605</li><li>BCCWJ: 28444</li><li>BCCWJ: 39114</li><li>JPDBv2㋕: 28272</li><li>JPDBv2㋕: 56986㋕</li><li>H Freq: 21429-23831</li></ul>",
+  "FreqSort": "20482",
+  "MiscInfo": "",
+  "Tags": "Game::AmairoChocolata GSM yomitan",
+  "furigana:ExpressionFurigana": "<ruby><rb>鼓</rb><rt>つづみ</rt></ruby>",
+  "kana:ExpressionFurigana": "つづみ",
+  "furigana:Sentence": "それからみんなで一緒に寮に帰って、みくりのお雑煮と苺華のおせちに舌<b>鼓</b>を打ったのだった。",
+  "kanji:Sentence": "それからみんなで一緒に寮に帰って、みくりのお雑煮と苺華のおせちに舌<b>鼓</b>を打ったのだった。",
+  "furigana:SentenceFurigana": "<span class=\"term\">それから</span><span class=\"term\">みんな</span><span class=\"term\">で</span><span class=\"term\"><ruby>一緒<rt>いっしょ</rt></ruby>に</span><span class=\"term\"><ruby>寮<rt>りょう</rt></ruby></span><span class=\"term\">に</span><span class=\"term\"><ruby>帰<rt>かえ</rt></ruby>って、</span><span class=\"term\">みくり</span><span class=\"term\">の</span><span class=\"term\">お<ruby>雑煮<rt>ぞうに</rt></ruby></span><span class=\"term\">と</span><span class=\"term\"><ruby>苺<rt>いちご</rt></ruby></span><span class=\"term\"><ruby>華<rt>はな</rt></ruby></span><span class=\"term\">の</span><span class=\"term\">おせち</span><span class=\"term\">に</span><span class=\"term\"><ruby>舌鼓<rt>したつづみ</rt></ruby>を<ruby>打<rt>う</rt></ruby>った</span><span class=\"term\">のだ</span><span class=\"term\">った</span><span class=\"term\"><ruby>。<rt>まる</rt></ruby></span>",
+  "kana:SentenceFurigana": "<span class=\"term\">それから</span><span class=\"term\">みんな</span><span class=\"term\">で</span><span class=\"term\"><ruby>一緒<rt>いっしょ</rt></ruby>に</span><span class=\"term\"><ruby>寮<rt>りょう</rt></ruby></span><span class=\"term\">に</span><span class=\"term\"><ruby>帰<rt>かえ</rt></ruby>って、</span><span class=\"term\">みくり</span><span class=\"term\">の</span><span class=\"term\">お<ruby>雑煮<rt>ぞうに</rt></ruby></span><span class=\"term\">と</span><span class=\"term\"><ruby>苺<rt>いちご</rt></ruby></span><span class=\"term\"><ruby>華<rt>はな</rt></ruby></span><span class=\"term\">の</span><span class=\"term\">おせち</span><span class=\"term\">に</span><span class=\"term\"><ruby>舌鼓<rt>したつづみ</rt></ruby>を<ruby>打<rt>う</rt></ruby>った</span><span class=\"term\">のだ</span><span class=\"term\">った</span><span class=\"term\"><ruby>。<rt>まる</rt></ruby></span>"
+}
