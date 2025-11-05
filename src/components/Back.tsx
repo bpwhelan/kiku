@@ -113,14 +113,17 @@ export function Back() {
               </div>
             </div>
 
-            <div
-              class="sm:[&_img]:h-full [&_img]:rounded-lg [&_img]:object-contain [&_img]:h-48 [&_img]:mx-auto bg-base-200 rounded-lg transition-[filter] hover:filter-none cursor-pointer"
-              classList={{
-                "filter blur-[16px] brightness-50": isNsfw,
-              }}
-              on:click={() => picture && setShowImageModal(picture)}
-            >
-              {picture}
+            <div class="bg-base-200 rounded-lg">
+              <div
+                class="h-full sm:[&_img]:h-full [&_img]:rounded-lg [&_img]:object-contain [&_img]:h-48 [&_img]:mx-auto [&_img]:transition-[filter] [&_img]:hover:filter-none cursor-pointer rounded-lg overflow-hidden"
+                classList={{
+                  "[&_img]:filter [&_img]:blur-[16px] [&_img]:brightness-50":
+                    isNsfw,
+                }}
+                on:click={() => picture && setShowImageModal(picture)}
+              >
+                {picture}
+              </div>
             </div>
           </div>
           {ready() && (
