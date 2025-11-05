@@ -220,7 +220,8 @@ export default function Settings(props: {
       <FontSizeSettings />
 
       <div class="pb-32">
-        <div class="collapse bg-base-100 border border-base-300 collapse-arrow">
+        {/* NOTE: collapse arrow broke button color https://github.com/saadeghi/daisyui/issues/4209 */}
+        <div class="collapse bg-base-100 border border-base-300">
           <input type="checkbox" />
           <div class="collapse-title text-lg font-bold">Debug</div>
           <div class="collapse-content text-sm">
