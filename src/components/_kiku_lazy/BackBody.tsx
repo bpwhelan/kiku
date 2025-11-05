@@ -72,7 +72,7 @@ export default function BackBody(props: {
 
   const tempDiv = document.createElement("div");
   ankiFieldNodes.DefinitionPicture.forEach((node) => {
-    tempDiv.appendChild(node);
+    tempDiv.appendChild(node.cloneNode());
   });
   const definitionPicture = tempDiv.querySelector("img");
 
@@ -84,8 +84,12 @@ export default function BackBody(props: {
           ref={sentenceEl}
         >
           {ankiFields["furigana:SentenceFurigana"]
-            ? Array.from(ankiFieldNodes["furigana:SentenceFurigana"])
-            : Array.from(ankiFieldNodes["kanji:Sentence"])}
+            ? Array.from(ankiFieldNodes["furigana:SentenceFurigana"]).map(
+                (node) => node.cloneNode(true),
+              )
+            : Array.from(ankiFieldNodes["kanji:Sentence"]).map((node) =>
+                node.cloneNode(true),
+              )}
         </div>
       </div>
       {pagesWithContent.length > 0 && (

@@ -78,13 +78,23 @@ export function Back() {
                 class={`${config.fontSizeBaseExpression} ${config.fontSizeSmExpression}`}
               >
                 {ankiFields.ExpressionFurigana
-                  ? Array.from(ankiFieldNodes["furigana:ExpressionFurigana"])
-                  : Array.from(ankiFieldNodes.Expression)}
+                  ? Array.from(
+                      ankiFieldNodes["furigana:ExpressionFurigana"],
+                    ).map((node) => node.cloneNode(true))
+                  : Array.from(ankiFieldNodes.Expression).map((node) =>
+                      node.cloneNode(true),
+                    )}
               </div>
               <div
                 class={`${config.fontSizeBasePitch} ${config.fontSizeSmPitch}`}
               >
-                {/* TODO: pitch  */}
+                {ankiFields.ExpressionFurigana
+                  ? Array.from(ankiFieldNodes["kana:ExpressionFurigana"]).map(
+                      (node) => node.cloneNode(true),
+                    )
+                  : Array.from(ankiFieldNodes.ExpressionReading).map((node) =>
+                      node.cloneNode(true),
+                    )}
               </div>
               <div
                 class="flex gap-2"
