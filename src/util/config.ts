@@ -25,7 +25,7 @@ export const defaultConfig: KikuConfig = {
   systemFont: "",
   ankiConnectPort: 8765,
   fontSizeBaseExpression: "text-5xl",
-  fontSizeBasePitch: "text-3xl",
+  fontSizeBasePitch: "text-xl",
   fontSizeBaseSentence: "text-2xl",
   fontSizeBaseMiscInfo: "text-sm",
   fontSizeBaseHint: "text-lg",

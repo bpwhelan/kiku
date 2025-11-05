@@ -101,7 +101,7 @@ export default function BackBody(props: {
             <div class="overflow-auto" ref={definitionEl}>
               {ankiFields.DefinitionPicture && (
                 <div
-                  class="max-w-1/3 float-end [&_img]:rounded-sm ps-2 cursor-pointer"
+                  class="max-w-1/3 float-right [&_img]:rounded-sm ps-2 cursor-pointer"
                   on:click={() =>
                     definitionPicture &&
                     props.onDefinitionPictureClick?.(definitionPicture)

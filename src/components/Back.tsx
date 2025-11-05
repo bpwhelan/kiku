@@ -25,8 +25,6 @@ const Lazy = {
   })),
 };
 
-let relax = false;
-
 export function Back() {
   const expressionAudioRefSignal = createSignal<HTMLDivElement | undefined>();
   const sentenceAudioRefSignal = createSignal<HTMLDivElement | undefined>();
@@ -43,7 +41,7 @@ export function Back() {
   onMount(() => {
     setTimeout(() => {
       setReady(true);
-      relax = true;
+      window.KIKU_STATE.relax = true;
     }, 50);
   });
 
@@ -89,7 +87,7 @@ export function Back() {
           <div
             class="flex rounded-lg gap-4 sm:h-56 flex-col sm:flex-row"
             classList={{
-              "animate-fade-in": relax,
+              "animate-fade-in": window.KIKU_STATE.relax,
             }}
           >
             <div class="flex-1 bg-base-200 p-4 rounded-lg flex flex-col items-center justify-center">

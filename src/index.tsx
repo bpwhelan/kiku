@@ -19,6 +19,15 @@ import { type KikuConfig, validateConfig } from "./util/config.ts";
 import { type OnlineFont, setOnlineFont } from "./util/fonts.ts";
 import { env } from "./util/general.ts";
 
+declare global {
+  interface Window {
+    KIKU_STATE: {
+      relax?: boolean;
+    };
+  }
+}
+window.KIKU_STATE = {};
+
 export async function init({ side }: { side: "front" | "back" }) {
   try {
     const root = document.getElementById("root");
@@ -79,6 +88,7 @@ export async function init({ side }: { side: "front" | "back" }) {
 
     const [config, setConfig] = createStore(config_);
 
+    window.KIKU_STATE.relax = false;
     if (side === "front") {
       render(
         () => (
