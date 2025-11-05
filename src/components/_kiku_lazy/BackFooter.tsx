@@ -11,8 +11,10 @@ export default function BackFooter(props: { tags: string[] }) {
         <div
           class={`flex gap-2 items-center justify-center bg-base-200 p-2 rounded-lg animate-fade-in ${config.fontSizeBaseMiscInfo} ${config.fontSizeSmMiscInfo}`}
         >
-          <InfoIcon class="h-5 w-5" />
-          <div>{Array.from(ankiFieldNodes.MiscInfo)}</div>
+          <InfoIcon class="h-5 w-5 text-base-content-calm" />
+          <div class="text-base-content-calm">
+            {Array.from(ankiFieldNodes.MiscInfo)}
+          </div>
         </div>
       )}
       <div class="flex gap-2 items-center justify-center animate-fade-in">

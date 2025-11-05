@@ -1,4 +1,4 @@
-import { createSignal, onMount } from "solid-js";
+import { createEffect, createSignal, onMount } from "solid-js";
 import { useAnkiField, useConfig } from "../shared/Context";
 
 export default function BackBody(props: {
@@ -27,8 +27,8 @@ export default function BackBody(props: {
 
   const pageNode = () => pageNodes[definitionPage()];
   const pageType = () => {
-    if (definitionPage() === 0) return "Selection text";
-    if (definitionPage() === 1) return "Main definition";
+    if (definitionPage() === 0) return "Selection Text";
+    if (definitionPage() === 1) return "Main Definition";
     if (definitionPage() === 2) return "Glossary";
   };
 
@@ -51,6 +51,27 @@ export default function BackBody(props: {
       });
     }
 
+    if (definitionEl) {
+      const spans = Array.from(definitionEl.querySelectorAll("span")).filter(
+        (el) => {
+          return getComputedStyle(el).backgroundColor === "rgb(86, 86, 86)";
+        },
+      );
+      spans.forEach((el) => {
+        el.dataset["jitendexTag"] = "true";
+      });
+
+      const i = Array.from(definitionEl.querySelectorAll("i")).filter((el) => {
+        return el.innerHTML.includes("Jitendex.org");
+      });
+      i.forEach((el) => {
+        el.dataset["jitendexI"] = "true";
+      });
+    }
+  });
+
+  createEffect(() => {
+    definitionPage();
     if (definitionEl) {
       const spans = Array.from(definitionEl.querySelectorAll("span")).filter(
         (el) => {
