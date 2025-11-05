@@ -22,6 +22,7 @@ export default function CacheJoyoKanji() {
     joyoKanjiContainer.style.height = "0";
     joyoKanjiContainer.style.overflow = "hidden";
     joyoKanjiContainer.style.position = "absolute";
+    joyoKanjiContainer.style.fontFamily = config.onlineFont;
     document.body.appendChild(joyoKanjiContainer);
     sessionStorage.setItem("joyoKanjiCached", "true");
   }
