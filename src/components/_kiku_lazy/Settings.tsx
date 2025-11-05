@@ -218,44 +218,53 @@ export default function Settings(props: {
         </div>
       </div>
       <FontSizeSettings />
-      <div class="flex flex-col gap-4 animate-fade-in ">
-        <div class="text-2xl font-bold">Debug</div>
-        <div class="flex flex-col gap-2">
-          <div class="flex gap-2 items-center">
-            <div class="text-lg">Config</div>
-            <ClipboardCopyIcon
-              class="size-5 text-base-content-calm cursor-pointer"
-              on:click={() => {
-                navigator.clipboard.writeText(
-                  JSON.stringify({ ...config }, null, 2),
-                );
-                toast.success("Copied to clipboard!");
-              }}
-            />
-          </div>
-          <pre class="text-xs bg-base-200 p-4 rounded-lg overflow-auto">
-            {JSON.stringify({ ...config }, null, 2)}
-          </pre>
-        </div>
 
-        <div class="flex flex-col gap-2">
-          <div class="flex gap-2 items-center">
-            <div class="text-lg">Anki Fields</div>
-            <ClipboardCopyIcon
-              class="size-5 text-base-content-calm cursor-pointer"
-              on:click={() => {
-                navigator.clipboard.writeText(
-                  JSON.stringify({ ...ankiFields }, null, 2),
-                );
-                toast.success("Copied to clipboard!");
-              }}
-            />
+      <div class="pb-32">
+        <div class="collapse bg-base-100 border border-base-300 collapse-arrow">
+          <input type="checkbox" />
+          <div class="collapse-title text-lg font-bold">Debug</div>
+          <div class="collapse-content text-sm">
+            <div class="flex flex-col gap-4 animate-fade-in ">
+              <div class="flex flex-col gap-2">
+                <div class="flex gap-2 items-center">
+                  <div class="text-lg">Config</div>
+                  <ClipboardCopyIcon
+                    class="size-5 text-base-content-calm cursor-pointer"
+                    on:click={() => {
+                      navigator.clipboard.writeText(
+                        JSON.stringify({ ...config }, null, 2),
+                      );
+                      toast.success("Copied to clipboard!");
+                    }}
+                  />
+                </div>
+                <pre class="text-xs bg-base-200 p-4 rounded-lg overflow-auto">
+                  {JSON.stringify({ ...config }, null, 2)}
+                </pre>
+              </div>
+
+              <div class="flex flex-col gap-2">
+                <div class="flex gap-2 items-center">
+                  <div class="text-lg">Anki Fields</div>
+                  <ClipboardCopyIcon
+                    class="size-5 text-base-content-calm cursor-pointer"
+                    on:click={() => {
+                      navigator.clipboard.writeText(
+                        JSON.stringify({ ...ankiFields }, null, 2),
+                      );
+                      toast.success("Copied to clipboard!");
+                    }}
+                  />
+                </div>
+                <pre class="text-xs bg-base-200 p-4 rounded-lg overflow-auto">
+                  {JSON.stringify({ ...ankiFields }, null, 2)}
+                </pre>
+              </div>
+            </div>
           </div>
-          <pre class="text-xs bg-base-200 p-4 rounded-lg overflow-auto">
-            {JSON.stringify({ ...ankiFields }, null, 2)}
-          </pre>
         </div>
       </div>
+
       <Portal mount={window.KIKU_STATE.shadow}>
         <div class="max-w-4xl mx-auto w-full relative">
           <div class="flex flex-row gap-2 justify-end animate-fade-in absolute bottom-0 right-0 mx-4 mb-4">
