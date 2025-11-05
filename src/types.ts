@@ -186,3 +186,36 @@ export const exampleFields3: AnkiFields = {
   "furigana:SentenceFurigana": "",
   "kana:SentenceFurigana": ""
 }
+
+// biome-ignore format: this looks nicer
+export const exampleFields4: AnkiFields = {
+  "Expression": "押し切る",
+  "ExpressionFurigana": "押[お]し 切[き]る",
+  "ExpressionReading": "おしきる",
+  "ExpressionAudio": "<a class=\"replay-button soundLink\" href=\"#\" onclick=\"pycmd('play:a:0'); return false;\">\n    <svg class=\"playImage\" viewBox=\"0 0 64 64\" version=\"1.1\">\n        <circle cx=\"32\" cy=\"32\" r=\"29\"></circle>\n        <path d=\"M56.502,32.301l-37.502,20.101l0.329,-40.804l37.173,20.703Z\"></path>\n    </svg>\n</a>",
+  "SelectionText": "<ol><li data-details=\"JMdict\"><span class=\"dict-group__tag-list\"><span class=\"dict-group__tag dict-group__tag--name\"><span class=\"dict-group__tag-inner\">1</span></span><span class=\"dict-group__tag dict-group__tag--name\"><span class=\"dict-group__tag-inner\">v5r</span></span><span class=\"dict-group__tag dict-group__tag--name\"><span class=\"dict-group__tag-inner\">vt</span></span><span class=\"dict-group__tag dict-group__tag--dict\"><span class=\"dict-group__tag-inner\">JMdict</span></span></span><span class=\"dict-group__glossary\">to overcome (opposition) | to push past | to force one's way</span></li><li data-details=\"JMdict\"><span class=\"dict-group__tag-list\"><span class=\"dict-group__tag dict-group__tag--name\"><span class=\"dict-group__tag-inner\">2</span></span><span class=\"dict-group__tag dict-group__tag--name\"><span class=\"dict-group__tag-inner\">v5r</span></span><span class=\"dict-group__tag dict-group__tag--name\"><span class=\"dict-group__tag-inner\">vt</span></span><span class=\"dict-group__tag dict-group__tag--dict\"><span class=\"dict-group__tag-inner\">JMdict</span></span></span><span class=\"dict-group__glossary\">to press and cut</span></li><li data-details=\"JMdict\"><span class=\"dict-group__tag-list\"><span class=\"dict-group__tag dict-group__tag--name\"><span class=\"dict-group__tag-inner\">forms</span></span><span class=\"dict-group__tag dict-group__tag--dict\"><span class=\"dict-group__tag-inner\">JMdict</span></span></span><span class=\"dict-group__glossary\">押し切る（★） | 押切る | 押しきる</span></li></ol>",
+  "MainDefinition": "",
+  "DefinitionPicture": "",
+  "Sentence": "まひるんも ＯＫしてくれたから！<br>（周）<b>押し切られた</b>な…",
+  "SentenceFurigana": "",
+  "SentenceAudio": "<a class=\"replay-button soundLink\" href=\"#\" onclick=\"pycmd('play:a:1'); return false;\">\n    <svg class=\"playImage\" viewBox=\"0 0 64 64\" version=\"1.1\">\n        <circle cx=\"32\" cy=\"32\" r=\"29\"></circle>\n        <path d=\"M56.502,32.301l-37.502,20.101l0.329,-40.804l37.173,20.703Z\"></path>\n    </svg>\n</a>",
+  "Picture": "<div><img src=\"7.mkv_260094.webp\"></div>",
+  "Glossary": "",
+  "Hint": "",
+  "IsWordAndSentenceCard": "",
+  "IsClickCard": "",
+  "IsSentenceCard": "1",
+  "IsAudioCard": "",
+  "PitchPosition": "<div class=\"pa-positions__group\" data-details=\"アクセント辞典\"><div class=\"pa-positions__dictionary\"><div class=\"pa-positions__dictionary-inner\">アクセント辞典</div></div><ol><li><span style=\"display:inline;\"><span>[</span><span>3</span><span>]</span></span></li></ol></div>",
+  "PitchCategories": "",
+  "Frequency": "",
+  "FreqSort": "9978",
+  "MiscInfo": "",
+  "Tags": "yomichan",
+  "furigana:ExpressionFurigana": "<ruby><rb>押</rb><rt>お</rt></ruby>し<ruby><rb>切</rb><rt>き</rt></ruby>る",
+  "kana:ExpressionFurigana": "おしきる",
+  "furigana:Sentence": "まひるんも ＯＫしてくれたから！<br>（周）<b>押し切られた</b>な…",
+  "kanji:Sentence": "まひるんも ＯＫしてくれたから！<br>（周）<b>押し切られた</b>な…",
+  "furigana:SentenceFurigana": "",
+  "kana:SentenceFurigana": ""
+}

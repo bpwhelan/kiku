@@ -250,9 +250,8 @@ body {
 }
 
 /*
- *    ────────────────────────── Jitexdex ─────────────────────────
+ *    ────────────────────────────── Jitendex ─────────────────────────────
 */
-
 [data-sc-content="example-sentence"] {
   background-color: var(--color-base-300) !important;
   border-color: var(--color-primary) !important;
@@ -260,4 +259,26 @@ body {
 
 [data-sc-content="example-keyword"] {
   color: var(--color-base-content-primary) !important;
+}
+
+/*
+ *    ─────────────────────────────── JMdict ──────────────────────────────
+*/
+
+[data-details="JMdict"] > .dict-group__tag-list::before {
+  content: "(";
+}
+
+[data-details="JMdict"] > .dict-group__tag-list::after {
+  content: ") ";
+}
+
+[data-details="JMdict"]
+  .dict-group__tag-list
+  .dict-group__tag:not(:first-child)::before {
+  content: ", ";
+}
+
+ol:has(> li[data-details="JMdict"]) {
+  list-style-type: square;
 }

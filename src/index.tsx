@@ -4,7 +4,7 @@ import { Back } from "./components/Back.tsx";
 import {
   type AnkiFieldNodes,
   type AnkiFields,
-  exampleFields,
+  exampleFields4,
 } from "./types.ts";
 import "./tailwind.css";
 import { createStore } from "solid-js/store";
@@ -26,7 +26,7 @@ export async function init({ side }: { side: "front" | "back" }) {
       document.querySelectorAll("#anki-fields > div");
 
     if (import.meta.env.DEV) {
-      divs = Object.entries(exampleFields).map(([key, value]) => {
+      divs = Object.entries(exampleFields4).map(([key, value]) => {
         const div = document.createElement("div");
         div.dataset.field = key;
         div.innerHTML = value;
@@ -68,6 +68,8 @@ export async function init({ side }: { side: "front" | "back" }) {
         el.childNodes,
       ]),
     ) as AnkiFieldNodes;
+
+    console.log("DEBUG[876]: ankiFields=", ankiFields);
 
     document.documentElement.setAttribute("data-theme", config_.theme);
     root.setAttribute("data-theme", config_.theme);
