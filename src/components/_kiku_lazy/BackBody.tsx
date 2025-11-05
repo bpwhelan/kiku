@@ -5,6 +5,7 @@ export default function BackBody(props: {
   onDefinitionPictureClick?: (node: Node) => void;
 }) {
   let sentenceEl: HTMLDivElement | undefined;
+  let definitionEl: HTMLDivElement | undefined;
   const [config] = useConfig();
   const { ankiFields, ankiFieldNodes } = useAnkiField<"back">();
   const [definitionPage, setDefinitionPage] = createSignal(
@@ -49,6 +50,24 @@ export default function BackBody(props: {
         el.classList.add(..."[&_rt]:invisible hover:[&_rt]:visible".split(" "));
       });
     }
+
+    if (definitionEl) {
+      const spans = Array.from(definitionEl.querySelectorAll("span")).filter(
+        (el) => {
+          return getComputedStyle(el).backgroundColor === "rgb(86, 86, 86)";
+        },
+      );
+      spans.forEach((el) => {
+        el.dataset["jitendexTag"] = "true";
+      });
+
+      const i = Array.from(definitionEl.querySelectorAll("i")).filter((el) => {
+        return el.innerHTML.includes("Jitendex.org");
+      });
+      i.forEach((el) => {
+        el.dataset["jitendexI"] = "true";
+      });
+    }
   });
 
   const tempDiv = document.createElement("div");
@@ -75,7 +94,7 @@ export default function BackBody(props: {
             <div class="text-end text-base-content-soft">{pageType()}</div>
           )}
           <div class="relative bg-base-200 p-4 border-s-4 border-primary text-base sm:text-xl rounded-lg [&_ol]:list-inside [&_ul]:list-inside">
-            <div class="overflow-auto">
+            <div class="overflow-auto" ref={definitionEl}>
               {ankiFields.DefinitionPicture && (
                 <div
                   class="max-w-1/3 float-end [&_img]:rounded-sm ps-2 cursor-pointer"

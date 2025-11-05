@@ -310,6 +310,15 @@ body {
   color: var(--color-base-content-primary) !important;
 }
 
+[data-jitendex-tag="true"] {
+  background-color: var(--color-secondary) !important;
+  color: var(--color-secondary-content) !important;
+}
+
+[data-jitendex-i="true"] {
+  color: var(--color-base-content-calm) !important;
+}
+
 /*
  *    ─────────────────────────────── JMdict ──────────────────────────────
 */
