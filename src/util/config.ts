@@ -30,7 +30,7 @@ export const defaultConfig: KikuConfig = {
   fontSizeBaseMiscInfo: "text-sm",
   fontSizeBaseHint: "text-lg",
   fontSizeSmExpression: "sm:text-6xl",
-  fontSizeSmPitch: "sm:text-4xl",
+  fontSizeSmPitch: "sm:text-2xl",
   fontSizeSmSentence: "sm:text-4xl",
   fontSizeSmMiscInfo: "sm:text-sm",
   fontSizeSmHint: "sm:text-2xl",

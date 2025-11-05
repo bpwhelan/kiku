@@ -1,6 +1,7 @@
 import { createSignal, lazy, onMount } from "solid-js";
 import { isMobile } from "../util/general";
 import { Layout } from "./Layout";
+import Pitch from "./Pitch";
 import { useAnkiField, useConfig } from "./shared/Context";
 
 const Lazy = {
@@ -46,11 +47,29 @@ export function Back() {
     }, 50);
   });
 
-  const tempDiv = document.createElement("div");
+  let tempDiv = document.createElement("div");
   ankiFieldNodes.Picture.forEach((node) => {
     tempDiv.appendChild(node);
   });
   const picture = tempDiv.querySelector("img");
+
+  tempDiv = document.createElement("div");
+  ankiFieldNodes.PitchPosition.forEach((node) => {
+    tempDiv.appendChild(node);
+  });
+  const pitchNumber = Array.from(tempDiv.querySelectorAll("span"))
+    .filter((el) => {
+      return !Number.isNaN(Number(el.innerText));
+    })
+    .map((el) => {
+      return Number(el.innerText);
+    });
+  const pitches = pitchNumber.map((pitchNum, index) => {
+    const kana = ankiFields.ExpressionFurigana
+      ? ankiFields["kana:ExpressionFurigana"]
+      : ankiFields.ExpressionReading;
+    return <Pitch kana={kana} pitchNum={pitchNum} index={index} />;
+  });
 
   return (
     <Layout>
@@ -86,20 +105,14 @@ export function Back() {
                     )}
               </div>
               <div
-                class={`${config.fontSizeBasePitch} ${config.fontSizeSmPitch}`}
+                class={`mt-6 flex gap-4 ${config.fontSizeBasePitch} ${config.fontSizeSmPitch}`}
               >
-                {ankiFields.ExpressionFurigana
-                  ? Array.from(ankiFieldNodes["kana:ExpressionFurigana"]).map(
-                      (node) => node.cloneNode(true),
-                    )
-                  : Array.from(ankiFieldNodes.ExpressionReading).map((node) =>
-                      node.cloneNode(true),
-                    )}
+                {pitches}
               </div>
               <div
                 class="flex gap-2"
                 classList={{
-                  "h-8 pt-4": !isMobile(),
+                  "h-8 mt-2": !isMobile(),
                 }}
               >
                 {ready() && (

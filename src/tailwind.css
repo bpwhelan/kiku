@@ -298,6 +298,26 @@ body {
   }
 }
 
+.pitch-segment {
+  position: relative;
+}
+
+.pitch-segment::after {
+  content: "";
+  position: absolute;
+  top: 0; /* near the top edge */
+  right: 0;
+  width: 2px; /* length of the short corner */
+  height: 8px; /* thickness */
+}
+
+[data-is-even="true"] .pitch-segment::after {
+  background-color: var(--color-primary); /* match text/border color */
+}
+[data-is-even="false"] .pitch-segment::after {
+  background-color: var(--color-secondary); /* match text/border color */
+}
+
 /*
  *    ────────────────────────────── Jitendex ─────────────────────────────
 */

@@ -252,3 +252,36 @@ export const exampleFields5: AnkiFields = {
   "furigana:SentenceFurigana": "<span class=\"term\">それから</span><span class=\"term\">みんな</span><span class=\"term\">で</span><span class=\"term\"><ruby>一緒<rt>いっしょ</rt></ruby>に</span><span class=\"term\"><ruby>寮<rt>りょう</rt></ruby></span><span class=\"term\">に</span><span class=\"term\"><ruby>帰<rt>かえ</rt></ruby>って、</span><span class=\"term\">みくり</span><span class=\"term\">の</span><span class=\"term\">お<ruby>雑煮<rt>ぞうに</rt></ruby></span><span class=\"term\">と</span><span class=\"term\"><ruby>苺<rt>いちご</rt></ruby></span><span class=\"term\"><ruby>華<rt>はな</rt></ruby></span><span class=\"term\">の</span><span class=\"term\">おせち</span><span class=\"term\">に</span><span class=\"term\"><ruby>舌鼓<rt>したつづみ</rt></ruby>を<ruby>打<rt>う</rt></ruby>った</span><span class=\"term\">のだ</span><span class=\"term\">った</span><span class=\"term\"><ruby>。<rt>まる</rt></ruby></span>",
   "kana:SentenceFurigana": "<span class=\"term\">それから</span><span class=\"term\">みんな</span><span class=\"term\">で</span><span class=\"term\"><ruby>一緒<rt>いっしょ</rt></ruby>に</span><span class=\"term\"><ruby>寮<rt>りょう</rt></ruby></span><span class=\"term\">に</span><span class=\"term\"><ruby>帰<rt>かえ</rt></ruby>って、</span><span class=\"term\">みくり</span><span class=\"term\">の</span><span class=\"term\">お<ruby>雑煮<rt>ぞうに</rt></ruby></span><span class=\"term\">と</span><span class=\"term\"><ruby>苺<rt>いちご</rt></ruby></span><span class=\"term\"><ruby>華<rt>はな</rt></ruby></span><span class=\"term\">の</span><span class=\"term\">おせち</span><span class=\"term\">に</span><span class=\"term\"><ruby>舌鼓<rt>したつづみ</rt></ruby>を<ruby>打<rt>う</rt></ruby>った</span><span class=\"term\">のだ</span><span class=\"term\">った</span><span class=\"term\"><ruby>。<rt>まる</rt></ruby></span>"
 }
+
+// biome-ignore format: this looks nicer
+export const exampleFields6: AnkiFields = {
+  "Expression": "からくり",
+  "ExpressionFurigana": "絡繰[からくり]",
+  "ExpressionReading": "",
+  "ExpressionAudio": "",
+  "SelectionText": "<ol><li data-details=\"JMdict\"><span class=\"dict-group__tag-list\"><span class=\"dict-group__tag dict-group__tag--name\"><span class=\"dict-group__tag-inner\">1</span></span><span class=\"dict-group__tag dict-group__tag--name\"><span class=\"dict-group__tag-inner\">n</span></span><span class=\"dict-group__tag dict-group__tag--name\"><span class=\"dict-group__tag-inner\">uk</span></span><span class=\"dict-group__tag dict-group__tag--dict\"><span class=\"dict-group__tag-inner\">JMdict</span></span></span><span class=\"dict-group__glossary\">mechanism | machinery | contrivance | device</span></li><li data-details=\"JMdict\"><span class=\"dict-group__tag-list\"><span class=\"dict-group__tag dict-group__tag--name\"><span class=\"dict-group__tag-inner\">2</span></span><span class=\"dict-group__tag dict-group__tag--name\"><span class=\"dict-group__tag-inner\">n</span></span><span class=\"dict-group__tag dict-group__tag--name\"><span class=\"dict-group__tag-inner\">uk</span></span><span class=\"dict-group__tag dict-group__tag--dict\"><span class=\"dict-group__tag-inner\">JMdict</span></span></span><span class=\"dict-group__glossary\">trick | dodge</span></li><li data-details=\"JMdict\"><span class=\"dict-group__tag-list\"><span class=\"dict-group__tag dict-group__tag--name\"><span class=\"dict-group__tag-inner\">3</span></span><span class=\"dict-group__tag dict-group__tag--name\"><span class=\"dict-group__tag-inner\">n</span></span><span class=\"dict-group__tag dict-group__tag--name\"><span class=\"dict-group__tag-inner\">abbr</span></span><span class=\"dict-group__tag dict-group__tag--name\"><span class=\"dict-group__tag-inner\">uk</span></span><span class=\"dict-group__tag dict-group__tag--dict\"><span class=\"dict-group__tag-inner\">JMdict</span></span></span><span class=\"dict-group__glossary\"><span><ul data-sc-content=\"glossary\" lang=\"en\" style=\"list-style-type: circle;\"><li>mechanical doll</li><li>string puppet</li></ul><ul data-sc-content=\"references\" lang=\"en\" style=\"list-style-type: &quot;➡ &quot;;\"><li>see: <a lang=\"ja\" href=\"#\"><span>からくり人形</span></a><span data-sc-content=\"refGlosses\" style=\"font-size: 65%; vertical-align: middle;\"> mechanical doll; automaton; string puppet; marionette</span></li></ul></span></span></li><li data-details=\"JMdict\"><span class=\"dict-group__tag-list\"><span class=\"dict-group__tag dict-group__tag--name\"><span class=\"dict-group__tag-inner\">forms</span></span><span class=\"dict-group__tag dict-group__tag--dict\"><span class=\"dict-group__tag-inner\">JMdict</span></span></span><span class=\"dict-group__glossary\">からくり | カラクリ | 絡繰り（🅁） | 絡繰（🅁） | 機関（🅁）</span></li></ol>",
+  "MainDefinition": "",
+  "DefinitionPicture": "",
+  "Sentence": "ゴールの方程式の<b>からくり</b>は<br>分かったけど",
+  "SentenceFurigana": "ゴールの 方程式[ほうていしき]の<b>からくり</b>は<br> 分[わ]かったけど",
+  "SentenceAudio": "<a class=\"replay-button soundLink\" href=\"#\" onclick=\"pycmd('play:a:0'); return false;\">\n    <svg class=\"playImage\" viewBox=\"0 0 64 64\" version=\"1.1\">\n        <circle cx=\"32\" cy=\"32\" r=\"29\"></circle>\n        <path d=\"M56.502,32.301l-37.502,20.101l0.329,-40.804l37.173,20.703Z\"></path>\n    </svg>\n</a>",
+  "Picture": "<div><img src=\"trix%20blue%20lock%20-%20s01e08%20(720p%20av1).mkv_1033903_9070.webp\"></div>",
+  "Glossary": "",
+  "Hint": "",
+  "IsWordAndSentenceCard": "",
+  "IsClickCard": "",
+  "IsSentenceCard": "",
+  "IsAudioCard": "",
+  "PitchPosition": "<div class=\"pa-positions__group\" data-details=\"アクセント辞典\"><div class=\"pa-positions__dictionary\"><div class=\"pa-positions__dictionary-inner\">アクセント辞典</div></div><ol><li><span style=\"display:inline;\"><span>[</span><span>0</span><span>]</span></span></li><li><span style=\"display:inline;\"><span>[</span><span>2</span><span>]</span></span></li></ol></div>",
+  "PitchCategories": "",
+  "Frequency": "",
+  "FreqSort": "14614",
+  "MiscInfo": "",
+  "Tags": "yomichan",
+  "furigana:ExpressionFurigana": "<ruby><rb>絡繰</rb><rt>からくり</rt></ruby>",
+  "kana:ExpressionFurigana": "からくり",
+  "furigana:Sentence": "ゴールの方程式の<b>からくり</b>は<br>分かったけど",
+  "kanji:Sentence": "ゴールの方程式の<b>からくり</b>は<br>分かったけど",
+  "furigana:SentenceFurigana": "ゴールの<ruby><rb>方程式</rb><rt>ほうていしき</rt></ruby>の<b>からくり</b>は<br><ruby><rb>分</rb><rt>わ</rt></ruby>かったけど",
+  "kana:SentenceFurigana": "ゴールのほうていしきの<b>からくり</b>は<br>わかったけど"
+}
