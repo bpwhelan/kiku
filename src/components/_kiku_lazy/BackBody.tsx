@@ -58,14 +58,14 @@ export default function BackBody(props: {
         },
       );
       spans.forEach((el) => {
-        el.dataset["jitendexTag"] = "true";
+        el.dataset.jitendexTag = "true";
       });
 
       const i = Array.from(definitionEl.querySelectorAll("i")).filter((el) => {
         return el.innerHTML.includes("Jitendex.org");
       });
       i.forEach((el) => {
-        el.dataset["jitendexI"] = "true";
+        el.dataset.jitendexI = "true";
       });
     }
   });
@@ -79,14 +79,14 @@ export default function BackBody(props: {
         },
       );
       spans.forEach((el) => {
-        el.dataset["jitendexTag"] = "true";
+        el.dataset.jitendexTag = "true";
       });
 
       const i = Array.from(definitionEl.querySelectorAll("i")).filter((el) => {
         return el.innerHTML.includes("Jitendex.org");
       });
       i.forEach((el) => {
-        el.dataset["jitendexI"] = "true";
+        el.dataset.jitendexI = "true";
       });
     }
   });

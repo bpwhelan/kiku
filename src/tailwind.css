@@ -3,247 +3,194 @@
   themes: all;
 }
 
+/* biome-ignore format: this looks nicer */
 @theme {
   --color-base-content-primary: black;
-  --color-base-content-subtle-100: color-mix(
-    in srgb,
-    var(--color-base-content) 10%,
-    var(--color-base-100)
-  );
-  --color-base-content-subtle-200: color-mix(
-    in srgb,
-    var(--color-base-content) 20%,
-    var(--color-base-100)
-  );
-  --color-base-content-subtle-300: color-mix(
-    in srgb,
-    var(--color-base-content) 30%,
-    var(--color-base-100)
-  );
-  --color-base-content-subtle-400: color-mix(
-    in srgb,
-    var(--color-base-content) 40%,
-    var(--color-base-100)
-  );
-  --color-base-content-subtle-500: color-mix(
-    in srgb,
-    var(--color-base-content) 50%,
-    var(--color-base-100)
-  );
-  --color-base-content-subtle-600: color-mix(
-    in srgb,
-    var(--color-base-content) 60%,
-    var(--color-base-100)
-  );
-  --color-base-content-subtle-700: color-mix(
-    in srgb,
-    var(--color-base-content) 70%,
-    var(--color-base-100)
-  );
-  --color-base-content-subtle-800: color-mix(
-    in srgb,
-    var(--color-base-content) 80%,
-    var(--color-base-100)
-  );
-  --color-base-content-subtle-900: color-mix(
-    in srgb,
-    var(--color-base-content) 90%,
-    var(--color-base-100)
-  );
-
+  --color-base-content-subtle-100: color-mix( in srgb, var(--color-base-content) 10%, var(--color-base-100));
+  --color-base-content-subtle-200: color-mix( in srgb, var(--color-base-content) 20%, var(--color-base-100));
+  --color-base-content-subtle-300: color-mix( in srgb, var(--color-base-content) 30%, var(--color-base-100));
+  --color-base-content-subtle-400: color-mix( in srgb, var(--color-base-content) 40%, var(--color-base-100));
+  --color-base-content-subtle-500: color-mix( in srgb, var(--color-base-content) 50%, var(--color-base-100));
+  --color-base-content-subtle-600: color-mix( in srgb, var(--color-base-content) 60%, var(--color-base-100));
+  --color-base-content-subtle-700: color-mix( in srgb, var(--color-base-content) 70%, var(--color-base-100));
+  --color-base-content-subtle-800: color-mix( in srgb, var(--color-base-content) 80%, var(--color-base-100));
+  --color-base-content-subtle-900: color-mix( in srgb, var(--color-base-content) 90%, var(--color-base-100));
   --color-base-content-faint: var(--color-base-content-subtle-300);
   --color-base-content-soft: var(--color-base-content-subtle-500);
   --color-base-content-calm: var(--color-base-content-subtle-700);
 }
 
+/* biome-ignore format: this looks nicer */
 @plugin "daisyui/theme" {
   name: "light";
   --color-base-content-primary: var(--color-primary);
 }
+/* biome-ignore format: this looks nicer */
 @plugin "daisyui/theme" {
   name: "dark";
-  --color-base-content-primary: color-mix(
-    in srgb,
-    var(--color-primary) 50%,
-    var(--color-base-content)
-  );
+  --color-base-content-primary: color-mix( in srgb, var(--color-primary) 50%, var(--color-base-content));
 }
+/* biome-ignore format: this looks nicer */
 @plugin "daisyui/theme" {
   name: "cupcake";
-  --color-base-content-primary: color-mix(
-    in srgb,
-    var(--color-primary) 50%,
-    var(--color-base-content)
-  );
+  --color-base-content-primary: color-mix( in srgb, var(--color-primary) 50%, var(--color-base-content));
 }
+/* biome-ignore format: this looks nicer */
 @plugin "daisyui/theme" {
   name: "bumblebee";
-  --color-base-content-primary: color-mix(
-    in srgb,
-    var(--color-primary) 50%,
-    var(--color-base-content)
-  );
+  --color-base-content-primary: color-mix( in srgb, var(--color-primary) 50%, var(--color-base-content));
 }
+/* biome-ignore format: this looks nicer */
 @plugin "daisyui/theme" {
   name: "emerald";
-  --color-base-content-primary: color-mix(
-    in srgb,
-    var(--color-primary) 50%,
-    var(--color-base-content)
-  );
+  --color-base-content-primary: color-mix( in srgb, var(--color-primary) 50%, var(--color-base-content));
 }
+/* biome-ignore format: this looks nicer */
 @plugin "daisyui/theme" {
   name: "corporate";
   --color-base-content-primary: var(--color-primary);
 }
+/* biome-ignore format: this looks nicer */
 @plugin "daisyui/theme" {
   name: "synthwave";
-  --color-base-content-primary: color-mix(
-    in srgb,
-    var(--color-primary) 50%,
-    var(--color-base-content)
-  );
+  --color-base-content-primary: color-mix( in srgb, var(--color-primary) 50%, var(--color-base-content));
 }
+/* biome-ignore format: this looks nicer */
 @plugin "daisyui/theme" {
   name: "retro";
-  --color-base-content-primary: color-mix(
-    in srgb,
-    var(--color-primary) 50%,
-    var(--color-base-content)
-  );
+  --color-base-content-primary: color-mix( in srgb, var(--color-primary) 50%, var(--color-base-content));
 }
+/* biome-ignore format: this looks nicer */
 @plugin "daisyui/theme" {
   name: "cyberpunk";
-  --color-base-content-primary: color-mix(
-    in srgb,
-    var(--color-primary) 50%,
-    var(--color-base-content)
-  );
+  --color-base-content-primary: color-mix( in srgb, var(--color-primary) 50%, var(--color-base-content));
 }
+/* biome-ignore format: this looks nicer */
 @plugin "daisyui/theme" {
   name: "valentine";
   --color-base-content-primary: var(--color-primary);
 }
+/* biome-ignore format: this looks nicer */
 @plugin "daisyui/theme" {
   name: "halloween";
   --color-base-content-primary: var(--color-primary);
 }
+/* biome-ignore format: this looks nicer */
 @plugin "daisyui/theme" {
   name: "garden";
-  --color-base-content-primary: color-mix(
-    in srgb,
-    var(--color-primary) 50%,
-    var(--color-base-content)
-  );
+  --color-base-content-primary: color-mix( in srgb, var(--color-primary) 50%, var(--color-base-content));
 }
+/* biome-ignore format: this looks nicer */
 @plugin "daisyui/theme" {
   name: "forest";
   --color-base-content-primary: var(--color-primary);
 }
+/* biome-ignore format: this looks nicer */
 @plugin "daisyui/theme" {
   name: "aqua";
   --color-base-content-primary: var(--color-primary);
 }
+/* biome-ignore format: this looks nicer */
 @plugin "daisyui/theme" {
   name: "lofi";
   --color-base-content-primary: var(--color-primary);
 }
+/* biome-ignore format: this looks nicer */
 @plugin "daisyui/theme" {
   name: "pastel";
-  --color-base-content-primary: color-mix(
-    in srgb,
-    var(--color-primary) 50%,
-    var(--color-base-content)
-  );
+  --color-base-content-primary: color-mix( in srgb, var(--color-primary) 50%, var(--color-base-content));
 }
+/* biome-ignore format: this looks nicer */
 @plugin "daisyui/theme" {
   name: "fantasy";
   --color-base-content-primary: var(--color-primary);
 }
+/* biome-ignore format: this looks nicer */
 @plugin "daisyui/theme" {
   name: "wireframe";
-  --color-base-content-primary: color-mix(
-    in srgb,
-    var(--color-primary) 50%,
-    var(--color-base-content)
-  );
+  --color-base-content-primary: color-mix( in srgb, var(--color-primary) 50%, var(--color-base-content));
 }
+/* biome-ignore format: this looks nicer */
 @plugin "daisyui/theme" {
   name: "black";
-  --color-base-content-primary: color-mix(
-    in srgb,
-    var(--color-primary) 50%,
-    var(--color-base-content)
-  );
+  --color-base-content-primary: color-mix( in srgb, var(--color-primary) 50%, var(--color-base-content));
 }
+/* biome-ignore format: this looks nicer */
 @plugin "daisyui/theme" {
   name: "luxury";
   --color-base-content-primary: var(--color-primary);
 }
+/* biome-ignore format: this looks nicer */
 @plugin "daisyui/theme" {
   name: "dracula";
   --color-base-content-primary: var(--color-primary);
 }
+/* biome-ignore format: this looks nicer */
 @plugin "daisyui/theme" {
   name: "cmyk";
   --color-base-content-primary: var(--color-primary);
 }
+/* biome-ignore format: this looks nicer */
 @plugin "daisyui/theme" {
   name: "autumn";
   --color-base-content-primary: var(--color-primary);
 }
+/* biome-ignore format: this looks nicer */
 @plugin "daisyui/theme" {
   name: "business";
-  --color-base-content-primary: color-mix(
-    in srgb,
-    var(--color-primary) 50%,
-    var(--color-base-content)
-  );
+  --color-base-content-primary: color-mix( in srgb, var(--color-primary) 50%, var(--color-base-content));
 }
+/* biome-ignore format: this looks nicer */
 @plugin "daisyui/theme" {
   name: "acid";
-  --color-base-content-primary: color-mix(
-    in srgb,
-    var(--color-primary) 50%,
-    var(--color-base-content)
-  );
+  --color-base-content-primary: color-mix( in srgb, var(--color-primary) 50%, var(--color-base-content));
 }
+/* biome-ignore format: this looks nicer */
 @plugin "daisyui/theme" {
   name: "lemonade";
   --color-base-content-primary: var(--color-primary);
 }
+/* biome-ignore format: this looks nicer */
 @plugin "daisyui/theme" {
   name: "night";
   --color-base-content-primary: var(--color-primary);
 }
+/* biome-ignore format: this looks nicer */
 @plugin "daisyui/theme" {
   name: "coffee";
   --color-base-content-primary: var(--color-primary);
 }
+/* biome-ignore format: this looks nicer */
 @plugin "daisyui/theme" {
   name: "winter";
   --color-base-content-primary: var(--color-primary);
 }
+/* biome-ignore format: this looks nicer */
 @plugin "daisyui/theme" {
   name: "dim";
   --color-base-content-primary: var(--color-primary);
 }
+/* biome-ignore format: this looks nicer */
 @plugin "daisyui/theme" {
   name: "nord";
   --color-base-content-primary: var(--color-primary);
 }
+/* biome-ignore format: this looks nicer */
 @plugin "daisyui/theme" {
   name: "sunset";
   --color-base-content-primary: var(--color-primary);
 }
+/* biome-ignore format: this looks nicer */
 @plugin "daisyui/theme" {
   name: "carramelta";
   --color-base-content-primary: var(--color-primary);
 }
+/* biome-ignore format: this looks nicer */
 @plugin "daisyui/theme" {
   name: "abyss";
   --color-base-content-primary: var(--color-primary);
 }
+/* biome-ignore format: this looks nicer */
 @plugin "daisyui/theme" {
   name: "silk";
   --color-base-content-primary: var(--color-primary);
@@ -262,10 +209,6 @@ body {
     margin-left: 0;
     margin-right: 0;
   }
-}
-
-.gutter-stable {
-  scrollbar-gutter: stable;
 }
 
 @theme {
@@ -298,24 +241,30 @@ body {
   }
 }
 
-.pitch-segment {
+@utility gutter-stable {
+  scrollbar-gutter: stable;
+}
+
+@utility pitch-segment {
   position: relative;
 }
 
-.pitch-segment::after {
-  content: "";
-  position: absolute;
-  top: 0; /* near the top edge */
-  right: 0;
-  width: 2px; /* length of the short corner */
-  height: 8px; /* thickness */
-}
+@layer utilities {
+  .pitch-segment::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 2px;
+    height: 8px;
+  }
 
-[data-is-even="true"] .pitch-segment::after {
-  background-color: var(--color-primary); /* match text/border color */
-}
-[data-is-even="false"] .pitch-segment::after {
-  background-color: var(--color-secondary); /* match text/border color */
+  [data-is-even="true"] .pitch-segment::after {
+    background-color: var(--color-primary); /* match text/border color */
+  }
+  [data-is-even="false"] .pitch-segment::after {
+    background-color: var(--color-secondary); /* match text/border color */
+  }
 }
 
 /*

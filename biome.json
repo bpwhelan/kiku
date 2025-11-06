@@ -21,7 +21,7 @@
         "noSvgWithoutTitle": "off"
       },
       "correctness": {
-        "noUnknownProperty": "warn",
+        "noUnknownProperty": "info",
         "noUnusedVariables": "info"
       },
       "complexity": {
