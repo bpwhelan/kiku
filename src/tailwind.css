@@ -198,17 +198,21 @@
 
 @custom-variant hover (&:hover);
 
-body {
-  margin: 2em;
+* {
+  box-sizing: border-box;
 }
 
-@media (max-width: 640px) {
-  body {
-    margin-top: 1em;
-    margin-bottom: 1em;
-    margin-left: 0;
-    margin-right: 0;
-  }
+a {
+  color: inherit;
+}
+
+html {
+  font-size: 1rem;
+}
+
+body {
+  margin: 0em;
+  background: var(--color-base-100);
 }
 
 @theme {
@@ -336,5 +340,5 @@ body {
 }
 
 ol:has(> li[data-details="JMdict"]) {
-  list-style-type: square;
+  list-style-type: disc;
 }

@@ -123,14 +123,14 @@ export default function BackBody(props: {
             </div>
             {pagesWithContent.length > 1 && (
               <>
-                <button
+                <div
                   class="cursor-pointer w-8 h-full absolute top-0 left-0 hover:bg-base-content/10"
                   on:click={() => changePage(-1)}
-                ></button>
-                <button
+                ></div>
+                <div
                   class="cursor-pointer w-8 h-full absolute top-0 right-0 hover:bg-base-content/10"
                   on:click={() => changePage(1)}
-                ></button>
+                ></div>
               </>
             )}
           </div>

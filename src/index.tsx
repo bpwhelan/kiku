@@ -17,9 +17,9 @@ import { env } from "./util/general.ts";
 declare global {
   var KIKU_STATE: {
     relax?: boolean;
-    shadow?: ShadowRoot;
     initDelay?: number;
     config?: KikuConfig;
+    root?: HTMLElement;
   };
 }
 globalThis.KIKU_STATE = {};
@@ -28,19 +28,8 @@ export async function init({ side }: { side: "front" | "back" }) {
   try {
     const root = document.getElementById("root");
     if (!root) throw new Error("root not found");
-    const template = root.querySelector("template");
-    const shadow = root.attachShadow({ mode: "closed" });
-    root.appendChild(shadow);
-    if (template) shadow.appendChild(template.content);
-    window.KIKU_STATE.shadow = shadow;
+    globalThis.KIKU_STATE.root = root;
 
-    if (!import.meta.env.DEV) {
-      const qa = document.getElementById("qa");
-      const style = qa?.querySelector("style");
-      if (style) {
-        shadow.appendChild(style.cloneNode(true));
-      }
-    }
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
     let config$: KikuConfig;
@@ -67,13 +56,6 @@ export async function init({ side }: { side: "front" | "back" }) {
         div.innerHTML = value;
         return div;
       });
-
-      const link = document.createElement("link");
-      link.rel = "stylesheet";
-      link.href = "/src/tailwind.css";
-      const link2 = link.cloneNode();
-      document.head.appendChild(link);
-      shadow.appendChild(link2);
     }
 
     const ankiFields = Object.fromEntries(
@@ -98,8 +80,8 @@ export async function init({ side }: { side: "front" | "back" }) {
           </AnkiFieldContextProvider>
         </BreakpointContextProvider>
       );
-      if (template) return hydrate(App, shadow);
-      render(App, shadow);
+      // if (template) return hydrate(App, shadow);
+      render(App, root);
     } else if (side === "back") {
       const App = () => (
         <BreakpointContextProvider>
@@ -108,8 +90,8 @@ export async function init({ side }: { side: "front" | "back" }) {
           </ConfigContextProvider>
         </BreakpointContextProvider>
       );
-      if (template) return hydrate(App, shadow);
-      render(App, shadow);
+      // if (template) return hydrate(App, shadow);
+      render(App, root);
     }
   } catch (e) {
     document.body.style.margin = "0";

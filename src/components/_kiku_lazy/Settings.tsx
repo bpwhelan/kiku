@@ -274,24 +274,26 @@ export default function Settings(props: {
         </div>
       </div>
 
-      <Portal mount={window.KIKU_STATE.shadow}>
+      <Portal mount={window.KIKU_STATE.root}>
         <div class="max-w-4xl mx-auto w-full relative">
           <div class="flex flex-row gap-2 justify-end animate-fade-in absolute bottom-0 right-0 mx-4 mb-4">
-            <button class="btn" on:click={props.onCancelClick}>
+            <div class="btn" on:click={props.onCancelClick}>
               Cancel
-            </button>
-            <button
+            </div>
+            <div
               class="btn"
               classList={{
                 "btn-primary": isAnkiConnectAvailable(),
                 "btn-disabled bg-base-300 text-base-content-faint":
                   !isAnkiConnectAvailable(),
               }}
+              role="button"
+              //@ts-expect-error
               disabled={!isAnkiConnectAvailable()}
               on:click={saveConfig}
             >
               Save
-            </button>
+            </div>
           </div>
         </div>
       </Portal>
