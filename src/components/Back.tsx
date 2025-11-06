@@ -6,11 +6,7 @@ import {
   exampleFields6,
 } from "#/types";
 import { Layout } from "./Layout";
-import {
-  AnkiFieldContextProvider,
-  useBreakpoint,
-  useConfig,
-} from "./shared/Context";
+import { AnkiFieldContextProvider, useConfig } from "./shared/Context";
 
 // biome-ignore format: this looks nicer
 const Lazy = {
@@ -28,7 +24,6 @@ export function Back() {
   const sentenceAudioRefSignal = createSignal<HTMLDivElement | undefined>();
 
   const [config] = useConfig();
-  const bp = useBreakpoint();
   const [showSettings, setShowSettings] = createSignal(false);
   const [ankiFields, setAnkiFields] =
     createSignal<AnkiBackFields>(ankiFieldsSkeleton);
@@ -47,25 +42,23 @@ export function Back() {
       globalThis.KIKU_STATE.relax = true;
     }, 2000);
 
-    setTimeout(() => {
-      let divs: NodeListOf<Element> | Element[] =
-        document.querySelectorAll("#anki-fields > div");
-      if (import.meta.env.DEV) {
-        divs = Object.entries(exampleFields6).map(([key, value]) => {
-          const div = document.createElement("div");
-          div.dataset.field = key;
-          div.innerHTML = value;
-          return div;
-        });
-      }
-      const ankiFields$ = Object.fromEntries(
-        Array.from(divs).map((el) => [
-          (el as HTMLDivElement).dataset.field,
-          el.innerHTML.trim(),
-        ]),
-      ) as AnkiBackFields;
-      setAnkiFields(ankiFields$);
-    }, 1000);
+    let divs: NodeListOf<Element> | Element[] =
+      document.querySelectorAll("#anki-fields > div");
+    if (import.meta.env.DEV) {
+      divs = Object.entries(exampleFields6).map(([key, value]) => {
+        const div = document.createElement("div");
+        div.dataset.field = key;
+        div.innerHTML = value;
+        return div;
+      });
+    }
+    const ankiFields$ = Object.fromEntries(
+      Array.from(divs).map((el) => [
+        (el as HTMLDivElement).dataset.field,
+        el.innerHTML.trim(),
+      ]),
+    ) as AnkiBackFields;
+    setAnkiFields(ankiFields$);
   });
 
   return (
@@ -99,11 +92,17 @@ export function Back() {
               <div
                 class={`${config.fontSizeBaseExpression} ${config.fontSizeSmExpression}`}
                 innerHTML={
-                  ankiFields().ExpressionFurigana
-                    ? ankiFields()["furigana:ExpressionFurigana"]
-                    : ankiFields().Expression
+                  isServer
+                    ? undefined
+                    : ankiFields().ExpressionFurigana
+                      ? ankiFields()["furigana:ExpressionFurigana"]
+                      : ankiFields().Expression
                 }
-              ></div>
+              >
+                {isServer
+                  ? "{{#ExpressionFurigana}}{{furigana:ExpressionFurigana}}{{/ExpressionFurigana}}{{^ExpressionFurigana}}{{Expression}}{{/ExpressionFurigana}}"
+                  : undefined}
+              </div>
               <div
                 class={`mt-6 flex gap-4 ${config.fontSizeBasePitch} ${config.fontSizeSmPitch}`}
               >
@@ -116,15 +115,10 @@ export function Back() {
                     </Suspense>
                   </AnkiFieldContextProvider>
                 ) : (
-                  ankiFields().PitchPosition && <>&nbsp;</>
+                  <>&nbsp;</>
                 )}
               </div>
-              <div
-                class="flex gap-2"
-                classList={{
-                  "h-8 mt-2": bp.isAtLeast("sm"),
-                }}
-              >
+              <div class="flex gap-2 sm:h-8 sm:mt-2">
                 {ready() && (
                   <AnkiFieldContextProvider
                     value={{ ankiFields: ankiFields() }}
