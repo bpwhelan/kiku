@@ -22,7 +22,7 @@ function serveAnkiCollectionMediaPlugin(): PluginOption {
 
 export default defineConfig({
   plugins: [
-    solid(),
+    solid({ ssr: true }),
     tailwindcss(),
     serveAnkiCollectionMediaPlugin(),
     circularDpendency({
