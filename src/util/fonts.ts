@@ -13,10 +13,6 @@ export const onlineFonts = [
 
 export type OnlineFont = (typeof onlineFonts)[number];
 
-export function setOnlineFont(font: OnlineFont) {
-  globalThis.KIKU_STATE.root?.setAttribute("data-font-family", font);
-}
-
 export function setSystemFont(font: string) {
   const root = globalThis.KIKU_STATE.root;
   if (root) root.style.fontFamily = font;

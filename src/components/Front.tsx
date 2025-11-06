@@ -41,7 +41,7 @@ export function Front() {
         >
           <div class="flex-1 bg-base-200 p-4 rounded-lg flex flex-col items-center justify-center">
             <div
-              class={`${config.fontSizeBaseExpression} ${config.fontSizeSmExpression}`}
+              class="expression"
               classList={{
                 "border-b-2 border-dotted border-base-content-soft":
                   !!ankiFields.IsClickCard,
@@ -61,7 +61,7 @@ export function Front() {
           (ankiFields.IsClickCard && clicked())) && (
           <div class="flex flex-col gap-4 items-center text-center">
             <div
-              class={`[&_b]:text-base-content-primary ${config.fontSizeBaseSentence} ${config.fontSizeSmSentence}`}
+              class={`[&_b]:text-base-content-primary sentence`}
               innerHTML={ankiFields["kanji:Sentence"]}
             ></div>
           </div>
@@ -79,7 +79,7 @@ export function Front() {
 
         {ankiFields.Hint && (
           <div
-            class={`flex gap-2 items-center justify-center text-center border-t-1 ${config.fontSizeBaseHint} ${config.fontSizeSmHint}`}
+            class={`flex gap-2 items-center justify-center text-center border-t-1 hint`}
           >
             <div innerHTML={ankiFields.Hint}></div>
           </div>

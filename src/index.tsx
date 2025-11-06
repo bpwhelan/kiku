@@ -4,14 +4,18 @@ import { Back } from "./components/Back.tsx";
 import { type AnkiFields, exampleFields6 } from "./types.ts";
 import "./tailwind.css";
 import { createStore } from "solid-js/store";
+import type { ResponsiveFontSize } from "./components/_kiku_lazy/util/tailwind.ts";
 import { Front } from "./components/Front.tsx";
 import {
   AnkiFieldContextProvider,
   BreakpointContextProvider,
   ConfigContextProvider,
 } from "./components/shared/Context.tsx";
-import { type KikuConfig, validateConfig } from "./util/config.ts";
-import { type OnlineFont, setOnlineFont } from "./util/fonts.ts";
+import {
+  type KikuConfig,
+  updateConfigDataset,
+  validateConfig,
+} from "./util/config.ts";
 import { env } from "./util/general.ts";
 import type { DaisyUITheme } from "./util/theme.ts";
 
@@ -50,18 +54,27 @@ export async function init({
     } catch (e) {
       throw new Error("Failed to load config", { cause: e });
     }
-    const rootDataSet = { ...root.dataset };
-    globalThis.KIKU_STATE.rootDataset.theme = rootDataSet.theme as DaisyUITheme;
-    globalThis.globalThis.KIKU_STATE.rootDataset.fontFamily =
-      rootDataSet.fontFamily;
 
-    document.documentElement.setAttribute("data-theme", config$.theme);
-    root.setAttribute("data-theme", config$.theme);
-    setOnlineFont(config$.onlineFont as OnlineFont);
+    const rootDataset = { ...root.dataset };
+    // biome-ignore format: this looks nicer
+    (() => {
+    globalThis.KIKU_STATE.rootDataset.theme = rootDataset.theme as DaisyUITheme;
+    globalThis.KIKU_STATE.rootDataset.fontFamily = rootDataset.fontFamily;
+    globalThis.KIKU_STATE.rootDataset.fontSizeBaseExpression = rootDataset.fontSizeBaseExpression as ResponsiveFontSize;
+    globalThis.KIKU_STATE.rootDataset.fontSizeBasePitch = rootDataset.fontSizeBasePitch as ResponsiveFontSize;
+    globalThis.KIKU_STATE.rootDataset.fontSizeBaseSentence = rootDataset.fontSizeBaseSentence as ResponsiveFontSize;
+    globalThis.KIKU_STATE.rootDataset.fontSizeBaseMiscInfo = rootDataset.fontSizeBaseMiscInfo as ResponsiveFontSize;
+    globalThis.KIKU_STATE.rootDataset.fontSizeBaseHint = rootDataset.fontSizeBaseHint as ResponsiveFontSize;
+    globalThis.KIKU_STATE.rootDataset.fontSizeSmExpression = rootDataset.fontSizeSmExpression as ResponsiveFontSize;
+    globalThis.KIKU_STATE.rootDataset.fontSizeSmPitch = rootDataset.fontSizeSmPitch as ResponsiveFontSize;
+    globalThis.KIKU_STATE.rootDataset.fontSizeSmSentence = rootDataset.fontSizeSmSentence as ResponsiveFontSize;
+    globalThis.KIKU_STATE.rootDataset.fontSizeSmMiscInfo = rootDataset.fontSizeSmMiscInfo as ResponsiveFontSize;
+    globalThis.KIKU_STATE.rootDataset.fontSizeSmHint = rootDataset.fontSizeSmHint as ResponsiveFontSize;
+    })()
+    updateConfigDataset(root, config$);
 
     let divs: NodeListOf<Element> | Element[] =
       document.querySelectorAll("#anki-fields > div");
-
     if (import.meta.env.DEV) {
       divs = Object.entries(exampleFields6).map(([key, value]) => {
         const div = document.createElement("div");
@@ -70,7 +83,6 @@ export async function init({
         return div;
       });
     }
-
     const ankiFields = Object.fromEntries(
       Array.from(divs).map((el) => [
         (el as HTMLDivElement).dataset.field,
@@ -79,10 +91,9 @@ export async function init({
     ) as AnkiFields;
 
     console.log("DEBUG[876]: ankiFields=", ankiFields);
-
     const [config, setConfig] = createStore(config$);
-
     window.KIKU_STATE.relax = false;
+
     if (side === "front") {
       const App = () => (
         <BreakpointContextProvider>

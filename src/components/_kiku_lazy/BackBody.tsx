@@ -93,7 +93,7 @@ export default function BackBody(props: {
     <div class="flex sm:flex-col gap-8 flex-col-reverse animate-fade-in">
       <div class="flex flex-col gap-4 items-center text-center">
         <div
-          class={`[&_b]:text-base-content-primary ${config.fontSizeBaseSentence} ${config.fontSizeSmSentence}`}
+          class={`[&_b]:text-base-content-primary sentence`}
           ref={sentenceEl}
           innerHTML={
             ankiFields["furigana:SentenceFurigana"]

@@ -87,7 +87,7 @@ export function Back() {
           >
             <div class="flex-1 bg-base-200 p-4 rounded-lg flex flex-col items-center justify-center">
               <div
-                class={`${config.fontSizeBaseExpression} ${config.fontSizeSmExpression}`}
+                class="expression"
                 innerHTML={
                   isServer
                     ? undefined
@@ -100,9 +100,7 @@ export function Back() {
                   ? "{{#ExpressionFurigana}}{{furigana:ExpressionFurigana}}{{/ExpressionFurigana}}{{^ExpressionFurigana}}{{Expression}}{{/ExpressionFurigana}}"
                   : undefined}
               </div>
-              <div
-                class={`mt-6 flex gap-4 ${config.fontSizeBasePitch} ${config.fontSizeSmPitch}`}
-              >
+              <div class={`mt-6 flex gap-4 pitch`}>
                 {ankiFields$.PitchPosition && ready() ? (
                   <AnkiFieldContextProvider value={{ ankiFields: ankiFields$ }}>
                     <Suspense fallback={<span>&nbsp;</span>}>

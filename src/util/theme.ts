@@ -38,12 +38,6 @@ export const daisyUIThemes = [
 
 export type DaisyUITheme = (typeof daisyUIThemes)[number];
 
-export function setTheme(theme: DaisyUITheme) {
-  document.documentElement.setAttribute("data-theme", theme);
-  const root = document.getElementById("root");
-  if (root) root.setAttribute("data-theme", theme);
-}
-
 export function nextTheme(): DaisyUITheme {
   const current = document.documentElement.getAttribute(
     "data-theme",

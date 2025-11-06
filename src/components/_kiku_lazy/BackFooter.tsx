@@ -9,7 +9,7 @@ export default function BackFooter(props: { tags: string[] }) {
     <>
       {ankiFields.MiscInfo && (
         <div
-          class={`flex gap-2 items-center justify-center bg-base-200 p-2 rounded-lg animate-fade-in ${config.fontSizeBaseMiscInfo} ${config.fontSizeSmMiscInfo}`}
+          class={`flex gap-2 items-center justify-center bg-base-200 p-2 rounded-lg animate-fade-in misc-info`}
         >
           <InfoIcon class="h-5 w-5 text-base-content-calm" />
           <div
