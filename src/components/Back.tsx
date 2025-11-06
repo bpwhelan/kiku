@@ -1,4 +1,5 @@
 import { createSignal, lazy, onMount, Suspense } from "solid-js";
+import { isServer } from "solid-js/web";
 import {
   type AnkiBackFields,
   ankiFieldsSkeleton,
@@ -140,21 +141,17 @@ export function Back() {
             <div class="bg-base-200 rounded-lg relative overflow-hidden">
               <div
                 class="picture-field-background"
-                innerHTML={
-                  import.meta.env.DEV ? ankiFields().Picture : undefined
-                }
+                innerHTML={isServer ? undefined : ankiFields().Picture}
               >
-                {import.meta.env.DEV ? undefined : "{{Picture}}"}
+                {isServer ? "{{Picture}}" : undefined}
               </div>
               <div
                 class="picture-field"
                 data-nsfw={isNsfw() ? "true" : undefined}
                 on:click={() => setImageModal(ankiFields().Picture)}
-                innerHTML={
-                  import.meta.env.DEV ? ankiFields().Picture : undefined
-                }
+                innerHTML={isServer ? undefined : ankiFields().Picture}
               >
-                {import.meta.env.DEV ? undefined : "{{Picture}}"}
+                {isServer ? "{{Picture}}" : undefined}
               </div>
             </div>
           </div>

@@ -24,13 +24,17 @@ declare global {
 }
 globalThis.KIKU_STATE = {};
 
-export async function init({ side }: { side: "front" | "back" }) {
+export async function init({
+  side,
+  ssr,
+}: {
+  side: "front" | "back";
+  ssr?: boolean;
+}) {
   try {
     const root = document.getElementById("root");
     if (!root) throw new Error("root not found");
     globalThis.KIKU_STATE.root = root;
-
-    await new Promise((resolve) => setTimeout(resolve, 1000));
 
     let config$: KikuConfig;
     try {
@@ -80,7 +84,7 @@ export async function init({ side }: { side: "front" | "back" }) {
           </AnkiFieldContextProvider>
         </BreakpointContextProvider>
       );
-      // if (template) return hydrate(App, shadow);
+      if (ssr) return hydrate(App, root);
       render(App, root);
     } else if (side === "back") {
       const App = () => (
@@ -90,7 +94,7 @@ export async function init({ side }: { side: "front" | "back" }) {
           </ConfigContextProvider>
         </BreakpointContextProvider>
       );
-      // if (template) return hydrate(App, shadow);
+      if (ssr) return hydrate(App, root);
       render(App, root);
     }
   } catch (e) {

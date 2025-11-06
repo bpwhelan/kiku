@@ -32,7 +32,7 @@
 </div>
 
 <div id="root" data-theme="light">
-  <div data-hk="0000000" class="max-w-4xl mx-auto overflow-auto p-2 sm:p-4 gutter-stable h-svh"><div class="flex flex-col gap-6 "><div data-hk="0000001" class="flex justify-between flex-row h-5 min-h-5"></div><div data-hk="0000002" class="flex rounded-lg gap-4 sm:h-56 flex-col sm:flex-row "><div class="flex-1 bg-base-200 p-4 rounded-lg flex flex-col items-center justify-center"><div class="text-5xl sm:text-6xl"></div><div class="mt-6 flex gap-4 text-xl sm:text-2xl"></div><div class="flex gap-2 "></div></div><div class="bg-base-200 rounded-lg relative overflow-hidden"><div class="picture-field-background"></div><div class="picture-field"></div></div></div><!--!$--></div></div>
+<div data-hk="0000000" class="max-w-4xl mx-auto overflow-auto p-2 sm:p-4 gutter-stable h-svh"><div class="flex flex-col gap-6 "><div data-hk="0000001" class="flex justify-between flex-row h-5 min-h-5"></div><div data-hk="0000002" class="flex rounded-lg gap-4 sm:h-56 flex-col sm:flex-row "><div class="flex-1 bg-base-200 p-4 rounded-lg flex flex-col items-center justify-center"><div class="text-5xl sm:text-6xl"></div><div class="mt-6 flex gap-4 text-xl sm:text-2xl"></div><div class="flex gap-2 "></div></div><div class="bg-base-200 rounded-lg relative overflow-hidden"><div class="picture-field-background">{{Picture}}</div><div class="picture-field">{{Picture}}</div></div></div><!--!$--></div></div>
 </div>
 
 <script>
@@ -64,7 +64,7 @@ import { init } from "./_kiku.js";
 
 async function initAnki() {
   const now = performance.now();
-  await init({ side: "back" });
+  await init({ side: "back", ssr: true });
   const delay = Math.round(performance.now() - now);
   window.KIKU_STATE ??= {};
   window.KIKU_STATE.initDelay = delay;
