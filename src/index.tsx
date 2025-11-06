@@ -1,5 +1,5 @@
 /* @refresh reload */
-import { render } from "solid-js/web";
+import { hydrate, render } from "solid-js/web";
 import { Back } from "./components/Back.tsx";
 import { type AnkiFields, exampleFields6 } from "./types.ts";
 import "./tailwind.css";
@@ -27,7 +27,11 @@ export async function init({ side }: { side: "front" | "back" }) {
   try {
     const root = document.getElementById("root");
     if (!root) throw new Error("root not found");
+    const template = root.querySelector("template");
     const shadow = root.attachShadow({ mode: "closed" });
+    root.appendChild(shadow);
+    if (template) shadow.appendChild(template.content);
+
     window.KIKU_STATE.shadow = shadow;
     let divs: NodeListOf<Element> | Element[] =
       document.querySelectorAll("#anki-fields > div");
@@ -80,31 +84,29 @@ export async function init({ side }: { side: "front" | "back" }) {
 
     window.KIKU_STATE.relax = false;
     if (side === "front") {
-      render(
-        () => (
-          <BreakpointContextProvider>
-            <AnkiFieldContextProvider value={{ ankiFields }}>
-              <ConfigContextProvider value={[config, setConfig]}>
-                <Front />
-              </ConfigContextProvider>
-            </AnkiFieldContextProvider>
-          </BreakpointContextProvider>
-        ),
-        shadow,
+      const App = () => (
+        <BreakpointContextProvider>
+          <AnkiFieldContextProvider value={{ ankiFields }}>
+            <ConfigContextProvider value={[config, setConfig]}>
+              <Front />
+            </ConfigContextProvider>
+          </AnkiFieldContextProvider>
+        </BreakpointContextProvider>
       );
+      if (template) return hydrate(App, shadow);
+      render(App, shadow);
     } else if (side === "back") {
-      render(
-        () => (
-          <BreakpointContextProvider>
-            <AnkiFieldContextProvider value={{ ankiFields }}>
-              <ConfigContextProvider value={[config, setConfig]}>
-                <Back />
-              </ConfigContextProvider>
-            </AnkiFieldContextProvider>
-          </BreakpointContextProvider>
-        ),
-        shadow,
+      const App = () => (
+        <BreakpointContextProvider>
+          <AnkiFieldContextProvider value={{ ankiFields }}>
+            <ConfigContextProvider value={[config, setConfig]}>
+              <Back />
+            </ConfigContextProvider>
+          </AnkiFieldContextProvider>
+        </BreakpointContextProvider>
       );
+      if (template) return hydrate(App, shadow);
+      render(App, shadow);
     }
   } catch (e) {
     document.body.style.margin = "0";

@@ -13,9 +13,13 @@ const [config, setConfig] = createStore(defaultConfig);
 
 globalThis.KIKU_STATE = {};
 
+const exampleFieldsSsr = Object.fromEntries(
+  Object.keys(exampleFields6).map((key) => [key, ""]),
+) as typeof exampleFields6;
+
 const html = renderToString(() => (
   <BreakpointContextProvider>
-    <AnkiFieldContextProvider value={{ ankiFields: exampleFields6 }}>
+    <AnkiFieldContextProvider value={{ ankiFields: exampleFieldsSsr }}>
       <ConfigContextProvider value={[config, setConfig]}>
         <Back />
       </ConfigContextProvider>

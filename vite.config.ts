@@ -44,7 +44,7 @@ export default defineConfig({
     copyPublicDir: false,
     cssCodeSplit: false,
     cssMinify: false,
-    minify: true,
+    minify: false,
     rolldownOptions: {
       output: {
         advancedChunks: {
@@ -67,7 +67,7 @@ export default defineConfig({
           ],
         },
         chunkFileNames: "[name].js",
-        minify: true,
+        minify: false,
       },
     },
   },
