@@ -1,0 +1,30 @@
+import { createStore } from "solid-js/store";
+import { generateHydrationScript, renderToString } from "solid-js/web";
+import { Back } from "../src/components/Back";
+import {
+  BreakpointContextProvider,
+  ConfigContextProvider,
+} from "../src/components/shared/Context";
+import { defaultConfig } from "../src/util/config";
+
+const [config, setConfig] = createStore(defaultConfig);
+
+globalThis.KIKU_STATE = {};
+
+export function getSsrTemplate() {
+  const backTemplate = renderToString(() => (
+    <BreakpointContextProvider>
+      <ConfigContextProvider value={[config, setConfig]}>
+        <Back />
+      </ConfigContextProvider>
+    </BreakpointContextProvider>
+  ));
+  const hydrationScript = generateHydrationScript();
+
+  const result = {
+    backTemplate,
+    hydrationScript,
+  };
+  console.log(result);
+  return result;
+}

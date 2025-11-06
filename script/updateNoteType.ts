@@ -20,8 +20,8 @@ const AnkiConnect = {
 async function main() {
   const noteType = "Kiku";
   const cardType = "Mining";
-  const frontPath = join(import.meta.dirname, "../src/front.html");
-  const backPath = join(import.meta.dirname, "../src/back.html");
+  const frontPath = join(import.meta.dirname, "../dist/front.html");
+  const backPath = join(import.meta.dirname, "../dist/back.html");
   const stylePath = join(import.meta.dirname, "../dist/_kiku.css");
 
   // Read your local HTML templates

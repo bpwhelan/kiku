@@ -16,8 +16,8 @@
     "check:write": "biome check --write .",
     "copyDist": "node ./script/copyDist.ts",
     "updateNoteType": "node ./script/updateNoteType.ts",
-    "ssr": "npx vite-node ./src/ssr.tsx",
-    "apply": "pnpm run build && pnpm run copyDist && pnpm run updateNoteType"
+    "generateTemplate": "npx vite-node ./script/generateTemplate.ts",
+    "apply": "pnpm run build && pnpm run generateTemplate && pnpm run copyDist && pnpm run updateNoteType"
   },
   "dependencies": {
     "solid-js": "^1.9.9"
