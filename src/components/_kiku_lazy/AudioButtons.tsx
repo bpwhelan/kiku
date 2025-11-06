@@ -1,6 +1,5 @@
 import type { Signal } from "solid-js";
-import { isMobile } from "#/util/general";
-import { useAnkiField } from "../shared/Context";
+import { useAnkiField, useBreakpoint } from "../shared/Context";
 import { PlayIcon } from "./Icons";
 
 export function NotePlayIcon(props: { "on:click"?: () => void }) {
@@ -17,6 +16,7 @@ export default function BackPlayButton(props: {
   sentenceAudioRefSignal: Signal<HTMLDivElement | undefined>;
   position: 1 | 2 | 3;
 }) {
+  const bp = useBreakpoint();
   const { ankiFields, ankiFieldNodes } = useAnkiField<"back">();
   const [expressionAudioRef, setExpressionAudioRef] =
     props.expressionAudioRefSignal;
@@ -41,7 +41,7 @@ export default function BackPlayButton(props: {
             node.cloneNode(true),
           )}
         </div>
-        {(!isMobile() || props.position === 3) && (
+        {(bp.isAtLeast("sm") || props.position === 3) && (
           <>
             {ankiFields.ExpressionAudio && (
               <NotePlayIcon
@@ -64,7 +64,7 @@ export default function BackPlayButton(props: {
 
   if (props.position === 2)
     return (
-      isMobile() && (
+      !bp.isAtLeast("sm") && (
         <div class="absolute bottom-4 left-4 flex flex-col gap-2 items-center">
           {ankiFields.ExpressionAudio && (
             <NotePlayIcon

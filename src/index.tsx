@@ -4,16 +4,14 @@ import { Back } from "./components/Back.tsx";
 import {
   type AnkiFieldNodes,
   type AnkiFields,
-  exampleFields4,
-  exampleFields5,
   exampleFields6,
-  exampleFields7,
 } from "./types.ts";
 import "./tailwind.css";
 import { createStore } from "solid-js/store";
 import { Front } from "./components/Front.tsx";
 import {
   AnkiFieldContextProvider,
+  BreakpointContextProvider,
   ConfigContextProvider,
 } from "./components/shared/Context.tsx";
 import { type KikuConfig, validateConfig } from "./util/config.ts";
@@ -96,22 +94,26 @@ export async function init({ side }: { side: "front" | "back" }) {
     if (side === "front") {
       render(
         () => (
-          <AnkiFieldContextProvider value={{ ankiFields, ankiFieldNodes }}>
-            <ConfigContextProvider value={[config, setConfig]}>
-              <Front />
-            </ConfigContextProvider>
-          </AnkiFieldContextProvider>
+          <BreakpointContextProvider>
+            <AnkiFieldContextProvider value={{ ankiFields, ankiFieldNodes }}>
+              <ConfigContextProvider value={[config, setConfig]}>
+                <Front />
+              </ConfigContextProvider>
+            </AnkiFieldContextProvider>
+          </BreakpointContextProvider>
         ),
         shadow,
       );
     } else if (side === "back") {
       render(
         () => (
-          <AnkiFieldContextProvider value={{ ankiFields, ankiFieldNodes }}>
-            <ConfigContextProvider value={[config, setConfig]}>
-              <Back />
-            </ConfigContextProvider>
-          </AnkiFieldContextProvider>
+          <BreakpointContextProvider>
+            <AnkiFieldContextProvider value={{ ankiFields, ankiFieldNodes }}>
+              <ConfigContextProvider value={[config, setConfig]}>
+                <Back />
+              </ConfigContextProvider>
+            </AnkiFieldContextProvider>
+          </BreakpointContextProvider>
         ),
         shadow,
       );

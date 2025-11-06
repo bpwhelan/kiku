@@ -2,9 +2,8 @@ import { createSignal, onMount } from "solid-js";
 import { Portal } from "solid-js/web";
 import { defaultConfig, type KikuConfig } from "#/util/config";
 import { type OnlineFont, onlineFonts } from "#/util/fonts";
-import { isMobile } from "#/util/general";
 import { daisyUIThemes } from "#/util/theme";
-import { useAnkiField, useConfig } from "../shared/Context";
+import { useAnkiField, useBreakpoint, useConfig } from "../shared/Context";
 import {
   ArrowLeftIcon,
   ClipboardCopyIcon,
@@ -24,13 +23,14 @@ export default function Settings(props: {
   onBackClick?: () => void;
   onCancelClick?: () => void;
 }) {
+  const bp = useBreakpoint();
   const [config, setConfig] = useConfig();
   const { ankiFields } = useAnkiField<"back">();
   const [isAnkiConnectAvailable, setIsAnkiConnectAvailable] =
     createSignal(false);
 
   onMount(async () => {
-    if (isMobile()) return;
+    if (!bp.isAtLeast("sm")) return;
     await checkAnkiConnect();
   });
 

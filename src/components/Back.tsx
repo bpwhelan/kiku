@@ -1,7 +1,6 @@
-import { createSignal, lazy, onMount, Suspense } from "solid-js";
-import { isMobile } from "../util/general";
+import { createEffect, createSignal, lazy, onMount, Suspense } from "solid-js";
 import { Layout } from "./Layout";
-import { useAnkiField, useConfig } from "./shared/Context";
+import { useAnkiField, useBreakpoint, useConfig } from "./shared/Context";
 
 const Lazy = {
   Settings: lazy(async () => ({
@@ -32,6 +31,7 @@ export function Back() {
   const sentenceAudioRefSignal = createSignal<HTMLDivElement | undefined>();
 
   const [config] = useConfig();
+  const bp = useBreakpoint();
   const { ankiFields, ankiFieldNodes } = useAnkiField<"back">();
   const [showSettings, setShowSettings] = createSignal(false);
   const [ready, setReady] = createSignal(false);
@@ -100,7 +100,7 @@ export function Back() {
               <div
                 class="flex gap-2"
                 classList={{
-                  "h-8 mt-2": !isMobile(),
+                  "h-8 mt-2": bp.isAtLeast("sm"),
                 }}
               >
                 {ready() && (
@@ -122,7 +122,7 @@ export function Back() {
                   "[&>img]:blur-[4px]": !isNsfw,
                 }}
               >
-                {isMobile() && picture?.cloneNode(true)}
+                {!bp.isAtLeast("sm") && picture?.cloneNode(true)}
                 <div
                   class="relative h-full sm:[&_img]:h-full [&_img]:object-contain [&_img]:h-48 [&_img]:mx-auto 
                 [&_img]:transition-[filter] [&_img]:hover:filter-none cursor-pointer "

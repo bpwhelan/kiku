@@ -12,6 +12,7 @@ const [config, setConfig] = createStore(defaultConfig);
 
 const html = renderToString(() => (
   <AnkiFieldContextProvider
+    //@ts-expect-error
     value={{ ankiFields: exampleFields6, ankiFieldNodes: {} }}
   >
     <ConfigContextProvider value={[config, setConfig]}>
