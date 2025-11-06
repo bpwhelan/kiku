@@ -267,6 +267,35 @@ body {
   }
 }
 
+@layer utilities {
+  .picture-field-background {
+    @apply [&_*:not(img)]:contents;
+    @apply [&_img]:absolute [&_img]:size-full [&_img]:object-cover [&_img]:object-center;
+    @apply [&_img]:scale-110 [&_img]:filter [&_img]:brightness-50 [&_img]:blur-[16px];
+  }
+
+  .picture-field {
+    @apply [&_*:not(img)]:contents;
+    @apply relative h-full cursor-pointer;
+    @apply [&_img]:h-48 sm:[&_img]:h-full [&_img]:object-contain [&_img]:mx-auto [&_img]:transition-[filter];
+    @apply [&_img]:hover:filter-none;
+    &[data-nsfw="true"] {
+      @apply [&_img]:filter [&_img]:blur-[16px] [&_img]:brightness-50;
+    }
+  }
+
+  .picture-field:hover {
+    @apply [&_img]:filter-none;
+  }
+
+  .picture-modal {
+    @apply absolute z-20 top-0 left-0 w-full h-full p-4 sm:p-8 bg-black/75 flex justify-center items-center [&_*:not(img)]:contents;
+    &[data-modal-hidden="true"] {
+      @apply hidden;
+    }
+  }
+}
+
 /*
  *    ────────────────────────────── Jitendex ─────────────────────────────
 */

@@ -11,28 +11,15 @@ import {
   useConfig,
 } from "./shared/Context";
 
+// biome-ignore format: this looks nicer
 const Lazy = {
-  Settings: lazy(async () => ({
-    default: (await import("./_kiku_lazy")).Settings,
-  })),
-  BackHeader: lazy(async () => ({
-    default: (await import("./_kiku_lazy")).BackHeader,
-  })),
-  BackFooter: lazy(async () => ({
-    default: (await import("./_kiku_lazy")).BackFooter,
-  })),
-  AudioButtons: lazy(async () => ({
-    default: (await import("./_kiku_lazy")).AudioButtons,
-  })),
-  ImageModal: lazy(async () => ({
-    default: (await import("./_kiku_lazy")).ImageModal,
-  })),
-  BackBody: lazy(async () => ({
-    default: (await import("./_kiku_lazy")).BackBody,
-  })),
-  Pitches: lazy(async () => ({
-    default: (await import("./_kiku_lazy")).Pitches,
-  })),
+  Settings: lazy(async () => ({ default: (await import("./_kiku_lazy")).Settings, })),
+  BackHeader: lazy(async () => ({ default: (await import("./_kiku_lazy")).BackHeader, })),
+  BackFooter: lazy(async () => ({ default: (await import("./_kiku_lazy")).BackFooter, })),
+  AudioButtons: lazy(async () => ({ default: (await import("./_kiku_lazy")).AudioButtons, })),
+  ImageModal: lazy(async () => ({ default: (await import("./_kiku_lazy")).ImageModal, })),
+  BackBody: lazy(async () => ({ default: (await import("./_kiku_lazy")).BackBody, })),
+  Pitches: lazy(async () => ({ default: (await import("./_kiku_lazy")).Pitches, })),
 };
 
 export function Back() {
@@ -45,11 +32,7 @@ export function Back() {
   const [ankiFields, setAnkiFields] =
     createSignal<AnkiBackFields>(ankiFieldsSkeleton);
   const [ready, setReady] = createSignal(false);
-  const [picture, setPicture] = createSignal<string | undefined>();
   const [imageModal, setImageModal] = createSignal<string>();
-
-  const pictureInnerHtml = () =>
-    import.meta.env.DEV ? ankiFields().Picture : undefined;
 
   const tags = () => ankiFields().Tags.split(" ") ?? [];
   const isNsfw = () =>
@@ -81,10 +64,6 @@ export function Back() {
         ]),
       ) as AnkiBackFields;
       setAnkiFields(ankiFields$);
-
-      const tempDiv = document.createElement("div");
-      tempDiv.innerHTML = ankiFields().Picture;
-      setPicture(tempDiv.querySelector("img")?.outerHTML ?? "");
     }, 1000);
   });
 
@@ -160,7 +139,7 @@ export function Back() {
             </div>
             <div class="bg-base-200 rounded-lg relative overflow-hidden">
               <div
-                class="[&_img]:scale-110 [&_img]:size-full [&_img]:filter [&_img]:object-cover [&_img]:object-center [&_img]:brightness-50 [&_img]:absolute [&_img]:blur-[16px]"
+                class="picture-field-background"
                 innerHTML={
                   import.meta.env.DEV ? ankiFields().Picture : undefined
                 }
@@ -168,12 +147,9 @@ export function Back() {
                 {import.meta.env.DEV ? undefined : "{{Picture}}"}
               </div>
               <div
-                class="relative h-full sm:[&_img]:h-full [&_img]:object-contain [&_img]:h-48 [&_img]:mx-auto [&_img]:transition-[filter] [&_img]:hover:filter-none cursor-pointer"
-                classList={{
-                  "[&_img]:filter [&_img]:blur-[16px] [&_img]:brightness-50":
-                    isNsfw(),
-                }}
-                on:click={() => picture && setImageModal(picture())}
+                class="picture-field"
+                data-nsfw={isNsfw() ? "true" : undefined}
+                on:click={() => setImageModal(ankiFields().Picture)}
                 innerHTML={
                   import.meta.env.DEV ? ankiFields().Picture : undefined
                 }
