@@ -58,7 +58,7 @@ export function Front() {
               }
             >
               {isServer
-                ? "{{#IsSentenceCard}} {{#IsAudioCard}} <span>?</span> {{/IsAudioCard}} {{/IsSentenceCard}} {{^IsSentenceCard}} {{^IsAudioCard}} {{Expression}} {{/IsAudioCard}} {{/IsSentenceCard}}"
+                ? `{{#IsSentenceCard}} <span>?</span> {{/IsSentenceCard}} {{#IsAudioCard}} <span>?</span> {{/IsAudioCard}} {{^IsSentenceCard}} {{^IsAudioCard}} {{Expression}} {{/IsAudioCard}} {{/IsSentenceCard}}`
                 : undefined}
             </div>
           </div>
