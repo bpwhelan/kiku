@@ -1,4 +1,4 @@
-import { createSignal, onMount } from "solid-js";
+import { createEffect, createSignal, onMount, Show } from "solid-js";
 import { Portal } from "solid-js/web";
 import { defaultConfig, type KikuConfig } from "#/util/config";
 import { type OnlineFont, onlineFonts } from "#/util/fonts";
@@ -8,6 +8,7 @@ import {
   ArrowLeftIcon,
   ClipboardCopyIcon,
   RefreshCwIcon,
+  TriangleAlertIcon,
   UndoIcon,
 } from "./Icons";
 import { AnkiConnect } from "./util/ankiConnect";
@@ -96,6 +97,84 @@ export default function Settings(props: {
       }, 3000);
     },
   };
+  function copyToClipboard(text: string) {
+    navigator.clipboard
+      .writeText(text)
+      .then(() => {
+        toast.success("Copied to clipboard!");
+      })
+      .catch(() => {
+        toast.error("Failed to copy to clipboard!");
+      });
+  }
+
+  function toDatasetString(obj: Record<string, string | number>) {
+    return Object.entries(obj)
+      .map(([key, value]) => {
+        const dashed = key.replace(/[A-Z]/g, (m) => `-${m.toLowerCase()}`);
+        return `data-${dashed}="${value}"`;
+      })
+      .join("\n");
+  }
+
+  const unwantedKeys = ["ankiConnectPort", "onlineFont", "systemFont"];
+  const [mismatches, setMismatches] = createSignal<Record<string, string>>({});
+  function compareConfigAndRootDataset() {
+    let mismatches = Object.entries(config).filter(([key, value]) => {
+      const rootDataValue =
+        globalThis.KIKU_STATE.rootDataset[key as keyof KikuConfig];
+      return rootDataValue !== value;
+    });
+    if (config.systemFont) {
+      if (config.systemFont !== globalThis.KIKU_STATE.rootDataset.fontFamily) {
+        mismatches.push(["fontFamily", config.systemFont]);
+      }
+    } else if (config.onlineFont) {
+      if (config.onlineFont !== globalThis.KIKU_STATE.rootDataset.fontFamily) {
+        mismatches.push(["fontFamily", config.onlineFont]);
+      }
+    }
+    mismatches = mismatches.filter(([key]) => {
+      return !unwantedKeys.includes(key);
+    });
+    const mismatches$ = mismatches.map(([key]) => {
+      return [key, globalThis.KIKU_STATE.rootDataset[key as keyof KikuConfig]];
+    });
+
+    const mismatches$2 = Object.fromEntries(mismatches$);
+    return mismatches$2;
+  }
+
+  const [configDataset, setConfigDataset] = createSignal<
+    Record<string, string>
+  >({});
+  function generateConfigDataset() {
+    let dataset = Object.entries(config);
+    dataset = dataset.filter(([key]) => {
+      return !unwantedKeys.includes(key);
+    });
+    dataset.push([
+      "fontFamily",
+      config.systemFont ? config.systemFont : config.onlineFont,
+    ]);
+    const dataset$ = Object.fromEntries(
+      dataset.map(([key, value]) => {
+        return [key, value.toString()];
+      }),
+    );
+    return dataset$;
+  }
+
+  createEffect(() => {
+    ({ ...config });
+    setMismatches(compareConfigAndRootDataset());
+    setConfigDataset(generateConfigDataset());
+    console.log(
+      "DEBUG[901]: mismatches, dataset=",
+      mismatches(),
+      configDataset(),
+    );
+  });
 
   return (
     <>
@@ -218,6 +297,14 @@ export default function Settings(props: {
         </div>
       </div>
       <FontSizeSettings />
+      <Show when={Object.keys(mismatches()).length > 0}>
+        <div role="alert" class="alert alert-warning">
+          <TriangleAlertIcon />
+          <span>
+            Root Dataset mismatches, FOUC (Flash Of Unstyled Content) may occur.
+          </span>
+        </div>
+      </Show>
 
       <div class="pb-32">
         {/* NOTE: collapse arrow broke button color https://github.com/saadeghi/daisyui/issues/4209 */}
@@ -228,18 +315,55 @@ export default function Settings(props: {
             <div class="flex flex-col gap-4 animate-fade-in ">
               <div class="flex flex-col gap-2">
                 <div class="flex gap-2 items-center">
+                  <div class="text-lg">Root Dataset</div>
+                  <ClipboardCopyIcon
+                    class="size-5 text-base-content-calm cursor-pointer"
+                    on:click={() => {
+                      copyToClipboard(
+                        JSON.stringify(
+                          toDatasetString(configDataset()),
+                          (_, value) =>
+                            value === undefined ? "undefined" : value,
+                          2,
+                        ),
+                      );
+                    }}
+                  />
+                </div>
+                <pre class="text-xs bg-base-200 p-4 rounded-lg overflow-auto">
+                  {toDatasetString(configDataset())}
+                </pre>
+              </div>
+
+              <div class="flex flex-col gap-2">
+                <div class="flex gap-2 items-center">
+                  <div class="text-lg">Current Root Dataset</div>
+                  <ClipboardCopyIcon
+                    class="size-5 text-base-content-calm cursor-pointer"
+                    on:click={() => {
+                      copyToClipboard(
+                        JSON.stringify(
+                          toDatasetString(globalThis.KIKU_STATE.rootDataset),
+                          (_, value) =>
+                            value === undefined ? "undefined" : value,
+                          2,
+                        ),
+                      );
+                    }}
+                  />
+                </div>
+                <pre class="text-xs bg-base-200 p-4 rounded-lg overflow-auto">
+                  {toDatasetString(globalThis.KIKU_STATE.rootDataset)}
+                </pre>
+              </div>
+
+              <div class="flex flex-col gap-2">
+                <div class="flex gap-2 items-center">
                   <div class="text-lg">Config</div>
                   <ClipboardCopyIcon
                     class="size-5 text-base-content-calm cursor-pointer"
                     on:click={() => {
-                      navigator.clipboard
-                        .writeText(JSON.stringify({ ...config }, null, 2))
-                        .then(() => {
-                          toast.success("Copied to clipboard!");
-                        })
-                        .catch(() => {
-                          toast.error("Failed to copy to clipboard!");
-                        });
+                      copyToClipboard(JSON.stringify({ ...config }, null, 2));
                     }}
                   />
                 </div>
@@ -254,14 +378,9 @@ export default function Settings(props: {
                   <ClipboardCopyIcon
                     class="size-5 text-base-content-calm cursor-pointer"
                     on:click={() => {
-                      navigator.clipboard
-                        .writeText(JSON.stringify({ ...ankiFields }, null, 2))
-                        .then(() => {
-                          toast.success("Copied to clipboard!");
-                        })
-                        .catch(() => {
-                          toast.error("Failed to copy to clipboard!");
-                        });
+                      copyToClipboard(
+                        JSON.stringify({ ...ankiFields }, null, 2),
+                      );
                     }}
                   />
                 </div>

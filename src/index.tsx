@@ -13,6 +13,7 @@ import {
 import { type KikuConfig, validateConfig } from "./util/config.ts";
 import { type OnlineFont, setOnlineFont } from "./util/fonts.ts";
 import { env } from "./util/general.ts";
+import type { DaisyUITheme } from "./util/theme.ts";
 
 declare global {
   var KIKU_STATE: {
@@ -20,9 +21,12 @@ declare global {
     initDelay?: number;
     config?: KikuConfig;
     root?: HTMLElement;
+    rootDataset: Partial<KikuConfig> & Partial<{ fontFamily: string }>;
   };
 }
-globalThis.KIKU_STATE = {};
+globalThis.KIKU_STATE = {
+  rootDataset: {},
+};
 
 export async function init({
   side,
@@ -46,6 +50,11 @@ export async function init({
     } catch (e) {
       throw new Error("Failed to load config", { cause: e });
     }
+    const rootDataSet = { ...root.dataset };
+    globalThis.KIKU_STATE.rootDataset.theme = rootDataSet.theme as DaisyUITheme;
+    globalThis.globalThis.KIKU_STATE.rootDataset.fontFamily =
+      rootDataSet.fontFamily;
+
     document.documentElement.setAttribute("data-theme", config$.theme);
     root.setAttribute("data-theme", config$.theme);
     setOnlineFont(config$.onlineFont as OnlineFont);
