@@ -2,7 +2,10 @@
 @import "./tailwindFontSize.css";
 
 @plugin "daisyui" {
-  themes: all;
+  themes: false;
+  include:
+    properties, reset, rootcolor, rootscrollgutter, rootscrolllock, svg, scrollbar, button, input, label, fieldset, select, alert, badge,
+    toast, collapse, status;
 }
 
 /* biome-ignore format: this looks nicer */

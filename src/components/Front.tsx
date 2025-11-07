@@ -23,7 +23,7 @@ export function Front() {
   onMount(() => {
     setTimeout(() => {
       setReady(true);
-    }, 0);
+    }, 100);
   });
 
   return (

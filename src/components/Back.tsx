@@ -32,7 +32,7 @@ export function Back() {
     setTimeout(() => {
       setReady(true);
       globalThis.KIKU_STATE.relax = true;
-    }, 0);
+    }, 100);
 
     const tags = ankiFields$.Tags.split(" ");
     setIsNsfw(tags.map((tag) => tag.toLowerCase()).includes("nsfw"));

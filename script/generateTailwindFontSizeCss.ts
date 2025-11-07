@@ -1,4 +1,5 @@
-const tailwindBreakpoints = ["sm", "md", "lg", "xl", "2xl"];
+// const tailwindBreakpoints = ["sm", "md", "lg", "xl", "2xl"];
+const tailwindBreakpoints = ["sm"];
 const sizes = [
   "text-xs",
   "text-sm",
