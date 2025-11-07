@@ -365,6 +365,20 @@ body {
       @apply hidden;
     }
   }
+
+  .sentence-front {
+    @apply hidden flex-col gap-4 items-center text-center;
+    &[data-is-audio-card]:not([data-is-audio-card=""]),
+    &[data-is-sentence-card]:not([data-is-sentence-card=""]),
+    &[data-is-word-and-sentence-card]:not([data-is-word-and-sentence-card=""]) {
+      @apply flex;
+    }
+    &[data-is-click-card][data-clicked="true"]:not(
+        [data-is-click-card=""][data-clicked="true"]
+      ) {
+      @apply flex;
+    }
+  }
 }
 
 /*

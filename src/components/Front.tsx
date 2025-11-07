@@ -63,19 +63,23 @@ export function Front() {
         </div>
       </div>
 
-      {(ankiFields$.IsAudioCard ||
-        ankiFields$.IsSentenceCard ||
-        ankiFields$.IsWordAndSentenceCard ||
-        (ankiFields$.IsClickCard && clicked())) && (
-        <div class="flex flex-col gap-4 items-center text-center">
-          <div
-            class={`[&_b]:text-base-content-primary sentence`}
-            innerHTML={isServer ? undefined : ankiFields$["kanji:Sentence"]}
-          >
-            {isServer ? "{{kanji:Sentence}}" : undefined}
-          </div>
+      <div
+        class="sentence-front"
+        data-is-audio-card={isServer ? "{{IsAudioCard}}" : undefined}
+        data-is-sentence-card={isServer ? "{{IsSentenceCard}}" : undefined}
+        data-is-word-and-sentence-card={
+          isServer ? "{{IsWordAndSentenceCard}}" : undefined
+        }
+        data-is-click-card={isServer ? "{{IsClickCard}}" : undefined}
+        data-clicked={clicked() ? "true" : undefined}
+      >
+        <div
+          class={`[&_b]:text-base-content-primary sentence`}
+          innerHTML={isServer ? undefined : ankiFields$["kanji:Sentence"]}
+        >
+          {isServer ? "{{kanji:Sentence}}" : undefined}
         </div>
-      )}
+      </div>
 
       {ready() && ankiFields$.IsAudioCard && (
         <div class="flex gap-4 justify-center">
