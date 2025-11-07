@@ -25,14 +25,17 @@ export function Back() {
 
   const ankiFields$ = getAnkiFields<"back">();
 
+  const [isNsfw, setIsNsfw] = createSignal(false);
   const tags = ankiFields$.Tags.split(" ");
-  const isNsfw = tags.map((tag) => tag.toLowerCase()).includes("nsfw");
 
   onMount(() => {
     setTimeout(() => {
       setReady(true);
       globalThis.KIKU_STATE.relax = true;
     }, 0);
+
+    const tags = ankiFields$.Tags.split(" ");
+    setIsNsfw(tags.map((tag) => tag.toLowerCase()).includes("nsfw"));
   });
 
   return (
@@ -111,7 +114,9 @@ export function Back() {
               </div>
               <div
                 class="picture-field"
-                data-nsfw={isNsfw ? "true" : undefined}
+                data-transition={ready() ? "true" : undefined}
+                data-tags="{{Tags}}"
+                data-nsfw={isNsfw() ? "true" : "false"}
                 on:click={() => setImageModal(ankiFields$.Picture)}
                 innerHTML={isServer ? undefined : ankiFields$.Picture}
               >

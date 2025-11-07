@@ -306,10 +306,16 @@ body {
   .picture-field {
     @apply [&_*:not(img)]:contents;
     @apply relative h-full cursor-pointer;
-    @apply [&_img]:h-48 sm:[&_img]:h-full [&_img]:object-contain [&_img]:mx-auto [&_img]:transition-[filter];
+    @apply [&_img]:h-48 sm:[&_img]:h-full [&_img]:object-contain [&_img]:mx-auto;
     @apply [&_img]:hover:filter-none;
-    &[data-nsfw="true"] {
+    &[data-nsfw="true"],
+    &[data-tags~="nsfw"],
+    &[data-tags~="NSFW"],
+    &[data-tags~="Nsfw"] {
       @apply [&_img]:filter [&_img]:blur-[16px] [&_img]:brightness-50;
+    }
+    &[data-transition="true"] {
+      @apply [&_img]:transition-[filter];
     }
   }
 
