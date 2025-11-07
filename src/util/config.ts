@@ -1,10 +1,10 @@
 import type { ResponsiveFontSize } from "#/components/_kiku_lazy/util/tailwind";
-import { type OnlineFont, onlineFonts } from "./fonts";
+import { type Font, fonts } from "./fonts";
 import { type DaisyUITheme, daisyUIThemes } from "./theme";
 
 export type KikuConfig = {
   theme: DaisyUITheme;
-  onlineFont: OnlineFont;
+  font: Font;
   systemFont: string;
   ankiConnectPort: number;
   fontSizeBaseExpression: ResponsiveFontSize;
@@ -21,7 +21,7 @@ export type KikuConfig = {
 
 export const defaultConfig: KikuConfig = {
   theme: "coffee",
-  onlineFont: "Noto Serif JP",
+  font: "Noto Serif JP",
   systemFont: "",
   ankiConnectPort: 8765,
   fontSizeBaseExpression: "text-5xl",
@@ -70,7 +70,7 @@ export function validateConfig(config: any): KikuConfig {
     // biome-ignore format: this looks nicer
     const valid: KikuConfig = {
       theme: daisyUIThemes.includes(config.theme) ? config.theme : defaultConfig.theme,
-      onlineFont: onlineFonts.includes(config.onlineFont) ? config.onlineFont : defaultConfig.onlineFont,
+      font: fonts.includes(config.font) ? config.font : defaultConfig.font,
       systemFont: typeof config.systemFont === "string" ? config.systemFont : defaultConfig.systemFont,
       ankiConnectPort: typeof config.ankiConnectPort === "number" && config.ankiConnectPort > 0 ? config.ankiConnectPort : defaultConfig.ankiConnectPort,
 
@@ -96,7 +96,7 @@ export function validateConfig(config: any): KikuConfig {
 export function updateConfigDataset(el: HTMLElement, config: KikuConfig) {
   document.documentElement.setAttribute("data-theme", config.theme);
   el.setAttribute("data-theme", config.theme);
-  el.setAttribute("data-font-family", config.onlineFont);
+  el.setAttribute("data-font-family", config.font);
   el.setAttribute("data-font-size-base-expression", config.fontSizeBaseExpression);
   el.setAttribute("data-font-size-base-pitch", config.fontSizeBasePitch);
   el.setAttribute("data-font-size-base-sentence", config.fontSizeBaseSentence);

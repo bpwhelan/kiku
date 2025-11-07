@@ -15,7 +15,22 @@ for (const file of FILES) {
   const src = join(import.meta.dirname, "../dist", file);
   await stat(src);
   const dest = join(ANKI_MEDIA_DIR, file);
+  await cp(src, dest);
+  console.log(`✅ Copied ${src} to ${dest}`);
+}
 
+const FONTS = [
+  "_kiku_font_hina-mincho.woff2",
+  "_kiku_font_klee-one.woff2",
+  "_kiku_font_noto-sans-jp.woff2",
+  "_kiku_font_noto-serif-jp.woff2",
+  "_kiku_font_ibm-plex-sans-jp.woff2",
+];
+
+for (const file of FONTS) {
+  const src = join(import.meta.dirname, "../.fonts", file);
+  await stat(src);
+  const dest = join(ANKI_MEDIA_DIR, file);
   await cp(src, dest);
   console.log(`✅ Copied ${src} to ${dest}`);
 }

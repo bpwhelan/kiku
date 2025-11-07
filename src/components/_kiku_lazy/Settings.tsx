@@ -1,7 +1,7 @@
 import { createEffect, createSignal, onMount, Show } from "solid-js";
 import { Portal } from "solid-js/web";
 import { defaultConfig, type KikuConfig } from "#/util/config";
-import { type OnlineFont, onlineFonts } from "#/util/fonts";
+import { type Font, fonts } from "#/util/fonts";
 import { daisyUIThemes } from "#/util/theme";
 import { useAnkiField, useBreakpoint, useConfig } from "../shared/Context";
 import {
@@ -48,7 +48,7 @@ export default function Settings(props: {
       //TODO: configurable
       ankiConnectPort: 8765,
       theme: config.theme ? config.theme : defaultConfig.theme,
-      onlineFont: config.onlineFont ? config.onlineFont : defaultConfig.onlineFont,
+      font: config.font ? config.font : defaultConfig.font,
       systemFont: config.systemFont ? config.systemFont : defaultConfig.systemFont,
       fontSizeBaseExpression: config.fontSizeBaseExpression ? config.fontSizeBaseExpression : defaultConfig.fontSizeBaseExpression,
       fontSizeBasePitch: config.fontSizeBasePitch ? config.fontSizeBasePitch : defaultConfig.fontSizeBasePitch,
@@ -119,7 +119,7 @@ export default function Settings(props: {
       .join("\n");
   }
 
-  const unwantedKeys = ["ankiConnectPort", "onlineFont", "systemFont"];
+  const unwantedKeys = ["ankiConnectPort", "font", "systemFont"];
   const [mismatches, setMismatches] = createSignal<Record<string, string>>({});
   function compareConfigAndRootDataset() {
     let mismatches = Object.entries(config).filter(([key, value]) => {
@@ -131,9 +131,9 @@ export default function Settings(props: {
       if (config.systemFont !== globalThis.KIKU_STATE.rootDataset.fontFamily) {
         mismatches.push(["fontFamily", config.systemFont]);
       }
-    } else if (config.onlineFont) {
-      if (config.onlineFont !== globalThis.KIKU_STATE.rootDataset.fontFamily) {
-        mismatches.push(["fontFamily", config.onlineFont]);
+    } else if (config.font) {
+      if (config.font !== globalThis.KIKU_STATE.rootDataset.fontFamily) {
+        mismatches.push(["fontFamily", config.font]);
       }
     }
     mismatches = mismatches.filter(([key]) => {
@@ -157,7 +157,7 @@ export default function Settings(props: {
     });
     dataset.push([
       "fontFamily",
-      config.systemFont ? config.systemFont : config.onlineFont,
+      config.systemFont ? config.systemFont : config.font,
     ]);
     dataset.unshift(["kikuRoot", "true"]);
     const dataset$ = Object.fromEntries(
@@ -215,7 +215,7 @@ export default function Settings(props: {
       </div>
       <div class="flex flex-col gap-4 animate-fade-in">
         <div class="text-2xl font-bold">Theme</div>
-        <div class="grid grid-cols-[repeat(auto-fit,minmax(150px,1fr))] rounded-box gap-4 p-2">
+        <div class="grid grid-cols-[repeat(auto-fit,minmax(170px,1fr))] rounded-box gap-4 p-2">
           {daisyUIThemes.map((theme) => {
             return (
               <div
@@ -270,14 +270,18 @@ export default function Settings(props: {
             class="fieldset"
             on:change={(e) => {
               const target = e.target as HTMLSelectElement;
-              setConfig("onlineFont", target.value as OnlineFont);
+              setConfig("font", target.value as Font);
             }}
           >
-            <legend class="fieldset-legend">Online Font</legend>
+            <legend class="fieldset-legend">Kiku Font</legend>
             <select class="select w-full">
-              {onlineFonts.map((font) => {
+              {fonts.map((font) => {
                 return (
-                  <option value={font} selected={config.onlineFont === font}>
+                  <option
+                    value={font}
+                    selected={config.font === font}
+                    data-font-family={font}
+                  >
                     {font}
                   </option>
                 );
@@ -289,13 +293,13 @@ export default function Settings(props: {
             <input
               type="text"
               class="input w-full"
-              placeholder="Segoe UI"
+              placeholder="Hiragino Mincho ProN"
               value={config.systemFont}
               on:input={(e) => {
                 setConfig("systemFont", (e.target as HTMLInputElement).value);
               }}
             />
-            <p class="label">Overrides online font when specified</p>
+            <p class="label">Overrides Kiku Font when specified</p>
           </fieldset>
         </div>
       </div>
