@@ -363,9 +363,12 @@ body {
   }
 
   .picture-modal {
-    @apply absolute z-20 top-0 left-0 w-full h-full p-4 sm:p-8 bg-black/75 flex justify-center items-center [&_*:not(img)]:contents;
+    @apply absolute z-20 top-0 left-0 w-full h-full p-4 sm:p-8 bg-black/75 flex justify-center items-center [&_*:not(img)]:contents transition-opacity;
     &[data-modal-hidden="true"] {
       @apply hidden;
+    }
+    &[data-modal-transparent="true"] {
+      @apply opacity-0;
     }
   }
 
