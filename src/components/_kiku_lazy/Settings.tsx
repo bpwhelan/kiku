@@ -346,7 +346,6 @@ export default function Settings(props: {
               <select class="select w-full">
                 {webFonts.map((font) => {
                   const dataSetProp: DatasetProp = {
-                    "data-font-primary": "true",
                     "data-web-font-primary": font,
                     "data-use-system-font-primary": "false",
                     "data-font-scope": "local",
@@ -357,7 +356,7 @@ export default function Settings(props: {
                       selected={config.webFontPrimary === font}
                       {...dataSetProp}
                     >
-                      {font}
+                      <span class="font-primary">{font}</span>
                     </option>
                   );
                 })}
@@ -441,7 +440,6 @@ export default function Settings(props: {
               <select class="select w-full">
                 {webFonts.map((font) => {
                   const dataSetProp: DatasetProp = {
-                    "data-font-secondary": "true",
                     "data-web-font-secondary": font,
                     "data-use-system-font-secondary": "false",
                     "data-font-scope": "local",
@@ -452,7 +450,7 @@ export default function Settings(props: {
                       selected={config.webFontSecondary === font}
                       {...dataSetProp}
                     >
-                      {font}
+                      <span class="font-secondary">{font}</span>
                     </option>
                   );
                 })}

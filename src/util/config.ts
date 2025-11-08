@@ -140,8 +140,6 @@ export type Dataset = {
   "data-is-word-and-sentence-card": | "true" | "false" | "{{IsWordAndSentenceCard}}";
   "data-is-click-card": "true" | "false" | "{{IsClickCard}}";
   "data-clicked": "true" | "false";
-  "data-font-primary": "true" | "false";
-  "data-font-secondary": "true" | "false";
   "data-font-scope": "local";
   "data-transition": "true" | "false";
   "data-tags": string;

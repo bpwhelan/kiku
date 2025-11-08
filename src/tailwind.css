@@ -10,25 +10,25 @@
 
 /* biome-ignore format: this looks nicer */
 @layer base {
-  [data-use-system-font-primary="true"] [data-font-primary="true"] { font-family: var(--system-font-primary); }
-  [data-use-system-font-secondary="true"] [data-font-secondary="true"] { font-family: var(--system-font-secondary); }
+  [data-use-system-font-primary="true"] .font-primary { font-family: var(--system-font-primary); }
+  [data-use-system-font-secondary="true"] .font-secondary { font-family: var(--system-font-secondary); }
 
-  [data-use-system-font-primary="false"][data-web-font-primary="Hina Mincho"] [data-font-primary="true"],
-  [data-use-system-font-primary="false"][data-web-font-primary="Hina Mincho"][data-font-primary="true"][data-font-scope="local"],
-  [data-use-system-font-secondary="false"][data-web-font-secondary="Hina Mincho"] [data-font-secondary="true"],
-  [data-use-system-font-secondary="false"][data-web-font-secondary="Hina Mincho"][data-font-secondary="true"][data-font-scope="local"]
+  [data-use-system-font-primary="false"][data-web-font-primary="Hina Mincho"] .font-primary,
+  [data-use-system-font-primary="false"][data-web-font-primary="Hina Mincho"][data-font-scope="local"] .font-primary,
+  [data-use-system-font-secondary="false"][data-web-font-secondary="Hina Mincho"] .font-secondary,
+  [data-use-system-font-secondary="false"][data-web-font-secondary="Hina Mincho"][data-font-scope="local"] .font-secondary
   { font-family: "Hina Mincho", serif; font-weight: 400; font-style: normal; }
 
-  [data-use-system-font-primary="false"][data-web-font-primary="Klee One"] [data-font-primary="true"],
-  [data-use-system-font-primary="false"][data-web-font-primary="Klee One"][data-font-primary="true"][data-font-scope="local"],
-  [data-use-system-font-secondary="false"][data-web-font-secondary="Klee One"] [data-font-secondary="true"], 
-  [data-use-system-font-secondary="false"][data-web-font-secondary="Klee One"][data-font-secondary="true"][data-font-scope="local"]
+  [data-use-system-font-primary="false"][data-web-font-primary="Klee One"] .font-primary,
+  [data-use-system-font-primary="false"][data-web-font-primary="Klee One"][data-font-scope="local"] .font-primary,
+  [data-use-system-font-secondary="false"][data-web-font-secondary="Klee One"] .font-secondary,
+  [data-use-system-font-secondary="false"][data-web-font-secondary="Klee One"][data-font-scope="local"] .font-secondary
   { font-family: "Klee One", cursive; font-weight: 400; font-style: normal; }
 
-  [data-use-system-font-primary="false"][data-web-font-primary="IBM Plex Sans JP"] [data-font-primary="true"],
-  [data-use-system-font-primary="false"][data-web-font-primary="IBM Plex Sans JP"][data-font-primary="true"][data-font-scope="local"],
-  [data-use-system-font-secondary="false"][data-web-font-secondary="IBM Plex Sans JP"] [data-font-secondary="true"],
-  [data-use-system-font-secondary="false"][data-web-font-secondary="IBM Plex Sans JP"][data-font-secondary="true"][data-font-scope="local"]
+  [data-use-system-font-primary="false"][data-web-font-primary="IBM Plex Sans JP"] .font-primary,
+  [data-use-system-font-primary="false"][data-web-font-primary="IBM Plex Sans JP"][data-font-scope="local"] .font-primary,
+  [data-use-system-font-secondary="false"][data-web-font-secondary="IBM Plex Sans JP"] .font-secondary,
+  [data-use-system-font-secondary="false"][data-web-font-secondary="IBM Plex Sans JP"][data-font-scope="local"] .font-secondary
   { font-family: "IBM Plex Sans JP", sans-serif; font-weight: 400; font-style: normal; }
 }
 
@@ -270,6 +270,7 @@ body {
 
 @theme {
   --animate-fade-in: fade-in 400ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  --animate-fade-in-sm: fade-in-sm 300ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 @keyframes fade-in {
@@ -281,10 +282,6 @@ body {
     opacity: 1;
     transform: translateY(0);
   }
-}
-
-@theme {
-  --animate-fade-in-sm: fade-in-sm 300ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 @keyframes fade-in-sm {
@@ -302,11 +299,10 @@ body {
   scrollbar-gutter: stable;
 }
 
-@utility pitch-segment {
-  position: relative;
-}
-
 @layer utilities {
+  .pitch-segment {
+    position: relative;
+  }
   .pitch-segment::after {
     content: "";
     position: absolute;
@@ -322,9 +318,7 @@ body {
   [data-is-even="false"] .pitch-segment::after {
     background-color: var(--color-secondary); /* match text/border color */
   }
-}
 
-@layer utilities {
   .picture-field-background {
     @apply [&_*:not(img)]:contents;
     @apply [&_img]:absolute [&_img]:size-full [&_img]:object-cover [&_img]:object-center;
