@@ -26,7 +26,8 @@ async function main() {
   backTemplate = backSrc
     .replace("<!-- SSR_TEMPLATE -->", backTemplate)
     .replace("<!-- HYDRATION_SCRIPT -->", hydrationScript);
-  cssTemplate = `${cssTemplate}\n${cssSrc}`;
+  // cssTemplate = `${cssTemplate}\n${cssSrc}`;
+  cssTemplate = `${cssSrc}`;
 
   await Promise.all([
     writeFile(frontDestPath, frontTemplate),
