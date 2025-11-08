@@ -7,7 +7,8 @@ export type KikuConfig = {
   theme: DaisyUITheme;
   webFont: WebFont;
   systemFont: string;
-  ankiConnectPort: number;
+  useSystemFont: "true" | "false";
+  ankiConnectPort: string;
   fontSizeBaseExpression: ResponsiveFontSize;
   fontSizeBasePitch: ResponsiveFontSize;
   fontSizeBaseSentence: ResponsiveFontSize;
@@ -26,7 +27,8 @@ export const defaultConfig: KikuConfig = {
   theme: "coffee",
   webFont: "Klee One",
   systemFont: "'Hiragino Mincho ProN', 'Noto Serif CJK JP', 'Noto Serif JP', 'Yu Mincho', HanaMinA, HanaMinB, serif",
-  ankiConnectPort: 8765,
+  useSystemFont: "true",
+  ankiConnectPort: "8765",
   fontSizeBaseExpression: "text-5xl",
   fontSizeBasePitch: "text-xl",
   fontSizeBaseSentence: "text-2xl",
@@ -76,6 +78,7 @@ export function validateConfig(config: KikuConfig): KikuConfig {
       theme: daisyUIThemes.includes(config.theme) ? config.theme : defaultConfig.theme,
       webFont: webFonts.includes(config.webFont) ? config.webFont : defaultConfig.webFont,
       systemFont: typeof config.systemFont === "string" ? config.systemFont : defaultConfig.systemFont,
+      useSystemFont: typeof config.useSystemFont === "string" && config.useSystemFont === "true" ? "true" : "false",
       ankiConnectPort: typeof config.ankiConnectPort === "number" && config.ankiConnectPort > 0 ? config.ankiConnectPort : defaultConfig.ankiConnectPort,
       fontSizeBaseExpression: validateResponsiveFontSize( config.fontSizeBaseExpression, defaultConfig.fontSizeBaseExpression,),
       fontSizeBasePitch: validateResponsiveFontSize( config.fontSizeBasePitch, defaultConfig.fontSizeBasePitch,),

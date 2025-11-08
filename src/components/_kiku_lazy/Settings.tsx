@@ -49,8 +49,9 @@ export default function Settings(props: {
       theme: config.theme ? config.theme : defaultConfig.theme,
       webFont: config.webFont ? config.webFont : defaultConfig.webFont,
       systemFont: config.systemFont ? config.systemFont : defaultConfig.systemFont,
+      useSystemFont: config.useSystemFont ? config.useSystemFont : defaultConfig.useSystemFont,
       //TODO: configurable
-      ankiConnectPort: 8765,
+      ankiConnectPort: "8765",
       fontSizeBaseExpression: config.fontSizeBaseExpression ? config.fontSizeBaseExpression : defaultConfig.fontSizeBaseExpression,
       fontSizeBasePitch: config.fontSizeBasePitch ? config.fontSizeBasePitch : defaultConfig.fontSizeBasePitch,
       fontSizeBaseSentence: config.fontSizeBaseSentence ? config.fontSizeBaseSentence : defaultConfig.fontSizeBaseSentence,

@@ -3,19 +3,18 @@ import { hydrate, render } from "solid-js/web";
 import { Back } from "./components/Back.tsx";
 import "./tailwind.css";
 import { createStore } from "solid-js/store";
-import type { ResponsiveFontSize } from "./components/_kiku_lazy/util/tailwind.ts";
 import { Front } from "./components/Front.tsx";
 import {
   BreakpointContextProvider,
   ConfigContextProvider,
 } from "./components/shared/Context.tsx";
 import {
+  defaultConfig,
   type KikuConfig,
   updateConfigDataset,
   validateConfig,
 } from "./util/config.ts";
 import { env } from "./util/general.ts";
-import type { DaisyUITheme } from "./util/theme.ts";
 
 declare global {
   var KIKU_STATE: {
@@ -23,11 +22,11 @@ declare global {
     initDelay?: number;
     config?: KikuConfig;
     root?: HTMLElement;
-    rootDataset: Partial<KikuConfig>;
+    rootDataset: KikuConfig;
   };
 }
 globalThis.KIKU_STATE = {
-  rootDataset: {},
+  rootDataset: defaultConfig,
 };
 
 export async function init({
@@ -55,24 +54,28 @@ export async function init({
       throw new Error("Failed to load config", { cause: e });
     }
 
-    const rootDataset = { ...root.dataset } as Partial<KikuConfig>;
+    const rootDataset = { ...root.dataset } as KikuConfig;
     // biome-ignore format: this looks nicer
     (() => {
-      globalThis.KIKU_STATE.rootDataset.kikuRoot = rootDataset.kikuRoot;
-      globalThis.KIKU_STATE.rootDataset.theme = rootDataset.theme;
-      globalThis.KIKU_STATE.rootDataset.webFont = rootDataset.webFont;
-      globalThis.KIKU_STATE.rootDataset.systemFont = rootDataset.systemFont;
-      globalThis.KIKU_STATE.rootDataset.ankiConnectPort = rootDataset.ankiConnectPort;
-      globalThis.KIKU_STATE.rootDataset.fontSizeBaseExpression = rootDataset.fontSizeBaseExpression;
-      globalThis.KIKU_STATE.rootDataset.fontSizeBasePitch = rootDataset.fontSizeBasePitch;
-      globalThis.KIKU_STATE.rootDataset.fontSizeBaseSentence = rootDataset.fontSizeBaseSentence;
-      globalThis.KIKU_STATE.rootDataset.fontSizeBaseMiscInfo = rootDataset.fontSizeBaseMiscInfo;
-      globalThis.KIKU_STATE.rootDataset.fontSizeBaseHint = rootDataset.fontSizeBaseHint;
-      globalThis.KIKU_STATE.rootDataset.fontSizeSmExpression = rootDataset.fontSizeSmExpression;
-      globalThis.KIKU_STATE.rootDataset.fontSizeSmPitch = rootDataset.fontSizeSmPitch;
-      globalThis.KIKU_STATE.rootDataset.fontSizeSmSentence = rootDataset.fontSizeSmSentence;
-      globalThis.KIKU_STATE.rootDataset.fontSizeSmMiscInfo = rootDataset.fontSizeSmMiscInfo;
-      globalThis.KIKU_STATE.rootDataset.fontSizeSmHint = rootDataset.fontSizeSmHint;
+      const rootDataset$: KikuConfig = {
+        kikuRoot: rootDataset.kikuRoot,
+        theme: rootDataset.theme,
+        webFont: rootDataset.webFont,
+        systemFont: rootDataset.systemFont,
+        useSystemFont: rootDataset.useSystemFont,
+        ankiConnectPort: rootDataset.ankiConnectPort,
+        fontSizeBaseExpression: rootDataset.fontSizeBaseExpression,
+        fontSizeBasePitch: rootDataset.fontSizeBasePitch,
+        fontSizeBaseSentence: rootDataset.fontSizeBaseSentence,
+        fontSizeBaseMiscInfo: rootDataset.fontSizeBaseMiscInfo,
+        fontSizeBaseHint: rootDataset.fontSizeBaseHint,
+        fontSizeSmExpression: rootDataset.fontSizeSmExpression,
+        fontSizeSmPitch: rootDataset.fontSizeSmPitch,
+        fontSizeSmSentence: rootDataset.fontSizeSmSentence,
+        fontSizeSmMiscInfo: rootDataset.fontSizeSmMiscInfo,
+        fontSizeSmHint: rootDataset.fontSizeSmHint,
+      };
+      globalThis.KIKU_STATE.rootDataset = rootDataset$;
     })();
     updateConfigDataset(root, config$);
 
