@@ -187,11 +187,22 @@ export default function Settings(props: {
     const systemFont = window
       .getComputedStyle(document.documentElement)
       .getPropertyValue("--system-font");
-    if (config.systemFont && config.systemFont !== systemFont) {
-      console.log("DEBUG[912]: systemFont=", systemFont);
-      console.log("DEBUG[911]: config.systemFont=", config.systemFont);
+
+    const systemFontConfigTrim = config.systemFont
+      .replaceAll("\n", "")
+      .split(",")
+      .map((font) => font.trim())
+      .join(", ");
+    const systemFontTrim = systemFont
+      .replaceAll("\n", "")
+      .split(",")
+      .map((font) => font.trim())
+      .join(", ");
+
+    if (config.systemFont && systemFontConfigTrim !== systemFontTrim) {
       mismatches.push(["--system-font", systemFont]);
     }
+
     return Object.fromEntries(mismatches);
   }
 
