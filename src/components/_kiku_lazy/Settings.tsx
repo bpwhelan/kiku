@@ -188,6 +188,8 @@ export default function Settings(props: {
       .getComputedStyle(document.documentElement)
       .getPropertyValue("--system-font");
     if (config.systemFont && config.systemFont !== systemFont) {
+      console.log("DEBUG[912]: systemFont=", systemFont);
+      console.log("DEBUG[911]: config.systemFont=", config.systemFont);
       mismatches.push(["--system-font", systemFont]);
     }
     return Object.fromEntries(mismatches);
@@ -197,7 +199,7 @@ export default function Settings(props: {
   function getCssVar() {
     const cssVar: Record<string, string> = {};
     if (config.systemFont) {
-      cssVar["--system-font"] = `"${config.systemFont}"`;
+      cssVar["--system-font"] = `${config.systemFont}`;
     }
     return cssVar;
   }
@@ -324,7 +326,9 @@ export default function Settings(props: {
             <input
               type="text"
               class="input w-full"
-              placeholder="Hiragino Mincho ProN"
+              placeholder={
+                '"Hiragino Mincho ProN", "Noto Serif CJK JP", "Noto Serif JP", "Yu Mincho", HanaMinA, HanaMinB, serif'
+              }
               value={config.systemFont}
               on:input={(e) => {
                 setConfig("systemFont", (e.target as HTMLInputElement).value);
