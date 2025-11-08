@@ -323,6 +323,7 @@ body {
     @apply [&_*:not(img)]:contents;
     @apply [&_img]:absolute [&_img]:size-full [&_img]:object-cover [&_img]:object-center;
     @apply [&_img]:scale-110 [&_img]:filter [&_img]:brightness-50 [&_img]:blur-[16px];
+    @apply [&_:not(:first-child)]:hidden;
   }
 
   .picture-field {
@@ -339,6 +340,7 @@ body {
     &[data-transition="true"] {
       @apply [&_img]:transition-[filter];
     }
+    @apply [&_:not(:first-child)]:hidden;
   }
 
   .picture-field:hover {
@@ -353,6 +355,7 @@ body {
     &[data-modal-transparent="true"] {
       @apply opacity-0;
     }
+    @apply [&_:not(:first-child)]:hidden;
   }
 
   .sentence-front {

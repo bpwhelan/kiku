@@ -298,7 +298,7 @@ export const exampleFields6: AnkiFields = {
   "Sentence": "ゴールの方程式の<b>からくり</b>は<br>分かったけど",
   "SentenceFurigana": "ゴールの 方程式[ほうていしき]の<b>からくり</b>は<br> 分[わ]かったけど",
   "SentenceAudio": "<a class=\"replay-button soundLink\" href=\"#\" onclick=\"pycmd('play:a:0'); return false;\">\n    <svg class=\"playImage\" viewBox=\"0 0 64 64\" version=\"1.1\">\n        <circle cx=\"32\" cy=\"32\" r=\"29\"></circle>\n        <path d=\"M56.502,32.301l-37.502,20.101l0.329,-40.804l37.173,20.703Z\"></path>\n    </svg>\n</a>",
-  "Picture": "<div><img src=\"trix%20blue%20lock%20-%20s01e08%20(720p%20av1).mkv_1033903_9070.webp\"></div>",
+  "Picture": "<div><img src=\"trix%20blue%20lock%20-%20s01e08%20(720p%20av1).mkv_1033903_9070.webp\"></div><img src=\"AV1ARY_New_Game!_-_05__36932_VM066QnE.jpeg\">",
   "Glossary": "",
   "Hint": "",
   "IsWordAndSentenceCard": "",

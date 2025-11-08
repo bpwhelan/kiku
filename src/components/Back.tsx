@@ -1,4 +1,4 @@
-import { createSignal, lazy, onMount, Suspense } from "solid-js";
+import { createEffect, createSignal, lazy, onMount, Suspense } from "solid-js";
 import { isServer } from "solid-js/web";
 import type { DatasetProp } from "#/util/config";
 import { getAnkiFields } from "#/util/general";
@@ -17,12 +17,16 @@ const Lazy = {
 };
 
 export function Back() {
+  let pictureFieldEl: HTMLDivElement | undefined;
   const expressionAudioRefSignal = createSignal<HTMLDivElement | undefined>();
   const sentenceAudioRefSignal = createSignal<HTMLDivElement | undefined>();
 
   const [showSettings, setShowSettings] = createSignal(false);
   const [ready, setReady] = createSignal(false);
   const [imageModal, setImageModal] = createSignal<string>();
+  const [pictureCount, setPictureCount] = createSignal(0);
+  const [pictureIndex, setPictureIndex] = createSignal(0);
+  const [pictures, setPictures] = createSignal<HTMLImageElement[]>([]);
 
   const ankiFields$ = getAnkiFields<"back">();
 
@@ -37,6 +41,25 @@ export function Back() {
 
     const tags = ankiFields$.Tags.split(" ");
     setIsNsfw(tags.map((tag) => tag.toLowerCase()).includes("nsfw"));
+
+    if (pictureFieldEl) {
+      const tempDiv = document.createElement("div");
+      tempDiv.innerHTML = ankiFields$.Picture;
+      const imgs = Array.from(tempDiv.querySelectorAll("img"));
+      imgs.forEach((img) => {
+        img.dataset.index = imgs.indexOf(img).toString();
+      });
+      setPictures(imgs);
+      setPictureCount(imgs.length);
+      pictureFieldEl.replaceChildren(...imgs);
+    }
+  });
+
+  createEffect(() => {
+    pictures().forEach((img) => {
+      img.style.display =
+        img.dataset.index === pictureIndex().toString() ? "block" : "none";
+    });
   });
 
   const pictureFieldDataset: () => DatasetProp = () => ({
@@ -121,6 +144,7 @@ export function Back() {
                 {isServer ? "{{Picture}}" : undefined}
               </div>
               <div
+                ref={pictureFieldEl}
                 class="picture-field"
                 on:click={() => setImageModal(ankiFields$.Picture)}
                 {...pictureFieldDataset()}
@@ -135,6 +159,16 @@ export function Back() {
               <Lazy.BackBody
                 onDefinitionPictureClick={(picture) => {
                   setImageModal(picture);
+                }}
+                onNextClick={() => {
+                  setPictureIndex((prev) => {
+                    return (prev + 1) % pictureCount();
+                  });
+                }}
+                onPrevClick={() => {
+                  setPictureIndex((prev) => {
+                    return (prev - 1 + pictureCount()) % pictureCount();
+                  });
                 }}
               />
             </AnkiFieldContextProvider>

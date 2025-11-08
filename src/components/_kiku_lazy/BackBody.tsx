@@ -1,8 +1,11 @@
 import { createEffect, createSignal, onMount } from "solid-js";
 import { useAnkiField, useConfig } from "../shared/Context";
+import { ArrowLeftIcon } from "./Icons";
 
 export default function BackBody(props: {
   onDefinitionPictureClick?: (picture: string) => void;
+  onNextClick?: () => void;
+  onPrevClick?: () => void;
 }) {
   let sentenceEl: HTMLDivElement | undefined;
   let definitionEl: HTMLDivElement | undefined;
@@ -91,9 +94,13 @@ export default function BackBody(props: {
 
   return (
     <div class="flex sm:flex-col gap-8 flex-col-reverse animate-fade-in">
-      <div class="flex flex-col gap-4 items-center text-center">
+      <div class="flex justify-between gap-2 items-center text-center">
+        <ArrowLeftIcon
+          class="cursor-pointer size-5 sm:size-8 hover:scale-110 transition-transform"
+          on:click={props.onPrevClick}
+        ></ArrowLeftIcon>
         <div
-          class={`[&_b]:text-base-content-primary sentence font-secondary`}
+          class={`[&_b]:text-base-content-primary sentence font-secondary flex-1`}
           ref={sentenceEl}
           innerHTML={
             ankiFields["furigana:SentenceFurigana"]
@@ -101,6 +108,10 @@ export default function BackBody(props: {
               : ankiFields["kanji:Sentence"]
           }
         ></div>
+        <ArrowLeftIcon
+          class="cursor-pointer size-5 sm:size-8 rotate-180 hover:scale-110 transition-transform"
+          on:click={props.onNextClick}
+        ></ArrowLeftIcon>
       </div>
       {pagesWithContent.length > 0 && (
         <div>
