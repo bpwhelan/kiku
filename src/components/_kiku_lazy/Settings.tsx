@@ -304,6 +304,9 @@ export default function Settings(props: {
         <div class="grid grid-cols-[repeat(auto-fit,minmax(15rem,1fr))] rounded-box gap-4">
           <fieldset
             class="fieldset"
+            classList={{
+              hidden: config.useSystemFont === "true",
+            }}
             on:change={(e) => {
               const target = e.target as HTMLSelectElement;
               setConfig("webFont", target.value as WebFont);
@@ -324,7 +327,12 @@ export default function Settings(props: {
               })}
             </select>
           </fieldset>
-          <fieldset class="fieldset">
+          <fieldset
+            class="fieldset"
+            classList={{
+              hidden: config.useSystemFont !== "true",
+            }}
+          >
             <legend class="fieldset-legend">System Font</legend>
             <input
               type="text"
@@ -353,7 +361,9 @@ export default function Settings(props: {
                   );
                 }}
               />
-              Overrides Web Font when enabled
+              {config.useSystemFont === "true"
+                ? "Using System Font"
+                : "Using Web Font"}
             </label>
           </fieldset>
         </div>
