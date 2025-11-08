@@ -21,7 +21,7 @@ export type KikuConfig = {
 
 export const defaultConfig: KikuConfig = {
   theme: "coffee",
-  font: "Noto Serif JP",
+  font: "Klee One",
   systemFont: "",
   ankiConnectPort: 8765,
   fontSizeBaseExpression: "text-5xl",

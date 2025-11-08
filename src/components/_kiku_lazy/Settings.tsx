@@ -317,7 +317,7 @@ export default function Settings(props: {
               setConfig("font", target.value as Font);
             }}
           >
-            <legend class="fieldset-legend">Kiku Font</legend>
+            <legend class="fieldset-legend">Web Font</legend>
             <select class="select w-full">
               {fonts.map((font) => {
                 return (
@@ -345,7 +345,7 @@ export default function Settings(props: {
                 setConfig("systemFont", (e.target as HTMLInputElement).value);
               }}
             />
-            <p class="label">Overrides Kiku Font when specified</p>
+            <p class="label">Overrides Web Font when specified</p>
           </fieldset>
         </div>
       </div>

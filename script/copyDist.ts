@@ -28,8 +28,6 @@ for (const file of FILES) {
 const FONTS = [
   "_kiku_font_hina-mincho.woff2",
   "_kiku_font_klee-one.woff2",
-  "_kiku_font_noto-sans-jp.woff2",
-  "_kiku_font_noto-serif-jp.woff2",
   "_kiku_font_ibm-plex-sans-jp.woff2",
 ];
 

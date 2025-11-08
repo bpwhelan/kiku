@@ -13,8 +13,6 @@
   [data-font-family]:not(
     [data-font-family="Hina Mincho"],
     [data-font-family="Klee One"],
-    [data-font-family="Noto Sans JP"],
-    [data-font-family="Noto Serif JP"],
     [data-font-family="IBM Plex Sans JP"]
   ) {
     font-family: var(--system-font);
@@ -22,8 +20,6 @@
 
   [data-font-family="Hina Mincho"] { font-family: "Hina Mincho", serif; font-weight: 400; font-style: normal; }
   [data-font-family="Klee One"] { font-family: "Klee One", cursive; font-weight: 400; font-style: normal; }
-  [data-font-family="Noto Sans JP"] { font-family: "Noto Sans JP", sans-serif; font-optical-sizing: auto; font-weight: 400; font-style: normal; }
-  [data-font-family="Noto Serif JP"] { font-family: "Noto Serif JP", serif; font-optical-sizing: auto; font-weight: 400; font-style: normal; }
   [data-font-family="IBM Plex Sans JP"] { font-family: "IBM Plex Sans JP", sans-serif; font-weight: 400; font-style: normal; }
 }
 
@@ -41,22 +37,6 @@
   font-weight: 400;
   font-display: swap;
   src: url("_kiku_font_klee-one.woff2") format("woff2");
-}
-
-@font-face {
-  font-family: "Noto Sans JP";
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url("_kiku_font_noto-sans-jp.woff2") format("woff2");
-}
-
-@font-face {
-  font-family: "Noto Serif JP";
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url("_kiku_font_noto-serif-jp.woff2") format("woff2");
 }
 
 @font-face {

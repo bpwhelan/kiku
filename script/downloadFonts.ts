@@ -2,13 +2,7 @@ import fs from "node:fs/promises";
 import path, { join } from "node:path";
 import extract from "extract-zip";
 
-const googleFonts = [
-  "Hina Mincho",
-  "Klee One",
-  "Noto Sans JP",
-  "Noto Serif JP",
-  "IBM Plex Sans JP",
-];
+const googleFonts = ["Hina Mincho", "Klee One", "IBM Plex Sans JP"];
 
 const outputDir = join(import.meta.dirname, "../.fonts");
 await fs.mkdir(outputDir, { recursive: true });
