@@ -380,7 +380,7 @@ export default function Settings(props: {
                 type="text"
                 class="input w-full"
                 placeholder={
-                  "'Hiragino Mincho ProN', 'Noto Serif CJK JP', 'Noto Serif JP', 'Yu Mincho', HanaMinA, HanaMinB, serif"
+                  "'Inter', 'SF Pro Display', 'Liberation Sans', 'Segoe UI', 'Hiragino Kaku Gothic ProN', 'Noto Sans CJK JP', 'Noto Sans JP', 'Meiryo', HanaMinA, HanaMinB, sans-serif"
                 }
                 value={config.systemFontPrimary}
                 on:input={(e) => {
@@ -471,7 +471,7 @@ export default function Settings(props: {
                 type="text"
                 class="input w-full"
                 placeholder={
-                  "'Inter', 'SF Pro Display', 'Liberation Sans', 'Segoe UI', 'Hiragino Kaku Gothic ProN', 'Noto Sans CJK JP', 'Noto Sans JP', 'Meiryo', HanaMinA, HanaMinB, sans-serif"
+                  "'Hiragino Mincho ProN', 'Noto Serif CJK JP', 'Noto Serif JP', 'Yu Mincho', HanaMinA, HanaMinB, serif"
                 }
                 value={config.systemFontSecondary}
                 on:input={(e) => {
