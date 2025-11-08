@@ -20,83 +20,51 @@
     font-family: var(--system-font), system-ui, sans-serif;
   }
 
-  [data-font-family="Hina Mincho"] { font-family: "Hina Mincho", "Fallback for Hina Mincho", serif; }
-  [data-font-family="Klee One"] { font-family: "Klee One", "Fallback for Klee One",  serif; }
-  [data-font-family="Noto Sans JP"] { font-family: "Noto Sans JP", "Fallback for Noto Serif JP", sans-serif; }
-  [data-font-family="Noto Serif JP"] { font-family: "Noto Serif JP", "Fallback for Noto Serif JP" , serif; }
-  [data-font-family="IBM Plex Sans JP"] { font-family: "Fallback for IBM Plex Sans JP", sans-serif; }
-  [data-font-family="IBM Plex Sans JP"] { font-family: "IBM Plex Sans JP", "Fallback for IBM Plex Sans JP", sans-serif; }
+  [data-font-family="Hina Mincho"] { font-family: "Hina Mincho", serif; font-weight: 400; font-style: normal; }
+  [data-font-family="Klee One"] { font-family: "Klee One", cursive; font-weight: 400; font-style: normal; }
+  [data-font-family="Noto Sans JP"] { font-family: "Noto Sans JP", sans-serif; font-optical-sizing: auto; font-weight: 400; font-style: normal; }
+  [data-font-family="Noto Serif JP"] { font-family: "Noto Serif JP", serif; font-optical-sizing: auto; font-weight: 400; font-style: normal; }
+  [data-font-family="IBM Plex Sans JP"] { font-family: "IBM Plex Sans JP", sans-serif; font-weight: 400; font-style: normal; }
 }
 
 @font-face {
   font-family: "Hina Mincho";
-  src: url("_kiku_font_hina-mincho.woff2") format("woff2");
-  font-weight: 400;
   font-style: normal;
+  font-weight: 400;
   font-display: swap;
-}
-
-@font-face {
-  font-family: "Fallback for Hina Mincho";
-  src: local("Roboto");
-  ascent-override: 112%;
+  src: url("_kiku_font_hina-mincho.woff2") format("woff2");
 }
 
 @font-face {
   font-family: "Klee One";
-  src: url("_kiku_font_klee-one.woff2") format("woff2");
-  font-weight: 400;
   font-style: normal;
+  font-weight: 400;
   font-display: swap;
-}
-
-@font-face {
-  font-family: "Fallback for Klee One";
-  src: local("Roboto Light"), local("Roboto-Thin"), local("Roboto");
-  size-adjust: 112%;
-  ascent-override: 105%;
+  src: url("_kiku_font_klee-one.woff2") format("woff2");
 }
 
 @font-face {
   font-family: "Noto Sans JP";
-  src: url("_kiku_font_noto-sans-jp.woff2") format("woff2");
-  font-weight: 400;
   font-style: normal;
+  font-weight: 400;
   font-display: swap;
-}
-
-@font-face {
-  font-family: "Fallback for Noto Sans JP";
-  src: local("Roboto");
-  ascent-override: 112%;
+  src: url("_kiku_font_noto-sans-jp.woff2") format("woff2");
 }
 
 @font-face {
   font-family: "Noto Serif JP";
-  src: url("_kiku_font_noto-serif-jp.woff2") format("woff2");
-  font-weight: 400;
   font-style: normal;
+  font-weight: 400;
   font-display: swap;
-}
-
-@font-face {
-  font-family: "Fallback for Noto Serif JP";
-  src: local("Roboto");
-  ascent-override: 112%;
+  src: url("_kiku_font_noto-serif-jp.woff2") format("woff2");
 }
 
 @font-face {
   font-family: "IBM Plex Sans JP";
-  src: url("_kiku_font_ibm-plex-sans-jp.woff2") format("woff2");
-  font-weight: 400;
   font-style: normal;
+  font-weight: 400;
   font-display: swap;
-}
-
-@font-face {
-  font-family: "Fallback for IBM Plex Sans JP";
-  src: local("Roboto");
-  ascent-override: 90%;
+  src: url("_kiku_font_ibm-plex-sans-jp.woff2") format("woff2");
 }
 
 /* biome-ignore format: this looks nicer */
