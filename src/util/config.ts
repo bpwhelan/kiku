@@ -7,7 +7,10 @@ export type KikuConfig = {
   theme: DaisyUITheme;
   webFontPrimary: WebFont;
   systemFontPrimary: string;
-  useSystemFont: "true" | "false";
+  useSystemFontPrimary: "true" | "false";
+  webFontSecondary: WebFont;
+  systemFontSecondary: string;
+  useSystemFontSecondary: "true" | "false";
   ankiConnectPort: string;
   fontSizeBaseExpression: ResponsiveFontSize;
   fontSizeBasePitch: ResponsiveFontSize;
@@ -27,7 +30,10 @@ export const defaultConfig: KikuConfig = {
   theme: "coffee",
   webFontPrimary: "Klee One",
   systemFontPrimary: "'Hiragino Mincho ProN', 'Noto Serif CJK JP', 'Noto Serif JP', 'Yu Mincho', HanaMinA, HanaMinB, serif",
-  useSystemFont: "true",
+  useSystemFontPrimary: "true",
+  webFontSecondary: "IBM Plex Sans JP",
+  systemFontSecondary: "'Inter', 'SF Pro Display', 'Liberation Sans', 'Segoe UI', 'Hiragino Kaku Gothic ProN', 'Noto Sans CJK JP', 'Noto Sans JP', 'Meiryo', HanaMinA, HanaMinB, sans-serif",
+  useSystemFontSecondary: "true",
   ankiConnectPort: "8765",
   fontSizeBaseExpression: "text-5xl",
   fontSizeBasePitch: "text-xl",
@@ -78,7 +84,10 @@ export function validateConfig(config: KikuConfig): KikuConfig {
       theme: daisyUIThemes.includes(config.theme) ? config.theme : defaultConfig.theme,
       webFontPrimary: webFonts.includes(config.webFontPrimary) ? config.webFontPrimary : defaultConfig.webFontPrimary,
       systemFontPrimary: typeof config.systemFontPrimary === "string" ? config.systemFontPrimary : defaultConfig.systemFontPrimary,
-      useSystemFont: typeof config.useSystemFont === "string" && config.useSystemFont === "true" ? "true" : "false",
+      useSystemFontPrimary: typeof config.useSystemFontPrimary === "string" && config.useSystemFontPrimary === "true" ? "true" : defaultConfig.useSystemFontPrimary,
+      webFontSecondary: webFonts.includes(config.webFontSecondary) ? config.webFontSecondary : defaultConfig.webFontSecondary,
+      systemFontSecondary: typeof config.systemFontSecondary === "string" ? config.systemFontSecondary : defaultConfig.systemFontSecondary,
+      useSystemFontSecondary: typeof config.useSystemFontSecondary === "string" && config.useSystemFontSecondary === "true" ? "true" : defaultConfig.useSystemFontSecondary,
       ankiConnectPort: typeof config.ankiConnectPort === "number" && config.ankiConnectPort > 0 ? config.ankiConnectPort : defaultConfig.ankiConnectPort,
       fontSizeBaseExpression: validateResponsiveFontSize( config.fontSizeBaseExpression, defaultConfig.fontSizeBaseExpression,),
       fontSizeBasePitch: validateResponsiveFontSize( config.fontSizeBasePitch, defaultConfig.fontSizeBasePitch,),
@@ -97,6 +106,11 @@ export function validateConfig(config: KikuConfig): KikuConfig {
     return defaultConfig;
   }
 }
+
+export type CssVar = {
+  "--system-font-primary": string;
+  "--system-font-secondary": string;
+};
 
 export function updateConfigDataset(el: HTMLElement, config: KikuConfig) {
   document.documentElement.setAttribute("data-theme", config.theme);

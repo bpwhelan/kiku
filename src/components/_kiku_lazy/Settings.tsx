@@ -1,6 +1,6 @@
 import { createEffect, createSignal, onMount, Show } from "solid-js";
 import { Portal } from "solid-js/web";
-import { defaultConfig, type KikuConfig } from "#/util/config";
+import { type CssVar, defaultConfig, type KikuConfig } from "#/util/config";
 import { type WebFont, webFonts } from "#/util/fonts";
 import { daisyUIThemes } from "#/util/theme";
 import { useAnkiField, useBreakpoint, useConfig } from "../shared/Context";
@@ -49,7 +49,10 @@ export default function Settings(props: {
       theme: config.theme ? config.theme : defaultConfig.theme,
       webFontPrimary: config.webFontPrimary ? config.webFontPrimary : defaultConfig.webFontPrimary,
       systemFontPrimary: config.systemFontPrimary ? config.systemFontPrimary : defaultConfig.systemFontPrimary,
-      useSystemFont: config.useSystemFont ? config.useSystemFont : defaultConfig.useSystemFont,
+      useSystemFontPrimary: config.useSystemFontPrimary ? config.useSystemFontPrimary : defaultConfig.useSystemFontPrimary,
+      webFontSecondary: config.webFontSecondary ? config.webFontSecondary : defaultConfig.webFontSecondary,
+      systemFontSecondary: config.systemFontSecondary ? config.systemFontSecondary : defaultConfig.systemFontSecondary,
+      useSystemFontSecondary: config.useSystemFontSecondary ? config.useSystemFontSecondary : defaultConfig.useSystemFontSecondary,
       //TODO: configurable
       ankiConnectPort: "8765",
       fontSizeBaseExpression: config.fontSizeBaseExpression ? config.fontSizeBaseExpression : defaultConfig.fontSizeBaseExpression,
@@ -124,7 +127,7 @@ export default function Settings(props: {
   function toCssVarString(obj: Record<string, string>) {
     const txt = Object.entries(obj)
       .map(([key, value]) => {
-        return `${key}: ${value};`;
+        return `${key}: ${value.replaceAll("\n", "").replaceAll("'", '"')};`;
       })
       .join("\n");
     return txt;
@@ -166,44 +169,64 @@ export default function Settings(props: {
   const [cssVarMismatches, setCssVarMismatches] = createSignal<
     Record<string, string>
   >({});
+  function getCurrentCssVar() {
+    const key1 = "--system-font-primary" as const;
+    const key2 = "--system-font-secondary" as const;
+    const cssVar: CssVar = {
+      [key1]: window
+        .getComputedStyle(document.documentElement)
+        .getPropertyValue(key1),
+      [key2]: window
+        .getComputedStyle(document.documentElement)
+        .getPropertyValue(key2),
+    };
+    return cssVar;
+  }
   function getCssVarMismatches() {
-    const mismatches: Array<[string, string]> = [];
-    const systemFont = window
-      .getComputedStyle(document.documentElement)
-      .getPropertyValue("--system-font");
+    const mismatches: Array<[keyof CssVar, string]> = [];
+    const cssVar = getCurrentCssVar();
+    function trimFontFamiliy(str: string) {
+      return str
+        .replaceAll("\n", "")
+        .split(",")
+        .map((font) => font.trim().replaceAll('"', "'"))
+        .join(", ");
+    }
+    const systemFontPrimaryConfigTrim = trimFontFamiliy(
+      config.systemFontPrimary,
+    );
+    const systemFontPrimaryTrim = trimFontFamiliy(
+      cssVar["--system-font-primary"],
+    );
+    const systemFontSecondaryConfigTrim = trimFontFamiliy(
+      config.systemFontSecondary,
+    );
+    const systemFontSecondaryTrim = trimFontFamiliy(
+      cssVar["--system-font-secondary"],
+    );
 
-    const systemFontConfigTrim = config.systemFontPrimary
-      .replaceAll("\n", "")
-      .split(",")
-      .map((font) => font.trim().replaceAll('"', "'"))
-      .join(", ");
-    const systemFontTrim = systemFont
-      .replaceAll("\n", "")
-      .split(",")
-      .map((font) => font.trim().replaceAll('"', "'"))
-      .join(", ");
-
-    if (config.systemFontPrimary && systemFontConfigTrim !== systemFontTrim) {
-      mismatches.push(["--system-font", systemFont]);
+    if (systemFontPrimaryConfigTrim !== systemFontPrimaryTrim) {
+      mismatches.push([
+        "--system-font-primary",
+        cssVar["--system-font-primary"],
+      ]);
+    }
+    if (systemFontSecondaryConfigTrim !== systemFontSecondaryTrim) {
+      mismatches.push([
+        "--system-font-secondary",
+        cssVar["--system-font-secondary"],
+      ]);
     }
 
     return Object.fromEntries(mismatches);
   }
-  function getCurrentCssVar() {
-    const systemFont = window
-      .getComputedStyle(document.documentElement)
-      .getPropertyValue("--system-font");
-    return {
-      "--system-font": systemFont,
-    };
-  }
 
   const [cssVar, setCssVar] = createSignal<Record<string, string>>({});
   function getCssVar() {
-    const cssVar: Record<string, string> = {};
-    if (config.systemFontPrimary) {
-      cssVar["--system-font"] = `${config.systemFontPrimary}`;
-    }
+    const cssVar: CssVar = {
+      "--system-font-primary": config.systemFontPrimary,
+      "--system-font-secondary": config.systemFontSecondary,
+    };
     return cssVar;
   }
 
@@ -301,91 +324,185 @@ export default function Settings(props: {
       </div>
       <div class="flex flex-col gap-4 animate-fade-in">
         <div class="text-2xl font-bold">Font</div>
-        <div class="grid grid-cols-[repeat(auto-fit,minmax(15rem,1fr))] rounded-box gap-4">
-          <fieldset
-            class="fieldset"
-            classList={{
-              hidden: config.useSystemFont === "true",
-            }}
-            on:change={(e) => {
-              const target = e.target as HTMLSelectElement;
-              setConfig("webFontPrimary", target.value as WebFont);
-            }}
-          >
-            <legend class="fieldset-legend">Web Font</legend>
-            <select class="select w-full">
-              {webFonts.map((font) => {
-                return (
-                  <option
-                    value={font}
-                    selected={config.webFontPrimary === font}
-                    data-web-font={font}
-                    data-use-system-font={"false"}
-                  >
-                    {font}
-                  </option>
-                );
-              })}
-            </select>
-          </fieldset>
-          <fieldset
-            class="fieldset"
-            classList={{
-              hidden: config.useSystemFont !== "true",
-            }}
-          >
-            <legend class="fieldset-legend">
-              System Font
-              <UndoIcon
-                class="h-4 w-4 cursor-pointer"
-                classList={{
-                  hidden:
-                    config.systemFontPrimary ===
-                    defaultConfig.systemFontPrimary,
-                }}
-                on:click={() => {
+        <div>
+          <div class="text-lg font-bold">Primary</div>
+          <div class="grid grid-cols-[repeat(auto-fit,minmax(15rem,1fr))] rounded-box gap-4">
+            <fieldset
+              class="fieldset"
+              classList={{
+                hidden: config.useSystemFontPrimary === "true",
+              }}
+              on:change={(e) => {
+                const target = e.target as HTMLSelectElement;
+                setConfig("webFontPrimary", target.value as WebFont);
+              }}
+            >
+              <legend class="fieldset-legend">Web Font</legend>
+              <select class="select w-full">
+                {webFonts.map((font) => {
+                  return (
+                    <option
+                      value={font}
+                      selected={config.webFontPrimary === font}
+                      data-web-font={font}
+                      data-use-system-font={"false"}
+                    >
+                      {font}
+                    </option>
+                  );
+                })}
+              </select>
+            </fieldset>
+            <fieldset
+              class="fieldset"
+              classList={{
+                hidden: config.useSystemFontPrimary !== "true",
+              }}
+            >
+              <legend class="fieldset-legend">
+                System Font
+                <UndoIcon
+                  class="h-4 w-4 cursor-pointer"
+                  classList={{
+                    hidden:
+                      config.systemFontPrimary ===
+                      defaultConfig.systemFontPrimary,
+                  }}
+                  on:click={() => {
+                    setConfig(
+                      "systemFontPrimary",
+                      defaultConfig.systemFontPrimary,
+                    );
+                  }}
+                />
+              </legend>
+              <input
+                type="text"
+                class="input w-full"
+                placeholder={
+                  "'Hiragino Mincho ProN', 'Noto Serif CJK JP', 'Noto Serif JP', 'Yu Mincho', HanaMinA, HanaMinB, serif"
+                }
+                value={config.systemFontPrimary}
+                on:input={(e) => {
                   setConfig(
                     "systemFontPrimary",
-                    defaultConfig.systemFontPrimary,
+                    (e.target as HTMLInputElement).value,
                   );
                 }}
               />
-            </legend>
-            <input
-              type="text"
-              class="input w-full"
-              placeholder={
-                "'Hiragino Mincho ProN', 'Noto Serif CJK JP', 'Noto Serif JP', 'Yu Mincho', HanaMinA, HanaMinB, serif"
-              }
-              value={config.systemFontPrimary}
-              on:input={(e) => {
-                setConfig(
-                  "systemFontPrimary",
-                  (e.target as HTMLInputElement).value,
-                );
-              }}
-            />
-          </fieldset>
+            </fieldset>
 
-          <fieldset class="fieldset bg-base-100 border-base-300 rounded-box w-64 py-4">
-            <legend class="fieldset-legend">Use System Font</legend>
-            <label class="label">
+            <fieldset class="fieldset bg-base-100 border-base-300 rounded-box w-64 py-4">
+              <legend class="fieldset-legend">Use System Font</legend>
+              <label class="label">
+                <input
+                  type="checkbox"
+                  checked={config.useSystemFontPrimary === "true"}
+                  class="toggle"
+                  on:change={(e) => {
+                    setConfig(
+                      "useSystemFontPrimary",
+                      e.target.checked ? "true" : "false",
+                    );
+                  }}
+                />
+                {config.useSystemFontPrimary === "true"
+                  ? "Using System Font"
+                  : "Using Web Font"}
+              </label>
+            </fieldset>
+          </div>
+        </div>
+
+        <div>
+          <div class="text-lg font-bold">Secondary</div>
+          <div class="grid grid-cols-[repeat(auto-fit,minmax(15rem,1fr))] rounded-box gap-4">
+            <fieldset
+              class="fieldset"
+              classList={{
+                hidden: config.useSystemFontSecondary === "true",
+              }}
+              on:change={(e) => {
+                const target = e.target as HTMLSelectElement;
+                setConfig("webFontSecondary", target.value as WebFont);
+              }}
+            >
+              <legend class="fieldset-legend">Web Font</legend>
+              <select class="select w-full">
+                {webFonts.map((font) => {
+                  return (
+                    <option
+                      value={font}
+                      selected={config.webFontSecondary === font}
+                      // TODO: font
+                      data-web-font={font}
+                      data-use-system-font={"false"}
+                    >
+                      {font}
+                    </option>
+                  );
+                })}
+              </select>
+            </fieldset>
+            <fieldset
+              class="fieldset"
+              classList={{
+                hidden: config.useSystemFontSecondary !== "true",
+              }}
+            >
+              <legend class="fieldset-legend">
+                System Font
+                <UndoIcon
+                  class="h-4 w-4 cursor-pointer"
+                  classList={{
+                    hidden:
+                      config.systemFontSecondary ===
+                      defaultConfig.systemFontSecondary,
+                  }}
+                  on:click={() => {
+                    setConfig(
+                      "systemFontSecondary",
+                      defaultConfig.systemFontSecondary,
+                    );
+                  }}
+                />
+              </legend>
               <input
-                type="checkbox"
-                checked={config.useSystemFont === "true"}
-                class="toggle"
-                on:change={(e) => {
+                type="text"
+                class="input w-full"
+                placeholder={
+                  "'Inter', 'SF Pro Display', 'Liberation Sans', 'Segoe UI', 'Hiragino Kaku Gothic ProN', 'Noto Sans CJK JP', 'Noto Sans JP', 'Meiryo', HanaMinA, HanaMinB, sans-serif"
+                }
+                value={config.systemFontSecondary}
+                on:input={(e) => {
                   setConfig(
-                    "useSystemFont",
-                    e.target.checked ? "true" : "false",
+                    "systemFontSecondary",
+                    (e.target as HTMLInputElement).value,
                   );
                 }}
               />
-              {config.useSystemFont === "true"
-                ? "Using System Font"
-                : "Using Web Font"}
-            </label>
-          </fieldset>
+            </fieldset>
+
+            <fieldset class="fieldset bg-base-100 border-base-300 rounded-box w-64 py-4">
+              <legend class="fieldset-legend">Use System Font</legend>
+              <label class="label">
+                <input
+                  type="checkbox"
+                  checked={config.useSystemFontSecondary === "true"}
+                  class="toggle"
+                  on:change={(e) => {
+                    setConfig(
+                      "useSystemFontSecondary",
+                      e.target.checked ? "true" : "false",
+                    );
+                  }}
+                />
+                {config.useSystemFontSecondary === "true"
+                  ? "Using System Font"
+                  : "Using Web Font"}
+              </label>
+            </fieldset>
+          </div>
         </div>
       </div>
       <FontSizeSettings />
