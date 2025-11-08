@@ -1,10 +1,11 @@
 import type { ResponsiveFontSize } from "#/components/_kiku_lazy/util/tailwind";
-import { type Font, fonts } from "./fonts";
+import { type WebFont, webFonts } from "./fonts";
 import { type DaisyUITheme, daisyUIThemes } from "./theme";
 
 export type KikuConfig = {
+  kikuRoot: "true";
   theme: DaisyUITheme;
-  font: Font;
+  webFont: WebFont;
   systemFont: string;
   ankiConnectPort: number;
   fontSizeBaseExpression: ResponsiveFontSize;
@@ -19,10 +20,12 @@ export type KikuConfig = {
   fontSizeSmHint: ResponsiveFontSize;
 };
 
+// biome-ignore format: this looks nicer
 export const defaultConfig: KikuConfig = {
+  kikuRoot: "true",
   theme: "coffee",
-  font: "Klee One",
-  systemFont: "",
+  webFont: "Klee One",
+  systemFont: '"Hiragino Mincho ProN", "Noto Serif CJK JP", "Noto Serif JP", "Yu Mincho", HanaMinA, HanaMinB, serif',
   ankiConnectPort: 8765,
   fontSizeBaseExpression: "text-5xl",
   fontSizeBasePitch: "text-xl",
@@ -56,24 +59,24 @@ export type TailwindResponsiveFontSize =
   (typeof tailwindResponsiveFontSizes)[number];
 
 function validateResponsiveFontSize(
-  value: any,
+  value: ResponsiveFontSize,
   fallback: ResponsiveFontSize,
 ): ResponsiveFontSize {
   if (tailwindResponsiveFontSizesSet.has(value)) return value;
   return fallback;
 }
 
-export function validateConfig(config: any): KikuConfig {
+export function validateConfig(config: KikuConfig): KikuConfig {
   try {
     if (typeof config !== "object" || config === null) throw new Error();
 
     // biome-ignore format: this looks nicer
     const valid: KikuConfig = {
+      kikuRoot: "true",
       theme: daisyUIThemes.includes(config.theme) ? config.theme : defaultConfig.theme,
-      font: fonts.includes(config.font) ? config.font : defaultConfig.font,
+      webFont: webFonts.includes(config.webFont) ? config.webFont : defaultConfig.webFont,
       systemFont: typeof config.systemFont === "string" ? config.systemFont : defaultConfig.systemFont,
       ankiConnectPort: typeof config.ankiConnectPort === "number" && config.ankiConnectPort > 0 ? config.ankiConnectPort : defaultConfig.ankiConnectPort,
-
       fontSizeBaseExpression: validateResponsiveFontSize( config.fontSizeBaseExpression, defaultConfig.fontSizeBaseExpression,),
       fontSizeBasePitch: validateResponsiveFontSize( config.fontSizeBasePitch, defaultConfig.fontSizeBasePitch,),
       fontSizeBaseSentence: validateResponsiveFontSize( config.fontSizeBaseSentence, defaultConfig.fontSizeBaseSentence,),
@@ -96,8 +99,8 @@ export function validateConfig(config: any): KikuConfig {
 export function updateConfigDataset(el: HTMLElement, config: KikuConfig) {
   document.documentElement.setAttribute("data-theme", config.theme);
   el.setAttribute("data-theme", config.theme);
-  el.setAttribute("data-font-family", config.font);
-  if (config.systemFont) el.setAttribute("data-font-family", config.systemFont);
+  el.setAttribute("data-web-font", config.webFont);
+  el.setAttribute("data-system-font", config.systemFont);
   if (config.systemFont) el.style.fontFamily = config.systemFont;
   if (!config.systemFont) el.style.fontFamily = ""
   el.setAttribute("data-font-size-base-expression", config.fontSizeBaseExpression);

@@ -23,7 +23,7 @@ declare global {
     initDelay?: number;
     config?: KikuConfig;
     root?: HTMLElement;
-    rootDataset: Partial<KikuConfig> & Partial<{ fontFamily: string }>;
+    rootDataset: Partial<KikuConfig>;
   };
 }
 globalThis.KIKU_STATE = {
@@ -55,22 +55,25 @@ export async function init({
       throw new Error("Failed to load config", { cause: e });
     }
 
-    const rootDataset = { ...root.dataset };
+    const rootDataset = { ...root.dataset } as Partial<KikuConfig>;
     // biome-ignore format: this looks nicer
     (() => {
-    globalThis.KIKU_STATE.rootDataset.theme = rootDataset.theme as DaisyUITheme;
-    globalThis.KIKU_STATE.rootDataset.fontFamily = rootDataset.fontFamily;
-    globalThis.KIKU_STATE.rootDataset.fontSizeBaseExpression = rootDataset.fontSizeBaseExpression as ResponsiveFontSize;
-    globalThis.KIKU_STATE.rootDataset.fontSizeBasePitch = rootDataset.fontSizeBasePitch as ResponsiveFontSize;
-    globalThis.KIKU_STATE.rootDataset.fontSizeBaseSentence = rootDataset.fontSizeBaseSentence as ResponsiveFontSize;
-    globalThis.KIKU_STATE.rootDataset.fontSizeBaseMiscInfo = rootDataset.fontSizeBaseMiscInfo as ResponsiveFontSize;
-    globalThis.KIKU_STATE.rootDataset.fontSizeBaseHint = rootDataset.fontSizeBaseHint as ResponsiveFontSize;
-    globalThis.KIKU_STATE.rootDataset.fontSizeSmExpression = rootDataset.fontSizeSmExpression as ResponsiveFontSize;
-    globalThis.KIKU_STATE.rootDataset.fontSizeSmPitch = rootDataset.fontSizeSmPitch as ResponsiveFontSize;
-    globalThis.KIKU_STATE.rootDataset.fontSizeSmSentence = rootDataset.fontSizeSmSentence as ResponsiveFontSize;
-    globalThis.KIKU_STATE.rootDataset.fontSizeSmMiscInfo = rootDataset.fontSizeSmMiscInfo as ResponsiveFontSize;
-    globalThis.KIKU_STATE.rootDataset.fontSizeSmHint = rootDataset.fontSizeSmHint as ResponsiveFontSize;
-    })()
+      globalThis.KIKU_STATE.rootDataset.kikuRoot = rootDataset.kikuRoot;
+      globalThis.KIKU_STATE.rootDataset.theme = rootDataset.theme;
+      globalThis.KIKU_STATE.rootDataset.webFont = rootDataset.webFont;
+      globalThis.KIKU_STATE.rootDataset.systemFont = rootDataset.systemFont;
+      globalThis.KIKU_STATE.rootDataset.ankiConnectPort = rootDataset.ankiConnectPort;
+      globalThis.KIKU_STATE.rootDataset.fontSizeBaseExpression = rootDataset.fontSizeBaseExpression;
+      globalThis.KIKU_STATE.rootDataset.fontSizeBasePitch = rootDataset.fontSizeBasePitch;
+      globalThis.KIKU_STATE.rootDataset.fontSizeBaseSentence = rootDataset.fontSizeBaseSentence;
+      globalThis.KIKU_STATE.rootDataset.fontSizeBaseMiscInfo = rootDataset.fontSizeBaseMiscInfo;
+      globalThis.KIKU_STATE.rootDataset.fontSizeBaseHint = rootDataset.fontSizeBaseHint;
+      globalThis.KIKU_STATE.rootDataset.fontSizeSmExpression = rootDataset.fontSizeSmExpression;
+      globalThis.KIKU_STATE.rootDataset.fontSizeSmPitch = rootDataset.fontSizeSmPitch;
+      globalThis.KIKU_STATE.rootDataset.fontSizeSmSentence = rootDataset.fontSizeSmSentence;
+      globalThis.KIKU_STATE.rootDataset.fontSizeSmMiscInfo = rootDataset.fontSizeSmMiscInfo;
+      globalThis.KIKU_STATE.rootDataset.fontSizeSmHint = rootDataset.fontSizeSmHint;
+    })();
     updateConfigDataset(root, config$);
 
     const [config, setConfig] = createStore(config$);

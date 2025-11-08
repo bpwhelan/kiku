@@ -1,7 +1,7 @@
 import { createEffect, createSignal, onMount, Show } from "solid-js";
 import { Portal } from "solid-js/web";
 import { defaultConfig, type KikuConfig } from "#/util/config";
-import { type Font, fonts } from "#/util/fonts";
+import { type WebFont, webFonts } from "#/util/fonts";
 import { daisyUIThemes } from "#/util/theme";
 import { useAnkiField, useBreakpoint, useConfig } from "../shared/Context";
 import {
@@ -45,11 +45,12 @@ export default function Settings(props: {
   const saveConfig = async () => {
     // biome-ignore format: this looks nicer
     const payload: KikuConfig = {
+      kikuRoot: "true",
+      theme: config.theme ? config.theme : defaultConfig.theme,
+      webFont: config.webFont ? config.webFont : defaultConfig.webFont,
+      systemFont: config.systemFont ? config.systemFont : defaultConfig.systemFont,
       //TODO: configurable
       ankiConnectPort: 8765,
-      theme: config.theme ? config.theme : defaultConfig.theme,
-      font: config.font ? config.font : defaultConfig.font,
-      systemFont: config.systemFont ? config.systemFont : defaultConfig.systemFont,
       fontSizeBaseExpression: config.fontSizeBaseExpression ? config.fontSizeBaseExpression : defaultConfig.fontSizeBaseExpression,
       fontSizeBasePitch: config.fontSizeBasePitch ? config.fontSizeBasePitch : defaultConfig.fontSizeBasePitch,
       fontSizeBaseSentence: config.fontSizeBaseSentence ? config.fontSizeBaseSentence : defaultConfig.fontSizeBaseSentence,
@@ -128,27 +129,14 @@ export default function Settings(props: {
     return txt;
   }
 
-  const unwantedKeys = ["ankiConnectPort", "font", "systemFont"];
   const [rootDatasetMismatches, setRootDatasetMismatches] = createSignal<
     Record<string, string>
   >({});
   function getRootDatasetMismatches() {
-    let mismatches = Object.entries(config).filter(([key, value]) => {
+    const mismatches = Object.entries(config).filter(([key, value]) => {
       const rootDataValue =
         globalThis.KIKU_STATE.rootDataset[key as keyof KikuConfig];
       return rootDataValue !== value;
-    });
-    if (config.systemFont) {
-      if (config.systemFont !== globalThis.KIKU_STATE.rootDataset.fontFamily) {
-        mismatches.push(["fontFamily", config.systemFont]);
-      }
-    } else if (config.font) {
-      if (config.font !== globalThis.KIKU_STATE.rootDataset.fontFamily) {
-        mismatches.push(["fontFamily", config.font]);
-      }
-    }
-    mismatches = mismatches.filter(([key]) => {
-      return !unwantedKeys.includes(key);
     });
     const mismatches$ = mismatches.map(([key]) => {
       return [key, globalThis.KIKU_STATE.rootDataset[key as keyof KikuConfig]];
@@ -162,14 +150,7 @@ export default function Settings(props: {
     {},
   );
   function getRootDataset() {
-    let dataset = Object.entries(config);
-    dataset = dataset.filter(([key]) => {
-      return !unwantedKeys.includes(key);
-    });
-    dataset.push([
-      "fontFamily",
-      config.systemFont ? config.systemFont : config.font,
-    ]);
+    const dataset = Object.entries(config);
     dataset.unshift(["kikuRoot", "true"]);
     const dataset$ = Object.fromEntries(
       dataset.map(([key, value]) => {
@@ -314,17 +295,17 @@ export default function Settings(props: {
             class="fieldset"
             on:change={(e) => {
               const target = e.target as HTMLSelectElement;
-              setConfig("font", target.value as Font);
+              setConfig("webFont", target.value as WebFont);
             }}
           >
             <legend class="fieldset-legend">Web Font</legend>
             <select class="select w-full">
-              {fonts.map((font) => {
+              {webFonts.map((font) => {
                 return (
                   <option
                     value={font}
-                    selected={config.font === font}
-                    data-font-family={font}
+                    selected={config.webFont === font}
+                    //TODO: font
                   >
                     {font}
                   </option>
