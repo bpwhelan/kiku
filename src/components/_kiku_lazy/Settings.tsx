@@ -404,13 +404,13 @@ export default function Settings(props: {
                   <ClipboardCopyIcon
                     class="size-5 text-base-content-calm cursor-pointer"
                     on:click={() => {
-                      copyToClipboard(toCssVarString(cssVarMismatches()));
+                      copyToClipboard(toCssVarString(cssVar()));
                     }}
                   />
                 </div>
                 <pre class="text-xs bg-base-200 p-4 rounded-lg overflow-auto">
                   <span class="opacity-25 select-none">{":root {\n"}</span>
-                  {toCssVarString(cssVarMismatches())}
+                  {toCssVarString(cssVar())}
                   <span class="opacity-25 select-none">{"\n}"}</span>
                 </pre>
               </div>
@@ -421,13 +421,13 @@ export default function Settings(props: {
                   <ClipboardCopyIcon
                     class="size-5 text-base-content-calm cursor-pointer"
                     on:click={() => {
-                      copyToClipboard(toCssVarString(cssVar()));
+                      copyToClipboard(toCssVarString(cssVarMismatches()));
                     }}
                   />
                 </div>
                 <pre class="text-xs bg-base-200 p-4 rounded-lg overflow-auto">
                   <span class="opacity-25 select-none">{":root {\n"}</span>
-                  {toCssVarString(cssVar())}
+                  {toCssVarString(cssVarMismatches())}
                   <span class="opacity-25 select-none">{"\n}"}</span>
                 </pre>
               </div>
