@@ -175,12 +175,12 @@ export default function Settings(props: {
     const systemFontConfigTrim = config.systemFont
       .replaceAll("\n", "")
       .split(",")
-      .map((font) => font.trim())
+      .map((font) => font.trim().replaceAll('"', "'"))
       .join(", ");
     const systemFontTrim = systemFont
       .replaceAll("\n", "")
       .split(",")
-      .map((font) => font.trim())
+      .map((font) => font.trim().replaceAll('"', "'"))
       .join(", ");
 
     if (config.systemFont && systemFontConfigTrim !== systemFontTrim) {
@@ -334,7 +334,18 @@ export default function Settings(props: {
               hidden: config.useSystemFont !== "true",
             }}
           >
-            <legend class="fieldset-legend">System Font</legend>
+            <legend class="fieldset-legend">
+              System Font
+              <UndoIcon
+                class="h-4 w-4 cursor-pointer"
+                classList={{
+                  hidden: config.systemFont === defaultConfig.systemFont,
+                }}
+                on:click={() => {
+                  setConfig("systemFont", defaultConfig.systemFont);
+                }}
+              />
+            </legend>
             <input
               type="text"
               class="input w-full"
