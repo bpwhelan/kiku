@@ -1,4 +1,4 @@
-import { createSignal, onMount, type Signal } from "solid-js";
+import { onMount, type Signal } from "solid-js";
 import { useAnkiField } from "../shared/Context";
 import { PlayIcon } from "./Icons";
 
@@ -21,15 +21,15 @@ export function NotePlayIcon(props: {
 export default function AudioButtons(props: {
   expressionAudioRefSignal: Signal<HTMLDivElement | undefined>;
   sentenceAudioRefSignal: Signal<HTMLDivElement | undefined>;
+  sentenceAudiosSignal: Signal<HTMLAnchorElement[] | undefined>;
+
   position: 1 | 2;
 }) {
   const { ankiFields } = useAnkiField<"back">();
   const [expressionAudioRef, setExpressionAudioRef] =
     props.expressionAudioRefSignal;
   const [sentenceAudioRef, setSentenceAudioRef] = props.sentenceAudioRefSignal;
-  const [sentenceAudios, setSentenceAudios] = createSignal<HTMLAnchorElement[]>(
-    [],
-  );
+  const [sentenceAudios, setSentenceAudios] = props.sentenceAudiosSignal;
   const hiddenStyle = {
     width: "0",
     height: "0",
@@ -39,7 +39,7 @@ export default function AudioButtons(props: {
 
   onMount(() => {
     const aaa = sentenceAudioRef()?.querySelectorAll("a");
-    setSentenceAudios(Array.from(aaa ?? []));
+    if (aaa && !sentenceAudios()) setSentenceAudios(Array.from(aaa));
   });
 
   if (props.position === 1)
@@ -63,7 +63,7 @@ export default function AudioButtons(props: {
             }}
           ></NotePlayIcon>
         )}
-        {sentenceAudios().map((el) => {
+        {sentenceAudios()?.map((el) => {
           return (
             <NotePlayIcon
               color="secondary"
@@ -87,7 +87,7 @@ export default function AudioButtons(props: {
             }}
           ></NotePlayIcon>
         )}
-        {sentenceAudios().map((el) => {
+        {sentenceAudios()?.map((el) => {
           return (
             <NotePlayIcon
               color="secondary"

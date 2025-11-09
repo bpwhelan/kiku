@@ -15,6 +15,7 @@ const Lazy = {
 export function Front() {
   const expressionAudioRefSignal = createSignal<HTMLDivElement | undefined>();
   const sentenceAudioRefSignal = createSignal<HTMLDivElement | undefined>();
+  const sentenceAudiosSignal = createSignal<HTMLAnchorElement[]>();
 
   const [ready, setReady] = createSignal(false);
   const [clicked, setClicked] = createSignal(false);
@@ -91,6 +92,7 @@ export function Front() {
               position={1}
               expressionAudioRefSignal={expressionAudioRefSignal}
               sentenceAudioRefSignal={sentenceAudioRefSignal}
+              sentenceAudiosSignal={sentenceAudiosSignal}
             />
           </AnkiFieldContextProvider>
         </div>

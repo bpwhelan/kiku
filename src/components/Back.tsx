@@ -20,6 +20,7 @@ export function Back() {
   let pictureFieldEl: HTMLDivElement | undefined;
   const expressionAudioRefSignal = createSignal<HTMLDivElement | undefined>();
   const sentenceAudioRefSignal = createSignal<HTMLDivElement | undefined>();
+  const sentenceAudiosSignal = createSignal<HTMLAnchorElement[]>();
 
   const [showSettings, setShowSettings] = createSignal(false);
   const [ready, setReady] = createSignal(false);
@@ -129,6 +130,7 @@ export function Back() {
                       position={1}
                       expressionAudioRefSignal={expressionAudioRefSignal}
                       sentenceAudioRefSignal={sentenceAudioRefSignal}
+                      sentenceAudiosSignal={sentenceAudiosSignal}
                     />
                   </AnkiFieldContextProvider>
                 )}
@@ -160,12 +162,19 @@ export function Back() {
                 }}
                 onNextClick={() => {
                   setPictureIndex((prev) => {
-                    return (prev + 1) % pictures().length;
+                    const newIndex = (prev + 1) % pictures().length;
+                    const a = sentenceAudiosSignal[0]();
+                    a?.[newIndex]?.click();
+                    return newIndex;
                   });
                 }}
                 onPrevClick={() => {
                   setPictureIndex((prev) => {
-                    return (prev - 1 + pictures().length) % pictures().length;
+                    const newIndex =
+                      (prev - 1 + pictures().length) % pictures().length;
+                    const a = sentenceAudiosSignal[0]();
+                    a?.[newIndex]?.click();
+                    return newIndex;
                   });
                 }}
                 sentenceIndex={(sentenceLength) => {
@@ -182,6 +191,7 @@ export function Back() {
                 position={2}
                 expressionAudioRefSignal={expressionAudioRefSignal}
                 sentenceAudioRefSignal={sentenceAudioRefSignal}
+                sentenceAudiosSignal={sentenceAudiosSignal}
               />
             </AnkiFieldContextProvider>
           )}
