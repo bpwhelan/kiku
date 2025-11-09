@@ -122,7 +122,7 @@ export function Back() {
                   ankiFields$.PitchPosition && <span>&nbsp;</span>
                 )}
               </div>
-              <div class="flex gap-2 sm:h-8 sm:mt-2">
+              <div class="hidden sm:flex gap-2 sm:h-8 sm:mt-2">
                 {ready() && (
                   <AnkiFieldContextProvider value={{ ankiFields: ankiFields$ }}>
                     <Lazy.AudioButtons

@@ -88,7 +88,7 @@ export function Front() {
             value={{ ankiFields: ankiFields$ as AnkiFields }}
           >
             <Lazy.AudioButtons
-              position={3}
+              position={1}
               expressionAudioRefSignal={expressionAudioRefSignal}
               sentenceAudioRefSignal={sentenceAudioRefSignal}
             />

@@ -1,5 +1,5 @@
 import { createSignal, onMount, type Signal } from "solid-js";
-import { useAnkiField, useBreakpoint } from "../shared/Context";
+import { useAnkiField } from "../shared/Context";
 import { PlayIcon } from "./Icons";
 
 export function NotePlayIcon(props: {
@@ -18,12 +18,11 @@ export function NotePlayIcon(props: {
   );
 }
 
-export default function BackPlayButton(props: {
+export default function AudioButtons(props: {
   expressionAudioRefSignal: Signal<HTMLDivElement | undefined>;
   sentenceAudioRefSignal: Signal<HTMLDivElement | undefined>;
-  position: 1 | 2 | 3;
+  position: 1 | 2;
 }) {
-  const bp = useBreakpoint();
   const { ankiFields } = useAnkiField<"back">();
   const [expressionAudioRef, setExpressionAudioRef] =
     props.expressionAudioRefSignal;
@@ -43,7 +42,7 @@ export default function BackPlayButton(props: {
     setSentenceAudios(Array.from(aaa ?? []));
   });
 
-  if (props.position === 1 || props.position === 3)
+  if (props.position === 1)
     return (
       <>
         <div
@@ -56,54 +55,48 @@ export default function BackPlayButton(props: {
           ref={setSentenceAudioRef}
           innerHTML={ankiFields.SentenceAudio}
         ></div>
-        {(bp.isAtLeast("sm") || props.position === 3) && (
-          <>
-            {ankiFields.ExpressionAudio && (
-              <NotePlayIcon
-                color="primary"
-                on:click={() => {
-                  expressionAudioRef()?.querySelector("a")?.click();
-                }}
-              ></NotePlayIcon>
-            )}
-            {sentenceAudios().map((el) => {
-              return (
-                <NotePlayIcon
-                  color="secondary"
-                  on:click={() => {
-                    el.click();
-                  }}
-                ></NotePlayIcon>
-              );
-            })}
-          </>
+        {ankiFields.ExpressionAudio && (
+          <NotePlayIcon
+            color="primary"
+            on:click={() => {
+              expressionAudioRef()?.querySelector("a")?.click();
+            }}
+          ></NotePlayIcon>
         )}
+        {sentenceAudios().map((el) => {
+          return (
+            <NotePlayIcon
+              color="secondary"
+              on:click={() => {
+                el.click();
+              }}
+            ></NotePlayIcon>
+          );
+        })}
       </>
     );
 
   if (props.position === 2)
     return (
-      !bp.isAtLeast("sm") && (
-        <div class="absolute bottom-4 left-4 flex flex-col gap-2 items-center">
-          {ankiFields.ExpressionAudio && (
+      <div class="absolute bottom-4 left-4 flex sm:hidden flex-col gap-2 items-center">
+        {ankiFields.ExpressionAudio && (
+          <NotePlayIcon
+            color="primary"
+            on:click={() => {
+              expressionAudioRef()?.querySelector("a")?.click();
+            }}
+          ></NotePlayIcon>
+        )}
+        {sentenceAudios().map((el) => {
+          return (
             <NotePlayIcon
-              color="primary"
+              color="secondary"
               on:click={() => {
-                expressionAudioRef()?.querySelector("a")?.click();
+                el.click();
               }}
             ></NotePlayIcon>
-          )}
-          {sentenceAudios().map((el) => {
-            return (
-              <NotePlayIcon
-                color="secondary"
-                on:click={() => {
-                  el.click();
-                }}
-              ></NotePlayIcon>
-            );
-          })}
-        </div>
-      )
+          );
+        })}
+      </div>
     );
 }
