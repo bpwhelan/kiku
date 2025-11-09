@@ -21,13 +21,13 @@ export function Front() {
   });
 
   // biome-ignore format: this looks nicer
-  const sentenceFrontProp: DatasetProp = {
+  const sentenceFrontProp: () => DatasetProp = () => ({
     "data-is-audio-card": isServer ? "{{IsAudioCard}}" : undefined,
     "data-is-sentence-card": isServer ? "{{IsSentenceCard}}" : undefined,
-    "data-is-word-and-sentence-card": isServer ? "{{IsWordAndSentenceCard}}" : undefined ,
-    "data-is-click-card" :isServer ? "{{IsClickCard}}" : undefined,
-    "data-clicked": card.clicked ? "true" : undefined
-  }
+    "data-is-word-and-sentence-card": isServer ? "{{IsWordAndSentenceCard}}" : undefined,
+    "data-is-click-card": isServer ? "{{IsClickCard}}" : undefined,
+    "data-clicked": card.clicked ? "true" : undefined,
+  });
 
   return (
     <Layout>
@@ -60,7 +60,7 @@ export function Front() {
         </div>
       </div>
 
-      <div class="sentence-front" {...sentenceFrontProp}>
+      <div class="sentence-front" {...sentenceFrontProp()}>
         <div
           class={`[&_b]:text-base-content-primary sentence font-secondary`}
           innerHTML={isServer ? undefined : ankiFields["kanji:Sentence"]}
