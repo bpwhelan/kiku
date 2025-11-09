@@ -53,7 +53,7 @@ export function Front() {
       >
         <div class="flex-1 bg-base-200 p-4 rounded-lg flex flex-col items-center justify-center">
           <div
-            class="expression"
+            class="expression font-secondary"
             classList={{
               "border-b-2 border-dotted border-base-content-soft":
                 !!ankiFields$.IsClickCard,
@@ -75,7 +75,7 @@ export function Front() {
 
       <div class="sentence-front" {...sentenceFrontProp}>
         <div
-          class={`[&_b]:text-base-content-primary sentence`}
+          class={`[&_b]:text-base-content-primary sentence font-secondary`}
           innerHTML={isServer ? undefined : ankiFields$["kanji:Sentence"]}
         >
           {isServer ? "{{kanji:Sentence}}" : undefined}
