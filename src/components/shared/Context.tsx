@@ -8,7 +8,7 @@ import {
   onMount,
   useContext,
 } from "solid-js";
-import type { SetStoreFunction, Store } from "solid-js/store";
+import { createStore, type SetStoreFunction, type Store } from "solid-js/store";
 import type { AnkiBackFields, AnkiFields, AnkiFrontFields } from "../../types";
 import { type KikuConfig, updateConfigDataset } from "../../util/config";
 
@@ -138,4 +138,49 @@ export function useBreakpoint() {
   const breakpointSignal = useContext(BreakpointContext);
   if (!breakpointSignal) throw new Error("Missing BreakpointContext");
   return breakpointSignal;
+}
+
+type CardStore = {
+  pictureFieldRef?: HTMLDivElement;
+  expressionAudioRef?: HTMLDivElement;
+  sentenceAudioRef?: HTMLDivElement;
+  sentenceAudios?: HTMLAnchorElement[];
+  showSettings: boolean;
+  ready: boolean;
+  imageModal?: string;
+  pictureIndex: number;
+  pictures: HTMLImageElement[];
+  isNsfw: boolean;
+  clicked: boolean;
+};
+
+const CardStoreContext =
+  createContext<[Store<CardStore>, SetStoreFunction<CardStore>]>();
+
+export function CardStoreContextProvider(props: { children: JSX.Element }) {
+  const store = createStore<CardStore>({
+    pictureFieldRef: undefined,
+    expressionAudioRef: undefined,
+    sentenceAudioRef: undefined,
+    sentenceAudios: undefined,
+    showSettings: false,
+    ready: false,
+    imageModal: undefined,
+    pictureIndex: 0,
+    pictures: [],
+    isNsfw: false,
+    clicked: false,
+  });
+
+  return (
+    <CardStoreContext.Provider value={store}>
+      {props.children}
+    </CardStoreContext.Provider>
+  );
+}
+
+export function useCardStore() {
+  const cardStore = useContext(CardStoreContext);
+  if (!cardStore) throw new Error("Missing CardStoreContext");
+  return cardStore;
 }

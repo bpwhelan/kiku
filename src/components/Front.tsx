@@ -1,10 +1,10 @@
-import { createSignal, lazy, onMount } from "solid-js";
+import { lazy, onMount } from "solid-js";
 import { isServer } from "solid-js/web";
 import type { AnkiFields } from "#/types";
 import type { DatasetProp } from "#/util/config";
 import { getAnkiFields } from "#/util/general";
 import { Layout } from "./Layout";
-import { AnkiFieldContextProvider } from "./shared/Context";
+import { AnkiFieldContextProvider, useCardStore } from "./shared/Context";
 
 // biome-ignore format: this looks nicer
 const Lazy = {
@@ -13,18 +13,13 @@ const Lazy = {
 };
 
 export function Front() {
-  const expressionAudioRefSignal = createSignal<HTMLDivElement | undefined>();
-  const sentenceAudioRefSignal = createSignal<HTMLDivElement | undefined>();
-  const sentenceAudiosSignal = createSignal<HTMLAnchorElement[]>();
-
-  const [ready, setReady] = createSignal(false);
-  const [clicked, setClicked] = createSignal(false);
+  const [card, setCard] = useCardStore();
 
   const ankiFields$ = getAnkiFields<"front">();
 
   onMount(() => {
     setTimeout(() => {
-      setReady(true);
+      setCard("ready", true);
     }, 100);
   });
 
@@ -34,13 +29,13 @@ export function Front() {
     "data-is-sentence-card": isServer ? "{{IsSentenceCard}}" : undefined,
     "data-is-word-and-sentence-card": isServer ? "{{IsWordAndSentenceCard}}" : undefined ,
     "data-is-click-card" :isServer ? "{{IsClickCard}}" : undefined,
-    "data-clicked": clicked() ? "true" : undefined
+    "data-clicked": card.clicked ? "true" : undefined
   }
 
   return (
     <Layout>
       <div class="flex justify-between flex-row h-5 min-h-5">
-        {ready() && (
+        {card.ready && (
           <AnkiFieldContextProvider
             value={{ ankiFields: ankiFields$ as AnkiFields }}
           >
@@ -50,7 +45,7 @@ export function Front() {
       </div>
       <div
         class="flex rounded-lg gap-4 sm:h-56 flex-col sm:flex-row"
-        on:click={() => setClicked((prev) => !prev)}
+        on:click={() => setCard("clicked", (prev) => !prev)}
       >
         <div class="flex-1 bg-base-200 p-4 rounded-lg flex flex-col items-center justify-center">
           <div
@@ -83,17 +78,12 @@ export function Front() {
         </div>
       </div>
 
-      {ready() && ankiFields$.IsAudioCard && (
+      {card.ready && ankiFields$.IsAudioCard && (
         <div class="flex gap-2 justify-center">
           <AnkiFieldContextProvider
             value={{ ankiFields: ankiFields$ as AnkiFields }}
           >
-            <Lazy.AudioButtons
-              position={1}
-              expressionAudioRefSignal={expressionAudioRefSignal}
-              sentenceAudioRefSignal={sentenceAudioRefSignal}
-              sentenceAudiosSignal={sentenceAudiosSignal}
-            />
+            <Lazy.AudioButtons position={1} />
           </AnkiFieldContextProvider>
         </div>
       )}

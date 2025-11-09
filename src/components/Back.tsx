@@ -1,10 +1,9 @@
-import { createEffect, createSignal, lazy, onMount, Suspense } from "solid-js";
+import { createEffect, lazy, onMount, Suspense } from "solid-js";
 import { isServer } from "solid-js/web";
 import type { DatasetProp } from "#/util/config";
 import { getAnkiFields } from "#/util/general";
-import { ArrowLeftIcon } from "./_kiku_lazy/Icons";
 import { Layout } from "./Layout";
-import { AnkiFieldContextProvider } from "./shared/Context";
+import { AnkiFieldContextProvider, useCardStore } from "./shared/Context";
 
 // biome-ignore format: this looks nicer
 const Lazy = {
@@ -19,74 +18,64 @@ const Lazy = {
 };
 
 export function Back() {
-  let pictureFieldEl: HTMLDivElement | undefined;
-  const expressionAudioRefSignal = createSignal<HTMLDivElement | undefined>();
-  const sentenceAudioRefSignal = createSignal<HTMLDivElement | undefined>();
-  const sentenceAudiosSignal = createSignal<HTMLAnchorElement[]>();
-
-  const [showSettings, setShowSettings] = createSignal(false);
-  const [ready, setReady] = createSignal(false);
-  const [imageModal, setImageModal] = createSignal<string>();
-  const [pictureIndex, setPictureIndex] = createSignal(0);
-  const [pictures, setPictures] = createSignal<HTMLImageElement[]>([]);
+  const [card, setCard] = useCardStore();
 
   const ankiFields$ = getAnkiFields<"back">();
 
-  const [isNsfw, setIsNsfw] = createSignal(false);
   const tags = ankiFields$.Tags.split(" ");
 
   onMount(() => {
     setTimeout(() => {
-      setReady(true);
+      setCard("ready", true);
       globalThis.KIKU_STATE.relax = true;
     }, 100);
 
     const tags = ankiFields$.Tags.split(" ");
-    setIsNsfw(tags.map((tag) => tag.toLowerCase()).includes("nsfw"));
+    setCard("isNsfw", tags.map((tag) => tag.toLowerCase()).includes("nsfw"));
 
-    if (pictureFieldEl) {
+    if (card.pictureFieldRef) {
       const tempDiv = document.createElement("div");
       tempDiv.innerHTML = ankiFields$.Picture;
       const imgs = Array.from(tempDiv.querySelectorAll("img"));
       imgs.forEach((img) => {
         img.dataset.index = imgs.indexOf(img).toString();
       });
-      setPictures(imgs);
-      pictureFieldEl.replaceChildren(...imgs);
+      setCard("pictures", imgs);
+      card.pictureFieldRef.replaceChildren(...imgs);
     }
   });
 
   createEffect(() => {
-    pictures().forEach((img) => {
+    card.pictures.forEach((img) => {
       img.style.display =
-        img.dataset.index === pictureIndex().toString() ? "block" : "none";
+        img.dataset.index === card.pictureIndex.toString() ? "block" : "none";
     });
   });
 
   const pictureFieldDataset: () => DatasetProp = () => ({
-    "data-transition": ready() ? "true" : undefined,
+    "data-transition": card.ready ? "true" : undefined,
     "data-tags": "{{Tags}}",
-    "data-nsfw": isNsfw() ? "true" : "false",
+    "data-nsfw": card.isNsfw ? "true" : "false",
   });
 
   return (
     <Layout>
-      {showSettings() && (
+      {card.showSettings && (
         <AnkiFieldContextProvider value={{ ankiFields: ankiFields$ }}>
           <Lazy.Settings
-            onBackClick={() => setShowSettings(false)}
-            onCancelClick={() => setShowSettings(false)}
+            onBackClick={() => setCard("showSettings", false)}
+            onCancelClick={() => setCard("showSettings", false)}
           />
         </AnkiFieldContextProvider>
       )}
-      {!showSettings() && (
+      {!card.showSettings && (
         <>
           <div class="flex justify-between flex-row h-5 min-h-5">
-            {ready() && (
+            {card.ready && (
               <AnkiFieldContextProvider value={{ ankiFields: ankiFields$ }}>
                 <Lazy.Header
                   side="back"
-                  onSettingsClick={() => setShowSettings(true)}
+                  onSettingsClick={() => setCard("showSettings", true)}
                 />
               </AnkiFieldContextProvider>
             )}
@@ -114,7 +103,7 @@ export function Back() {
                     : undefined}
                 </div>
                 <div class={`mt-6 flex gap-4 pitch`}>
-                  {ankiFields$.PitchPosition && ready() ? (
+                  {ankiFields$.PitchPosition && card.ready ? (
                     <AnkiFieldContextProvider
                       value={{ ankiFields: ankiFields$ }}
                     >
@@ -129,16 +118,11 @@ export function Back() {
                   )}
                 </div>
                 <div class="hidden sm:flex gap-2 sm:h-8 sm:mt-2">
-                  {ready() && (
+                  {card.ready && (
                     <AnkiFieldContextProvider
                       value={{ ankiFields: ankiFields$ }}
                     >
-                      <Lazy.AudioButtons
-                        position={1}
-                        expressionAudioRefSignal={expressionAudioRefSignal}
-                        sentenceAudioRefSignal={sentenceAudioRefSignal}
-                        sentenceAudiosSignal={sentenceAudiosSignal}
-                      />
+                      <Lazy.AudioButtons position={1} />
                     </AnkiFieldContextProvider>
                   )}
                 </div>
@@ -151,9 +135,9 @@ export function Back() {
                   {isServer ? "{{Picture}}" : undefined}
                 </div>
                 <div
-                  ref={pictureFieldEl}
+                  ref={(ref) => setCard("pictureFieldRef", ref)}
                   class="picture-field"
-                  on:click={() => setImageModal(ankiFields$.Picture)}
+                  on:click={() => setCard("imageModal", ankiFields$.Picture)}
                   {...pictureFieldDataset()}
                   innerHTML={isServer ? undefined : ankiFields$.Picture}
                 >
@@ -161,29 +145,30 @@ export function Back() {
                 </div>
               </div>
             </div>
-            {ready() && (
+            {card.ready && (
               <div class="flex justify-between py-1 text-base-content-soft items-center gap-2 animate-fade-in h-5 sm:h-8">
-                {pictures().length > 1 && (
+                {card.pictures.length > 1 && (
                   <>
                     <Lazy.ArrowLeftIcon
                       class="cursor-pointer size-5 sm:size-8 hover:scale-110 transition-transform"
                       on:click={() => {
-                        setPictureIndex((prev) => {
+                        setCard("pictureIndex", (prev) => {
                           const newIndex =
-                            (prev - 1 + pictures().length) % pictures().length;
-                          const a = sentenceAudiosSignal[0]();
+                            (prev - 1 + card.pictures.length) %
+                            card.pictures.length;
+                          const a = card.sentenceAudios;
                           a?.[newIndex]?.click();
                           return newIndex;
                         });
                       }}
                     ></Lazy.ArrowLeftIcon>
-                    {`${pictureIndex() + 1} / ${pictures().length}`}
+                    {`${card.pictureIndex + 1} / ${card.pictures.length}`}
                     <Lazy.ArrowLeftIcon
                       class="cursor-pointer size-5 sm:size-8 rotate-180 hover:scale-110 transition-transform"
                       on:click={() => {
-                        setPictureIndex((prev) => {
-                          const newIndex = (prev + 1) % pictures().length;
-                          const a = sentenceAudiosSignal[0]();
+                        setCard("pictureIndex", (prev) => {
+                          const newIndex = (prev + 1) % card.pictures.length;
+                          const a = card.sentenceAudios;
                           a?.[newIndex]?.click();
                           return newIndex;
                         });
@@ -194,37 +179,34 @@ export function Back() {
               </div>
             )}
           </div>
-          {ready() && (
+          {card.ready && (
             <AnkiFieldContextProvider value={{ ankiFields: ankiFields$ }}>
               <Lazy.BackBody
                 onDefinitionPictureClick={(picture) => {
-                  setImageModal(picture);
+                  setCard("imageModal", picture);
                 }}
                 sentenceIndex={(sentenceLength) => {
-                  if (pictures().length !== sentenceLength) return undefined;
-                  return pictures().length > 1 ? pictureIndex() : undefined;
+                  if (card.pictures.length !== sentenceLength) return undefined;
+                  return card.pictures.length > 1
+                    ? card.pictureIndex
+                    : undefined;
                 }}
               />
             </AnkiFieldContextProvider>
           )}
-          {ready() && (
+          {card.ready && (
             <AnkiFieldContextProvider value={{ ankiFields: ankiFields$ }}>
               <Lazy.BackFooter tags={tags} />
-              <Lazy.AudioButtons
-                position={2}
-                expressionAudioRefSignal={expressionAudioRefSignal}
-                sentenceAudioRefSignal={sentenceAudioRefSignal}
-                sentenceAudiosSignal={sentenceAudiosSignal}
-              />
+              <Lazy.AudioButtons position={2} />
             </AnkiFieldContextProvider>
           )}
         </>
       )}
-      {ready() && (
+      {card.ready && (
         <AnkiFieldContextProvider value={{ ankiFields: ankiFields$ }}>
           <Lazy.ImageModal
-            img={imageModal()}
-            on:click={() => setImageModal(undefined)}
+            img={card.imageModal}
+            on:click={() => setCard("imageModal", undefined)}
           />
         </AnkiFieldContextProvider>
       )}

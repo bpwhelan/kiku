@@ -1,5 +1,5 @@
-import { onMount, type Signal } from "solid-js";
-import { useAnkiField } from "../shared/Context";
+import { onMount } from "solid-js";
+import { useAnkiField, useCardStore } from "../shared/Context";
 import { PlayIcon } from "./Icons";
 
 export function NotePlayIcon(props: {
@@ -18,18 +18,9 @@ export function NotePlayIcon(props: {
   );
 }
 
-export default function AudioButtons(props: {
-  expressionAudioRefSignal: Signal<HTMLDivElement | undefined>;
-  sentenceAudioRefSignal: Signal<HTMLDivElement | undefined>;
-  sentenceAudiosSignal: Signal<HTMLAnchorElement[] | undefined>;
-
-  position: 1 | 2;
-}) {
+export default function AudioButtons(props: { position: 1 | 2 }) {
   const { ankiFields } = useAnkiField<"back">();
-  const [expressionAudioRef, setExpressionAudioRef] =
-    props.expressionAudioRefSignal;
-  const [sentenceAudioRef, setSentenceAudioRef] = props.sentenceAudioRefSignal;
-  const [sentenceAudios, setSentenceAudios] = props.sentenceAudiosSignal;
+  const [card, setCard] = useCardStore();
   const hiddenStyle = {
     width: "0",
     height: "0",
@@ -38,8 +29,8 @@ export default function AudioButtons(props: {
   } as const;
 
   onMount(() => {
-    const aaa = sentenceAudioRef()?.querySelectorAll("a");
-    if (aaa && !sentenceAudios()) setSentenceAudios(Array.from(aaa));
+    const aaa = card.sentenceAudioRef?.querySelectorAll("a");
+    if (aaa && !card.sentenceAudios) setCard("sentenceAudios", Array.from(aaa));
   });
 
   if (props.position === 1)
@@ -47,23 +38,23 @@ export default function AudioButtons(props: {
       <>
         <div
           style={hiddenStyle}
-          ref={setExpressionAudioRef}
+          ref={(ref) => setCard("expressionAudioRef", ref)}
           innerHTML={ankiFields.ExpressionAudio}
         ></div>
         <div
           style={hiddenStyle}
-          ref={setSentenceAudioRef}
+          ref={(ref) => setCard("sentenceAudioRef", ref)}
           innerHTML={ankiFields.SentenceAudio}
         ></div>
         {ankiFields.ExpressionAudio && (
           <NotePlayIcon
             color="primary"
             on:click={() => {
-              expressionAudioRef()?.querySelector("a")?.click();
+              card.expressionAudioRef?.querySelector("a")?.click();
             }}
           ></NotePlayIcon>
         )}
-        {sentenceAudios()?.map((el) => {
+        {card.sentenceAudios?.map((el) => {
           return (
             <NotePlayIcon
               color="secondary"
@@ -83,11 +74,11 @@ export default function AudioButtons(props: {
           <NotePlayIcon
             color="primary"
             on:click={() => {
-              expressionAudioRef()?.querySelector("a")?.click();
+              card.expressionAudioRef?.querySelector("a")?.click();
             }}
           ></NotePlayIcon>
         )}
-        {sentenceAudios()?.map((el) => {
+        {card.sentenceAudios?.map((el) => {
           return (
             <NotePlayIcon
               color="secondary"

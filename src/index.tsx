@@ -6,6 +6,7 @@ import { createStore } from "solid-js/store";
 import { Front } from "./components/Front.tsx";
 import {
   BreakpointContextProvider,
+  CardStoreContextProvider,
   ConfigContextProvider,
 } from "./components/shared/Context.tsx";
 import {
@@ -87,21 +88,25 @@ export async function init({
 
     if (side === "front") {
       const App = () => (
-        <BreakpointContextProvider>
-          <ConfigContextProvider value={[config, setConfig]}>
-            <Front />
-          </ConfigContextProvider>
-        </BreakpointContextProvider>
+        <CardStoreContextProvider>
+          <BreakpointContextProvider>
+            <ConfigContextProvider value={[config, setConfig]}>
+              <Front />
+            </ConfigContextProvider>
+          </BreakpointContextProvider>
+        </CardStoreContextProvider>
       );
       if (ssr) return hydrate(App, root);
       render(App, root);
     } else if (side === "back") {
       const App = () => (
-        <BreakpointContextProvider>
-          <ConfigContextProvider value={[config, setConfig]}>
-            <Back />
-          </ConfigContextProvider>
-        </BreakpointContextProvider>
+        <CardStoreContextProvider>
+          <BreakpointContextProvider>
+            <ConfigContextProvider value={[config, setConfig]}>
+              <Back />
+            </ConfigContextProvider>
+          </BreakpointContextProvider>
+        </CardStoreContextProvider>
       );
       if (ssr) return hydrate(App, root);
       render(App, root);
