@@ -235,7 +235,7 @@
 }
 /* biome-ignore format: this looks nicer */
 @plugin "daisyui/theme" {
-  name: "carramelta";
+  name: "caramellatte";
   --color-base-content-primary: var(--color-primary);
 }
 /* biome-ignore format: this looks nicer */
