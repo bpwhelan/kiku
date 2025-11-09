@@ -36,7 +36,9 @@ export default function Header(props: {
           }}
         >
           <PaintbrushIcon class="size-5 cursor-pointer text-base-content-soft"></PaintbrushIcon>
-          <div class="text-base-content-soft">{capitalize(config.theme)}</div>
+          <div class="text-base-content-soft text-sm">
+            {capitalize(config.theme)}
+          </div>
         </div>
         <div class="text-base-content-soft bg-warning/10 rounded-sm px-1 text-sm">
           {initDelay()}

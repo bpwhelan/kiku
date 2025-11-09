@@ -25,7 +25,7 @@ export function Front() {
   });
 
   // biome-ignore format: this looks nicer
-  const sentenceFrontProp: () => DatasetProp = () => ({
+  const flexIfXCardProp: () => DatasetProp = () => ({
     "data-is-audio-card": isServer ? "{{IsAudioCard}}" : undefined,
     "data-is-sentence-card": isServer ? "{{IsSentenceCard}}" : undefined,
     "data-is-word-and-sentence-card": isServer ? "{{IsWordAndSentenceCard}}" : undefined,
@@ -63,12 +63,18 @@ export function Front() {
           </div>
         </div>
       </div>
-      <div class="flex justify-between py-1 text-base-content-soft items-center gap-2 animate-fade-in h-5 sm:h-8">
+      <div
+        class="hidden justify-between py-1 text-base-content-soft items-center gap-2 animate-fade-in h-5 sm:h-8 flex-if-x-card"
+        {...flexIfXCardProp()}
+      >
         {card.ready && <Lazy.PicturePagination />}
       </div>
 
       {/* TODO: animation */}
-      <div class="sentence-front" {...sentenceFrontProp()}>
+      <div
+        class="hidden flex-col gap-4 items-center text-center flex-if-x-card"
+        {...flexIfXCardProp()}
+      >
         <div
           ref={(ref) => setCard("sentenceFieldRef", ref)}
           class={`[&_b]:text-base-content-primary sentence font-secondary`}

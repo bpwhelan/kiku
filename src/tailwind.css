@@ -358,8 +358,7 @@ body {
     @apply [&_:not(:first-child)]:hidden;
   }
 
-  .sentence-front {
-    @apply hidden flex-col gap-4 items-center text-center;
+  .flex-if-x-card {
     &[data-is-audio-card]:not([data-is-audio-card=""]),
     &[data-is-sentence-card]:not([data-is-sentence-card=""]),
     &[data-is-word-and-sentence-card]:not([data-is-word-and-sentence-card=""]) {
