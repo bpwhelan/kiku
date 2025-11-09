@@ -1,7 +1,7 @@
 import { createEffect, createSignal, onMount } from "solid-js";
-import { useCardStore } from "#/components/shared/Context";
+import { useAnkiField, useCardStore } from "#/components/shared/Context";
 
-export const useSentenceField = () => {
+export function useSentenceField() {
   const [card] = useCardStore();
   const [sentences, setSentences] = createSignal<HTMLSpanElement[]>([]);
 
@@ -36,4 +36,21 @@ export const useSentenceField = () => {
   });
 
   return [sentences, setSentences] as const;
-};
+}
+
+export function usePictureField() {
+  const [card, setCard] = useCardStore();
+  const { ankiFields } = useAnkiField();
+  onMount(() => {
+    const tempDiv = document.createElement("div");
+    tempDiv.innerHTML = ankiFields.Picture;
+    const imgs = Array.from(tempDiv.querySelectorAll("img"));
+    imgs.forEach((img) => {
+      img.dataset.index = imgs.indexOf(img).toString();
+    });
+    setCard("pictures", imgs);
+    if (card.pictureFieldRef) {
+      card.pictureFieldRef.replaceChildren(...imgs);
+    }
+  });
+}

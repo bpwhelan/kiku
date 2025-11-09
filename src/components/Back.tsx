@@ -1,6 +1,7 @@
 import { createEffect, lazy, onMount, Suspense } from "solid-js";
 import { isServer } from "solid-js/web";
 import type { DatasetProp } from "#/util/config";
+import { usePictureField } from "#/util/hooks";
 import { Layout } from "./Layout";
 import { useAnkiField, useCardStore } from "./shared/Context";
 
@@ -18,9 +19,8 @@ const Lazy = {
 
 export function Back() {
   const [card, setCard] = useCardStore();
-
   const { ankiFields } = useAnkiField<"back">();
-
+  usePictureField();
   const tags = ankiFields.Tags.split(" ");
 
   onMount(() => {
@@ -31,17 +31,6 @@ export function Back() {
 
     const tags = ankiFields.Tags.split(" ");
     setCard("isNsfw", tags.map((tag) => tag.toLowerCase()).includes("nsfw"));
-
-    if (card.pictureFieldRef) {
-      const tempDiv = document.createElement("div");
-      tempDiv.innerHTML = ankiFields.Picture;
-      const imgs = Array.from(tempDiv.querySelectorAll("img"));
-      imgs.forEach((img) => {
-        img.dataset.index = imgs.indexOf(img).toString();
-      });
-      setCard("pictures", imgs);
-      card.pictureFieldRef.replaceChildren(...imgs);
-    }
   });
 
   createEffect(() => {

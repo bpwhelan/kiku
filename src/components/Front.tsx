@@ -1,7 +1,7 @@
 import { lazy, onMount } from "solid-js";
 import { isServer } from "solid-js/web";
 import type { DatasetProp } from "#/util/config";
-import { useSentenceField } from "#/util/hooks";
+import { usePictureField, useSentenceField } from "#/util/hooks";
 import { Layout } from "./Layout";
 import { useAnkiField, useCardStore } from "./shared/Context";
 
@@ -14,7 +14,8 @@ const Lazy = {
 export function Front() {
   const [card, setCard] = useCardStore();
   const { ankiFields } = useAnkiField<"front">();
-  const [sentences, setSentences] = useSentenceField();
+  useSentenceField();
+  usePictureField();
 
   onMount(() => {
     setTimeout(() => {

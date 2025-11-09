@@ -4,7 +4,7 @@ import { useAnkiField, useCardStore } from "../shared/Context";
 export function SentenceBack() {
   const { ankiFields } = useAnkiField<"back">();
   const [card, setCard] = useCardStore();
-  const [sentences, setSentences] = useSentenceField();
+  useSentenceField();
 
   return (
     <div
