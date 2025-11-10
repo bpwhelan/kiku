@@ -96,8 +96,8 @@ export function Back(props: { onExitNested?: () => void }) {
               const shared = Object.values(card.kanji).flatMap(
                 (data) => data.shared,
               );
-              const similar = Object.values(card.kanji).flatMap(
-                (data) => data.similar,
+              const similar = Object.values(card.kanji).flatMap((data) =>
+                Object.values(data.similar).flat(),
               );
               const notes = [...shared, ...similar];
               const note = notes.find((note) => note.noteId === noteId);

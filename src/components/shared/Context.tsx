@@ -166,7 +166,7 @@ type CardStore = {
     string,
     {
       shared: AnkiNote[];
-      similar: AnkiNote[];
+      similar: Record<string, AnkiNote[]>;
     }
   >;
   nextedAnkiFields: AnkiFields;
