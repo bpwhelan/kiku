@@ -91,7 +91,7 @@ export type AnkiBackFieldNodes = AnkiFieldNodes;
 
 export type AnkiNote = {
   cards: number[];
-  fields: Record<string, { order: number; value: string }>;
+  fields: Record<keyof AnkiFields, { order: number; value: string }>;
   mod: number;
   modelName: string;
   noteId: number;
