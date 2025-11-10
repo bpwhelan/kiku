@@ -1,6 +1,7 @@
 import type { AnkiNote, KikuNotesManifest } from "#/types";
 import { env } from "#/util/general";
 
+// biome-ignore format: this looks nicer
 export type WorkerChannels = {
   query: {
     payload: string[];
@@ -8,19 +9,14 @@ export type WorkerChannels = {
   };
   querySharedAndSimilar: {
     payload: string[];
-    result: Record<
-      string,
-      { shared: AnkiNote[]; similar: Record<string, AnkiNote[]> }
-    >;
+    result: Record< string, { shared: AnkiNote[]; similar: Record<string, AnkiNote[]> } >;
   };
   getSimilarKanji: {
     payload: string;
     result: string[];
   };
   init: {
-    payload: {
-      baseUrl: string;
-    };
+    payload: { baseUrl: string; };
     result: true;
   };
 };
@@ -32,16 +28,19 @@ export type WorkerRequest<T extends Key> = {
   type: T;
   payload: WorkerChannels[T]["payload"];
 };
-type WorkerMethod = (
-  payload: WorkerChannels[Key]["payload"],
-) => Promise<WorkerChannels[Key]["result"]>;
+
+type WorkerHandler<T extends Key> = (
+  payload: WorkerChannels[T]["payload"],
+) => Promise<WorkerChannels[T]["result"]>;
 
 class AppWorker {
-  static baseUrl = "";
+  static handlerMap = new Map<string, unknown>();
   constructor() {
     self.onmessage = async (e: MessageEvent<WorkerRequest<Key>>) => {
-      const method = AppWorker[e.data.type] as WorkerMethod;
-      method(e.data.payload)
+      const handler = AppWorker.handlerMap.get(
+        e.data.type,
+      ) as WorkerHandler<Key>;
+      handler(e.data.payload)
         .then((result) => {
           self.postMessage({
             type: e.data.type,
@@ -59,119 +58,126 @@ class AppWorker {
     };
   }
 
-  static async init({
-    baseUrl,
-  }: {
-    baseUrl: string;
-  }): Promise<WorkerChannels["init"]["result"]> {
+  static assignHandler<T extends Key>(type: T, handler: WorkerHandler<T>) {
+    AppWorker.handlerMap.set(type, handler);
+    return handler;
+  }
+
+  static baseUrl = "";
+  static init = AppWorker.assignHandler("init", async ({ baseUrl }) => {
     AppWorker.baseUrl = `${baseUrl}`;
     return true;
-  }
+  });
 
-  static async getSimilarKanji(
-    kanji: string,
-  ): Promise<WorkerChannels["getSimilarKanji"]["result"]> {
-    const store: Record<string, { kanji: string; score: number }> = {};
-    const sources = AppWorker.similar_kanji_sources();
-    const similarKanjiDbs = await AppWorker.getSimilarKanjiDBs();
+  static getSimilarKanji = AppWorker.assignHandler(
+    "getSimilarKanji",
+    async (kanji) => {
+      const store: Record<string, { kanji: string; score: number }> = {};
+      const sources = AppWorker.similar_kanji_sources();
+      const similarKanjiDbs = await AppWorker.getSimilarKanjiDBs();
 
-    sources.forEach((source) => {
-      const db = similarKanjiDbs[source.file];
-      if (!db || !(kanji in db)) return;
+      sources.forEach((source) => {
+        const db = similarKanjiDbs[source.file];
+        if (!db || !(kanji in db)) return;
 
-      db[kanji].forEach((similarity_info) => {
-        const isObject =
-          typeof similarity_info !== "string" && "kan" in similarity_info;
-        const similar_kanji = isObject ? similarity_info.kan : similarity_info;
-        const score =
-          source.base_score + (isObject ? (similarity_info.score ?? 0) : 0);
+        db[kanji].forEach((similarity_info) => {
+          const isObject =
+            typeof similarity_info !== "string" && "kan" in similarity_info;
+          const similar_kanji = isObject
+            ? similarity_info.kan
+            : similarity_info;
+          const score =
+            source.base_score + (isObject ? (similarity_info.score ?? 0) : 0);
 
-        const oldScore = store[similar_kanji]?.score ?? 0;
-        if (
-          score > AppWorker.similar_kanji_min_score ||
-          (score > 0 && oldScore > 0)
-        ) {
-          store[similar_kanji] = { kanji: similar_kanji, score };
-        } else if (score < 0) {
-          delete store[similar_kanji];
-        }
+          const oldScore = store[similar_kanji]?.score ?? 0;
+          if (
+            score > AppWorker.similar_kanji_min_score ||
+            (score > 0 && oldScore > 0)
+          ) {
+            store[similar_kanji] = { kanji: similar_kanji, score };
+          } else if (score < 0) {
+            delete store[similar_kanji];
+          }
+        });
       });
-    });
 
-    return Object.keys(store);
-  }
+      return Object.keys(store);
+    },
+  );
 
-  static async query(
-    kanjiList: string[],
-  ): Promise<WorkerChannels["query"]["result"]> {
-    const result: Record<string, AnkiNote[]> = {};
-    const manifest = await AppWorker.manifest();
+  static query = AppWorker.assignHandler(
+    "query",
+    async (kanjiList: string[]) => {
+      const result: Record<string, AnkiNote[]> = {};
+      const manifest = await AppWorker.manifest();
 
-    // Create a quick lookup for kanji to reduce nested loops
-    const kanjiSet = new Set(kanjiList);
+      // Create a quick lookup for kanji to reduce nested loops
+      const kanjiSet = new Set(kanjiList);
 
-    for (const chunk of manifest.chunks) {
-      const res = await fetch(`${AppWorker.baseUrl}${chunk.file}`);
-      if (!res.body) throw new Error(`No body for ${chunk.file}`);
+      for (const chunk of manifest.chunks) {
+        const res = await fetch(`${AppWorker.baseUrl}${chunk.file}`);
+        if (!res.body) throw new Error(`No body for ${chunk.file}`);
 
-      const ds = new DecompressionStream("gzip");
-      const decompressed = res.body.pipeThrough(ds);
-      const text = await new Response(decompressed).text();
-      const notes = JSON.parse(text) as AnkiNote[];
+        const ds = new DecompressionStream("gzip");
+        const decompressed = res.body.pipeThrough(ds);
+        const text = await new Response(decompressed).text();
+        const notes = JSON.parse(text) as AnkiNote[];
 
-      for (const note of notes) {
-        // Skip irrelevant models early
-        if (note.modelName !== "Kiku" && note.modelName !== "Lapis") continue;
+        for (const note of notes) {
+          // Skip irrelevant models early
+          if (note.modelName !== "Kiku" && note.modelName !== "Lapis") continue;
 
-        const expr = note.fields.Expression.value;
+          const expr = note.fields.Expression.value;
 
-        // Only check relevant kanji that actually appear in the expression
-        for (const kanji of kanjiSet) {
-          if (expr.includes(kanji)) {
-            result[kanji] ??= [];
-            result[kanji].push(note);
+          // Only check relevant kanji that actually appear in the expression
+          for (const kanji of kanjiSet) {
+            if (expr.includes(kanji)) {
+              result[kanji] ??= [];
+              result[kanji].push(note);
+            }
           }
         }
       }
-    }
 
-    return result;
-  }
+      return result;
+    },
+  );
 
-  static async querySharedAndSimilar(
-    kanjiList: string[],
-  ): Promise<WorkerChannels["querySharedAndSimilar"]["result"]> {
-    const similarKanji: Record<string, string[]> = Object.fromEntries(
-      await Promise.all(
-        kanjiList.map(async (k) => [k, await AppWorker.getSimilarKanji(k)]),
-      ),
-    );
-
-    const allKanji = [
-      ...new Set(kanjiList.flatMap((k) => [k, ...(similarKanji[k] ?? [])])),
-    ];
-    const queryResult = await AppWorker.query(allKanji);
-
-    const result: Record<
-      string,
-      { shared: AnkiNote[]; similar: Record<string, AnkiNote[]> }
-    > = {};
-
-    for (const kanji of kanjiList) {
-      const similars = similarKanji[kanji] ?? [];
-
-      result[kanji] = {
-        shared: queryResult[kanji] ?? [],
-        similar: Object.fromEntries(
-          similars
-            .filter((k) => queryResult[k])
-            .map((k) => [k, queryResult[k]]),
+  static querySharedAndSimilar = AppWorker.assignHandler(
+    "querySharedAndSimilar",
+    async (kanjiList: string[]) => {
+      const similarKanji: Record<string, string[]> = Object.fromEntries(
+        await Promise.all(
+          kanjiList.map(async (k) => [k, await AppWorker.getSimilarKanji(k)]),
         ),
-      };
-    }
+      );
 
-    return result;
-  }
+      const allKanji = [
+        ...new Set(kanjiList.flatMap((k) => [k, ...(similarKanji[k] ?? [])])),
+      ];
+      const queryResult = await AppWorker.query(allKanji);
+
+      const result: Record<
+        string,
+        { shared: AnkiNote[]; similar: Record<string, AnkiNote[]> }
+      > = {};
+
+      for (const kanji of kanjiList) {
+        const similars = similarKanji[kanji] ?? [];
+
+        result[kanji] = {
+          shared: queryResult[kanji] ?? [],
+          similar: Object.fromEntries(
+            similars
+              .filter((k) => queryResult[k])
+              .map((k) => [k, queryResult[k]]),
+          ),
+        };
+      }
+
+      return result;
+    },
+  );
 
   static similar_kanji_min_score = 0.5;
   static manifestCache: KikuNotesManifest | undefined;
