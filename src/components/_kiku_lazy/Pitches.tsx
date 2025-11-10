@@ -1,5 +1,5 @@
+import { hatsuon } from "#/components/_kiku_lazy/util/hatsuon";
 import type { DatasetProp } from "#/util/config";
-import { hatsuon } from "#/util/hatsuon";
 import { useAnkiField, useCardStore } from "../shared/Context";
 
 export default function Pitches() {
