@@ -89,6 +89,31 @@ export type AnkiFrontFieldNodes = ExtractUsedFields<
 >;
 export type AnkiBackFieldNodes = AnkiFieldNodes;
 
+export type AnkiNote = {
+  cards: number[];
+  fields: Record<string, { order: number; value: string }>;
+  mod: number;
+  modelName: string;
+  noteId: number;
+  profile: string;
+  tags: string[];
+};
+
+export type KikuNotesChunk = {
+  /** Path or filename of the chunk, e.g. "_kiku_notes_0.json.gz" */
+  file: string;
+  /** Number of notes contained in this chunk */
+  count: number;
+  /** [minNoteId, maxNoteId] range covered by this chunk */
+  range: [number, number];
+};
+
+export interface KikuNotesManifest {
+  profile: string;
+  totalNotes: number;
+  chunks: KikuNotesChunk[];
+}
+
 // biome-ignore format: this looks nicer
 export const ankiFieldsSkeleton: AnkiFields = {
   "Expression": "",

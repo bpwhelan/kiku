@@ -3,6 +3,7 @@ import { type AnkiFields, ankiFieldsSkeleton, exampleFields6 } from "#/types";
 
 export const env = {
   KIKU_CONFIG_FILE: "_kiku.config.json",
+  KIKU_NOTES_MANIFEST: "_kiku_notes_manifest.json",
 };
 
 export function getAnkiFields() {

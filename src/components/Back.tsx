@@ -2,6 +2,7 @@ import { createEffect, lazy, onMount, Suspense } from "solid-js";
 import { isServer } from "solid-js/web";
 import type { DatasetProp } from "#/util/config";
 import { usePictureField } from "#/util/hooks";
+import { worker } from "#/worker/workerClient";
 import { Layout } from "./Layout";
 import { useAnkiField, useCardStore } from "./shared/Context";
 
@@ -31,6 +32,16 @@ export function Back() {
 
     const tags = ankiFields.Tags.split(" ");
     setCard("isNsfw", tags.map((tag) => tag.toLowerCase()).includes("nsfw"));
+
+    async function findKanjiNotes() {
+      const kanjiList = ["学", "語", "日"];
+      const result = await worker.query(kanjiList, (info) => {
+        console.log(`Chunk ${info.chunk} — found ${info.found} matches`);
+      });
+      console.log("✅ Total found:", result.totalFound);
+      console.log(result.notes);
+    }
+    findKanjiNotes();
   });
 
   createEffect(() => {
