@@ -4,7 +4,7 @@ import { type AnkiFields, ankiFieldsSkeleton } from "#/types";
 import type { DatasetProp } from "#/util/config";
 import { extractKanji } from "#/util/general";
 import { usePictureField } from "#/util/hooks";
-import { worker } from "#/worker/workerClient";
+import { worker } from "#/worker/client";
 import { Layout } from "./Layout";
 import {
   AnkiFieldContextProvider,
@@ -47,23 +47,9 @@ export function Back(props: { onExitNested?: () => void }) {
           ? ankiFields["furigana:ExpressionFurigana"]
           : ankiFields.Expression,
       );
-      const result = await worker.query(kanjiList);
-      console.log("✅ Total found:", result.totalFound);
-      const kanji = result.notes.reduce(
-        (acc, note) => {
-          kanjiList.forEach((k) => {
-            if (!acc[k]) acc[k] = { shared: [], similar: [] };
-            if (note.fields.Expression.value.includes(k))
-              acc[k].shared.push(note);
-          });
-          return acc;
-        },
-        {} as typeof card.kanji,
-      );
-      Object.keys(kanji).forEach((k) => {
-        if (kanji[k].shared.length === 0 && kanji[k].similar.length === 0) {
-          delete kanji[k];
-        }
+      const kanji = await worker.invoke({
+        type: "querySharedAndSimilar",
+        payload: kanjiList,
       });
       setCard("kanji", kanji);
     }
