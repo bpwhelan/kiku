@@ -51,6 +51,7 @@ export function Back(props: { onExitNested?: () => void }) {
         type: "querySharedAndSimilar",
         payload: kanjiList,
       });
+
       setCard("kanji", kanji);
     }
     if (!card.nested) {
@@ -91,7 +92,12 @@ export function Back(props: { onExitNested?: () => void }) {
         </Match>
         <Match when={card.screen === "kanji" && !card.nested}>
           <Lazy.KanjiList
-            onBackClick={() => setCard("screen", "main")}
+            onBackClick={() => {
+              if (card.selectedSimilarKanji) {
+                return setCard("selectedSimilarKanji", undefined);
+              }
+              setCard("screen", "main");
+            }}
             onNextClick={(noteId) => {
               const shared = Object.values(card.kanji).flatMap(
                 (data) => data.shared,
@@ -112,13 +118,13 @@ export function Back(props: { onExitNested?: () => void }) {
                 Tags: note.tags.join(" "),
               };
 
-              setCard("nextedAnkiFields", ankiFields);
+              setCard("nestedAnkiFields", ankiFields);
               setCard("screen", "nested");
             }}
           />
         </Match>
         <Match when={card.screen === "nested" && !card.nested}>
-          <AnkiFieldContextProvider ankiFields={card.nextedAnkiFields}>
+          <AnkiFieldContextProvider ankiFields={card.nestedAnkiFields}>
             <CardStoreContextProvider nested>
               <Back
                 onExitNested={() => {

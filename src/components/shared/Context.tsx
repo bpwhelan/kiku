@@ -169,7 +169,8 @@ type CardStore = {
       similar: Record<string, AnkiNote[]>;
     }
   >;
-  nextedAnkiFields: AnkiFields;
+  selectedSimilarKanji: string | undefined;
+  nestedAnkiFields: AnkiFields;
   nested: boolean;
 };
 
@@ -194,7 +195,8 @@ export function CardStoreContextProvider(props: {
     isNsfw: false,
     clicked: false,
     kanji: {},
-    nextedAnkiFields: ankiFieldsSkeleton,
+    selectedSimilarKanji: undefined,
+    nestedAnkiFields: ankiFieldsSkeleton,
     nested: props.nested ?? false,
   });
 
