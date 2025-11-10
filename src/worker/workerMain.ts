@@ -11,6 +11,20 @@ export type QueryResponse =
   | { type: "success"; totalFound: number; notes: AnkiNote[] }
   | { type: "error"; error: string };
 
+// biome-ignore format: this looks nicer
+const similar_kanji_sources = [
+  { file: `/${env.KIKU_DB_SIMILAR_KANJI_FROM_KEISEI}`, base_score: 0.65 },
+  { file: `/${env.KIKU_DB_SIMILAR_KANJI_MANUAL}`, base_score: 0.9 },
+  { file: `/${env.KIKU_DB_SIMILAR_KANJI_WK_NIAI_NOTO}`, base_score: 0.1 },
+];
+// biome-ignore format: this looks nicer
+const similar_kanji_similar_sources = [
+  { file: `/${env.KIKU_DB_SIMILAR_KANJI_OLD_SCRIPT}`, base_score: 0.4 },
+  { file: `/${env.KIKU_DB_SIMILAR_KANJI_STROKE_EDIT_DIST}`, base_score: -0.2, },
+  { file: `/${env.KIKU_DB_SIMILAR_KANJI_YL_RADICAL}`, base_score: -0.2 },
+];
+const similar_kanji_min_score = 0.3;
+
 self.onmessage = async (e: MessageEvent<QueryRequest>) => {
   if (e.data.type !== "query") return;
   const { kanjiList } = e.data;
