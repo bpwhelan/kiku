@@ -4,7 +4,7 @@ import { type AnkiFields, ankiFieldsSkeleton } from "#/types";
 import type { DatasetProp } from "#/util/config";
 import { extractKanji } from "#/util/general";
 import { usePictureField } from "#/util/hooks";
-import { worker } from "#/worker/client";
+import { WorkerClient } from "#/worker/client";
 import { Layout } from "./Layout";
 import {
   AnkiFieldContextProvider,
@@ -47,6 +47,8 @@ export function Back(props: { onExitNested?: () => void }) {
           ? ankiFields["furigana:ExpressionFurigana"]
           : ankiFields.Expression,
       );
+
+      const worker = new WorkerClient();
       const kanji = await worker.invoke({
         type: "querySharedAndSimilar",
         payload: kanjiList,

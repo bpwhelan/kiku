@@ -1,4 +1,4 @@
-import AppWorker from "#/worker/worker?worker";
+import AppWorker from "#/worker/worker?worker&inline";
 import type { Key, WorkerChannels, WorkerResponse } from "./worker";
 
 export class WorkerClient {
@@ -37,5 +37,3 @@ export class WorkerClient {
     this.worker.terminate();
   }
 }
-
-export const worker = new WorkerClient();

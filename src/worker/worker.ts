@@ -1,6 +1,8 @@
 import type { AnkiNote, KikuNotesManifest } from "#/types";
 import { env } from "#/util/general";
 
+const prefix = import.meta.env.DEV ? "/" : "";
+
 export type WorkerChannels = {
   query: {
     payload: string[];
@@ -32,8 +34,8 @@ type WorkerMethod = (
 
 class AppWorker {
   constructor() {
-    AppWorker.manifest = fetch(`/${env.KIKU_NOTES_MANIFEST}`).then((res) =>
-      res.json(),
+    AppWorker.manifest = fetch(`${prefix}${env.KIKU_NOTES_MANIFEST}`).then(
+      (res) => res.json(),
     );
 
     self.onmessage = async (e: MessageEvent<WorkerRequest<Key>>) => {
@@ -163,17 +165,19 @@ class AppWorker {
 
   static similar_kanji_min_score = 0.5;
   static manifest: Promise<KikuNotesManifest>;
+
+  // biome-ignore format: this looks nicer
   static similar_kanji_sources = [
-    { file: `/${env.KIKU_DB_SIMILAR_KANJI_FROM_KEISEI}`, base_score: 0.65 },
-    { file: `/${env.KIKU_DB_SIMILAR_KANJI_MANUAL}`, base_score: 0.9 },
-    { file: `/${env.KIKU_DB_SIMILAR_KANJI_WK_NIAI_NOTO}`, base_score: 0.1 },
+    { file: `${prefix}${env.KIKU_DB_SIMILAR_KANJI_FROM_KEISEI}`, base_score: 0.65, },
+    { file: `${prefix}${env.KIKU_DB_SIMILAR_KANJI_MANUAL}`, base_score: 0.9 },
+    { file: `${prefix}${env.KIKU_DB_SIMILAR_KANJI_WK_NIAI_NOTO}`, base_score: 0.1, },
   ];
-  //biome-ignore format: this looks nicer
+  // biome-ignore format: this looks nicer
   static alternative_similar_kanji_sources = [
-    { file: `/${env.KIKU_DB_SIMILAR_KANJI_OLD_SCRIPT}`, base_score: 0.4 },
-    { file: `/${env.KIKU_DB_SIMILAR_KANJI_STROKE_EDIT_DIST}`, base_score: -0.2, },
-    { file: `/${env.KIKU_DB_SIMILAR_KANJI_YL_RADICAL}`, base_score: -0.2 },
-  ];
+  { file: `${prefix}${env.KIKU_DB_SIMILAR_KANJI_OLD_SCRIPT}`, base_score: 0.4 },
+  { file: `${prefix}${env.KIKU_DB_SIMILAR_KANJI_STROKE_EDIT_DIST}`, base_score: -0.2 },
+  { file: `${prefix}${env.KIKU_DB_SIMILAR_KANJI_YL_RADICAL}`, base_score: -0.2 },
+];
 
   static dbCache:
     | Record<
