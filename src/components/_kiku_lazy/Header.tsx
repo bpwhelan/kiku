@@ -62,10 +62,10 @@ export default function Header(props: {
           </div>
         </Show>
       </div>
-      <div class="flex gap-2 items-center relative hover:[&_>_#frequency]:block animate-fade-in-sm z-10">
+      <div class="flex gap-2 items-center relative hover:[&_>_#frequency]:block z-10">
         <Show when={!card.nested && props.onKanjiClick}>
           <div
-            class="text-base-content-soft cursor-pointer"
+            class="text-base-content-soft cursor-pointer animate-fade-in-sm"
             on:click={props.onKanjiClick}
           >
             漢字
@@ -80,7 +80,7 @@ export default function Header(props: {
 function Frequency() {
   const { ankiFields } = useAnkiField<"back">();
   return (
-    <>
+    <div class="flex gap-2 items-center animate-fade-in-sm">
       <div class="text-base-content-soft" innerHTML={ankiFields.FreqSort}></div>
       {ankiFields.Frequency && (
         <>
@@ -92,6 +92,6 @@ function Frequency() {
           ></div>
         </>
       )}
-    </>
+    </div>
   );
 }

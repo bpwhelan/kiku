@@ -60,6 +60,11 @@ export function Back(props: { onExitNested?: () => void }) {
         },
         {} as typeof card.kanji,
       );
+      Object.keys(kanji).forEach((k) => {
+        if (kanji[k].shared.length === 0 && kanji[k].similar.length === 0) {
+          delete kanji[k];
+        }
+      });
       setCard("kanji", kanji);
     }
     if (!card.nested) {

@@ -23,7 +23,7 @@ export default function KanjiList(props: {
         <For each={Object.entries(card.kanji)}>
           {([kanji, data]) => {
             return (
-              <div class="collapse bg-base-200 border border-base-300">
+              <div class="collapse bg-base-200 border border-base-300 animate-fade-in">
                 <input type="checkbox" checked={true} />
                 <div class="collapse-title justify-center flex font-secondary expression">
                   {kanji}
