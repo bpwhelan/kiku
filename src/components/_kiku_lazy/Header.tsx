@@ -6,6 +6,7 @@ import { capitalize } from "./util/general";
 
 export default function Header(props: {
   onSettingsClick?: () => void;
+  onKanjiClick?: () => void;
   side: "back" | "front";
 }) {
   const [config, setConfig] = useConfig();
@@ -40,12 +41,21 @@ export default function Header(props: {
             {capitalize(config.theme)}
           </div>
         </div>
+
         <div class="text-base-content-soft bg-warning/10 rounded-sm px-1 text-sm">
           {initDelay()}
           {initDelay() && "ms"}
         </div>
       </div>
       <div class="flex gap-2 items-center relative hover:[&_>_#frequency]:block animate-fade-in-sm z-10">
+        {props.onKanjiClick && (
+          <div
+            class="text-base-content-soft cursor-pointer"
+            on:click={props.onKanjiClick}
+          >
+            漢字
+          </div>
+        )}
         {props.side === "back" && <Frequency />}
       </div>
     </>

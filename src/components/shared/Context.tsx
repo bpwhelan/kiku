@@ -151,7 +151,7 @@ type CardStore = {
   sentenceFieldRef?: HTMLDivElement;
   sentenceAudioRef?: HTMLDivElement;
   sentenceAudios?: HTMLAnchorElement[];
-  showSettings: boolean;
+  screen: "main" | "settings" | "kanji";
   ready: boolean;
   imageModal?: string;
   pictureIndex: number;
@@ -177,7 +177,7 @@ export function CardStoreContextProvider(props: { children: JSX.Element }) {
     sentenceFieldRef: undefined,
     sentenceAudioRef: undefined,
     sentenceAudios: undefined,
-    showSettings: false,
+    screen: "main",
     ready: false,
     imageModal: undefined,
     pictureIndex: 0,

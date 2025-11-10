@@ -1,4 +1,4 @@
-import { createEffect, lazy, onMount, Suspense } from "solid-js";
+import { createEffect, lazy, Match, onMount, Suspense, Switch } from "solid-js";
 import { isServer } from "solid-js/web";
 import type { AnkiNote } from "#/types";
 import type { DatasetProp } from "#/util/config";
@@ -18,9 +18,10 @@ const Lazy = {
   BackBody: lazy(async () => ({ default: (await import("./_kiku_lazy")).BackBody, })),
   Pitches: lazy(async () => ({ default: (await import("./_kiku_lazy")).Pitches, })),
   PicturePagination: lazy(async () => ({ default: (await import("./_kiku_lazy")).PicturePagination, })),
+  KanjiList: lazy(async () => ({ default: (await import("./_kiku_lazy")).KanjiList, })),
 };
 
-export function Back() {
+export function Back(props: { nexted?: boolean }) {
   const [card, setCard] = useCardStore();
   const { ankiFields } = useAnkiField<"back">();
   usePictureField();
@@ -76,19 +77,27 @@ export function Back() {
 
   return (
     <Layout>
-      {card.showSettings && (
-        <Lazy.Settings
-          onBackClick={() => setCard("showSettings", false)}
-          onCancelClick={() => setCard("showSettings", false)}
-        />
-      )}
-      {!card.showSettings && (
-        <>
+      <Switch>
+        <Match when={card.screen === "settings"}>
+          <Lazy.Settings
+            onBackClick={() => setCard("screen", "main")}
+            onCancelClick={() => setCard("screen", "main")}
+          />
+        </Match>
+        <Match when={card.screen === "kanji"}>
+          <Lazy.KanjiList onBackClick={() => setCard("screen", "main")} />
+        </Match>
+        <Match when={card.screen === "main"}>
           <div class="flex justify-between flex-row h-5 min-h-5">
             {card.ready && (
               <Lazy.Header
                 side="back"
-                onSettingsClick={() => setCard("showSettings", true)}
+                onSettingsClick={() => setCard("screen", "settings")}
+                onKanjiClick={
+                  Object.keys(card.kanji).length > 0
+                    ? () => setCard("screen", "kanji")
+                    : undefined
+                }
               />
             )}
           </div>
@@ -168,8 +177,8 @@ export function Back() {
               <Lazy.AudioButtons position={2} />
             </>
           )}
-        </>
-      )}
+        </Match>
+      </Switch>
       {card.ready && (
         <Lazy.ImageModal
           img={card.imageModal}
