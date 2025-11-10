@@ -39,7 +39,10 @@ export default function KanjiList(props: {
                               <li class="p-4 pb-0 tracking-wide flex gap-2 items-end">
                                 <div
                                   class=" text-4xl font-secondary"
-                                  innerHTML={data.fields.Expression.value}
+                                  innerHTML={data.fields.Expression.value.replaceAll(
+                                    kanji,
+                                    `<span class="text-base-content-primary">${kanji}</span>`,
+                                  )}
                                 ></div>
                                 <div class="text-base-content-calm">
                                   {new Date(data.noteId).toLocaleDateString()}
@@ -50,7 +53,10 @@ export default function KanjiList(props: {
                                 <div></div>
                                 <div
                                   class="text-xl text-base-content-calm font-secondary"
-                                  innerHTML={data.fields.Sentence.value}
+                                  innerHTML={data.fields.Sentence.value.replaceAll(
+                                    kanji,
+                                    `<span class="text-base-content-primary">${kanji}</span>`,
+                                  )}
                                 ></div>
                                 <ArrowLeftIcon
                                   class="size-10 text-base-content-soft rotate-180 cursor-pointer"
