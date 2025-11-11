@@ -36,29 +36,28 @@ export function Back(props: { onExitNested?: () => void }) {
     setTimeout(() => {
       setCard("ready", true);
       globalThis.KIKU_STATE.relax = true;
+
+      async function setKanji() {
+        const kanjiList = extractKanji(
+          ankiFields.ExpressionFurigana
+            ? ankiFields["furigana:ExpressionFurigana"]
+            : ankiFields.Expression,
+        );
+        const worker = new WorkerClient();
+        const kanji = await worker.invoke({
+          type: "querySharedAndSimilar",
+          payload: kanjiList,
+        });
+
+        setCard("kanji", kanji);
+      }
+      if (!card.nested) {
+        setKanji();
+      }
     }, 100);
 
     const tags = ankiFields.Tags.split(" ");
     setCard("isNsfw", tags.map((tag) => tag.toLowerCase()).includes("nsfw"));
-
-    async function findKanjiNotes() {
-      const kanjiList = extractKanji(
-        ankiFields.ExpressionFurigana
-          ? ankiFields["furigana:ExpressionFurigana"]
-          : ankiFields.Expression,
-      );
-
-      const worker = new WorkerClient();
-      const kanji = await worker.invoke({
-        type: "querySharedAndSimilar",
-        payload: kanjiList,
-      });
-
-      setCard("kanji", kanji);
-    }
-    if (!card.nested) {
-      findKanjiNotes();
-    }
   });
 
   createEffect(() => {
