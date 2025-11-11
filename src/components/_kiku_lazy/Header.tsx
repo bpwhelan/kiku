@@ -62,7 +62,7 @@ export default function Header(props: {
           </div>
         </Show>
       </div>
-      <div class="flex gap-2 items-center relative hover:[&_>_#frequency]:block z-10">
+      <div class="flex gap-2 items-center">
         <Switch>
           <Match
             when={!card.nested && card.kanjiLoading && props.side === "back"}
@@ -87,7 +87,7 @@ export default function Header(props: {
 function Frequency() {
   const { ankiFields } = useAnkiField<"back">();
   return (
-    <div class="flex gap-2 items-center animate-fade-in-sm">
+    <div class="flex gap-2 items-center animate-fade-in-sm relative hover:[&_#frequency]:block z-10">
       <div class="text-base-content-soft" innerHTML={ankiFields.FreqSort}></div>
       {ankiFields.Frequency && (
         <>
