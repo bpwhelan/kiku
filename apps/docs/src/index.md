@@ -6,6 +6,9 @@ hero:
   name: "Kiku"
   text: "Modern Anki notes, built like web apps."
   tagline: A fully interactive Anki note type
+  image:
+    src: /logo.png
+    alt: Kiku logo
   actions:
     - theme: brand
       text: Getting Started
