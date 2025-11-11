@@ -101,6 +101,14 @@ export default function KanjiList(props: {
           }}
         </For>
       </div>
+      <div class="flex justify-center items-center">
+        <Show when={card.manifest}>
+          <div class="text-base-content-faint text-sm">
+            Updated at{" "}
+            {new Date(card.manifest?.generatedAt ?? 0).toLocaleDateString()}
+          </div>
+        </Show>
+      </div>
     </>
   );
 }

@@ -19,6 +19,10 @@ export type WorkerChannels = {
     payload: { baseUrl: string; };
     result: true;
   };
+  manifest: {
+    payload: null;
+    result: KikuNotesManifest;
+  };
 };
 export type Key = keyof WorkerChannels;
 export type WorkerResponse<T extends Key> =
@@ -109,7 +113,7 @@ class AppWorker {
     "query",
     async (kanjiList: string[]) => {
       const result: Record<string, AnkiNote[]> = {};
-      const manifest = await AppWorker.manifest();
+      const manifest = await AppWorker.manifest(null);
 
       // Create a quick lookup for kanji to reduce nested loops
       const kanjiSet = new Set(kanjiList);
@@ -181,13 +185,13 @@ class AppWorker {
 
   static similar_kanji_min_score = 0.5;
   static manifestCache: KikuNotesManifest | undefined;
-  static async manifest() {
+  static manifest = AppWorker.assignHandler("manifest", async () => {
     if (AppWorker.manifestCache) return AppWorker.manifestCache;
     const manifest = fetch(
       `${AppWorker.baseUrl}${env.KIKU_NOTES_MANIFEST}`,
     ).then((res) => res.json()) as Promise<KikuNotesManifest>;
     return manifest;
-  }
+  });
 
   // biome-ignore format: this looks nicer
   static similar_kanji_sources = () => [

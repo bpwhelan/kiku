@@ -9,15 +9,16 @@ import {
   useContext,
 } from "solid-js";
 import { createStore, type SetStoreFunction, type Store } from "solid-js/store";
-import { getAnkiFields } from "#/util/general";
 import {
   type AnkiBackFields,
   type AnkiFields,
   type AnkiFrontFields,
   type AnkiNote,
   ankiFieldsSkeleton,
-} from "../../types";
-import { type KikuConfig, updateConfigDataset } from "../../util/config";
+  type KikuNotesManifest,
+} from "#/types";
+import { type KikuConfig, updateConfigDataset } from "#/util/config";
+import { getAnkiFields } from "#/util/general";
 
 const ConfigContext =
   createContext<[Store<KikuConfig>, SetStoreFunction<KikuConfig>]>();
@@ -173,6 +174,7 @@ type CardStore = {
   selectedSimilarKanji: string | undefined;
   nestedAnkiFields: AnkiFields;
   nested: boolean;
+  manifest: KikuNotesManifest | undefined;
 };
 
 const CardStoreContext =
@@ -200,6 +202,7 @@ export function CardStoreContextProvider(props: {
     selectedSimilarKanji: undefined,
     nestedAnkiFields: ankiFieldsSkeleton,
     nested: props.nested ?? false,
+    manifest: undefined,
   });
 
   return (

@@ -112,6 +112,7 @@ export interface KikuNotesManifest {
   profile: string;
   totalNotes: number;
   chunks: KikuNotesChunk[];
+  generatedAt: number;
 }
 
 // biome-ignore format: this looks nicer
