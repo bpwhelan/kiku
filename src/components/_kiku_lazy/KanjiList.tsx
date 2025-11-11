@@ -44,7 +44,7 @@ export default function KanjiList(props: {
                     }
                   >
                     <div
-                      class="flex gap-2 items-center btn z-10"
+                      class="flex gap-2 items-center btn btn-sm sm:btn-md z-10"
                       on:click={() => {
                         setCard("selectedSimilarKanji", kanji);
                       }}
@@ -133,18 +133,28 @@ function KanjiText(props: { kanji: string }) {
   return (
     <div class="flex gap-2 sm:gap-4 ">
       <div class="font-secondary expression">{props.kanji}</div>
-      <div class="flex flex-col text-sm text-base-content-calm">
-        <div class="flex flex-row gap-2 items-center">
-          <div>Meaning:</div>
-          <div>{kanji()?.meanings.join(", ")}</div>
+      <div class="flex flex-col text-xs sm:text-sm text-base-content-calm leading-tight">
+        <div>
+          <span>Meaning: </span>
+          <span class="text-base-content-soft">
+            {kanji()?.meanings.join(", ")}
+          </span>
         </div>
-        <div class="flex flex-row gap-2 items-center">
-          <div>Onyomi:</div>
-          <div>{kanji()?.onyomi.join(", ")}</div>
+        <div>
+          <span>Frequency: </span>
+          <span class="text-base-content-soft">{kanji()?.level}</span>
         </div>
-        <div class="flex flex-row gap-2 items-center">
-          <div>Kunyomi:</div>
-          <div>{kanji()?.kunyomi.join(", ")}</div>
+        <div>
+          <span>Onyomi: </span>
+          <span class="text-base-content-soft">
+            {kanji()?.onyomi.join(", ")}
+          </span>
+        </div>
+        <div>
+          <span>Kunyomi: </span>
+          <span class="text-base-content-soft">
+            {kanji()?.kunyomi.join(", ")}
+          </span>
         </div>
       </div>
     </div>
