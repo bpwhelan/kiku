@@ -14,8 +14,8 @@ def export_notes_background(col: Collection) -> tuple[str, bool]:
     if not config:
         raise Exception("Add-on config not found.")
 
-    chunk_count = int(config.get("chunk_count", 10))
-    show_progress = bool(config.get("show_progress", True))
+    chunk_count = int(config.get("export_notes_chunk_count", 10))
+    show_progress = bool(config.get("export_notes_show_progress", True))
 
     db = col.db
     if not db:
@@ -143,7 +143,7 @@ def export_notes_json():
     config = mw.addonManager.getConfig(__name__)
     if not config:
         raise Exception("Add-on config not found.")
-    show_progress = bool(config.get("show_progress", True))
+    show_progress = bool(config.get("export_notes_show_progress", True))
 
     op = QueryOp(
         parent=mw,
@@ -162,7 +162,7 @@ def add_menu_item():
     kiku_menu = QMenu("Kiku Note Manager", mw)
     mw.form.menuTools.addMenu(kiku_menu)
 
-    export_action = QAction("Export Notes JSON (with optional progress)", mw)
+    export_action = QAction("Generate notes cache", mw)
     qconnect(export_action.triggered, export_notes_json)
     kiku_menu.addAction(export_action)
 
