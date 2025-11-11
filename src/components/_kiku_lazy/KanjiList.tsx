@@ -144,13 +144,21 @@ function KanjiText(props: { kanji: string }) {
           <span>Frequency: </span>
           <span class="text-base-content-soft">{kanji()?.level}</span>
         </div>
-        <div>
+        <div
+          classList={{
+            hidden: !kanji()?.onyomi.length,
+          }}
+        >
           <span>Onyomi: </span>
           <span class="text-base-content-soft">
             {kanji()?.onyomi.join(", ")}
           </span>
         </div>
-        <div>
+        <div
+          classList={{
+            hidden: !kanji()?.kunyomi.length,
+          }}
+        >
           <span>Kunyomi: </span>
           <span class="text-base-content-soft">
             {kanji()?.kunyomi.join(", ")}
