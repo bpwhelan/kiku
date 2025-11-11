@@ -20,9 +20,14 @@ export default function KanjiList(props: {
         </div>
         <div class="flex flex-row gap-2 items-center"></div>
       </div>
-      <div class="flex justify-center expression font-secondary ">
-        {card.selectedSimilarKanji}
-      </div>
+      <Show when={card.selectedSimilarKanji}>
+        <div class="flex flex-col items-center gap-2">
+          <div class="text-lg text-base-content-calm">Similar Kanji</div>
+          <div class="flex justify-center text-7xl font-secondary ">
+            {card.selectedSimilarKanji}
+          </div>
+        </div>
+      </Show>
       <div class="flex flex-col gap-2 sm:gap-4 ">
         <For
           each={
