@@ -1,0 +1,30 @@
+{
+  "$schema": "https://turborepo.com/schema.json",
+  "ui": "tui",
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "inputs": ["$TURBO_DEFAULT$", ".env*"],
+      "outputs": ["dist/**"]
+    },
+    "typecheck": {
+      "dependsOn": ["^typecheck"]
+    },
+    "copyDist": {
+      "dependsOn": ["^copyDist"]
+    },
+    "updateNoteType": {
+      "dependsOn": ["^updateNoteType"]
+    },
+    "generateTemplate": {
+      "dependsOn": ["^generateTemplate"]
+    },
+    "apply": {
+      "dependsOn": ["^apply"]
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    }
+  }
+}
