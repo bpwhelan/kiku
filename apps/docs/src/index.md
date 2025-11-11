@@ -5,21 +5,20 @@ layout: home
 hero:
   name: "Kiku"
   text: "Modern Anki notes, built like web apps."
-  tagline: My great project tagline
+  tagline: A fully interactive Anki note type
   actions:
     - theme: brand
-      text: Markdown Examples
+      text: Getting Started
       link: /markdown-examples
     - theme: alt
-      text: API Examples
+      text: Reference
       link: /api-examples
 
 features:
-  - title: Feature A
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
-  - title: Feature B
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
-  - title: Feature C
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+  - title: 35 Built-in Themes
+    details: Switch between 35 ready-to-use themes instantly, from light and minimal to dark and focused.
+  - title: Kanji Panel
+    details: View notes that share the same or similar kanji, and quickly jump between related expressions.
+  - title: Settings Panel
+    details: Adjust your theme, font, and size from a simple, built-in panel to match your study preferences.
 ---
-
