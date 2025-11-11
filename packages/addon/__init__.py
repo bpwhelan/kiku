@@ -3,6 +3,7 @@ from aqt.qt import QAction, QMenu, qconnect
 from aqt.utils import showInfo, tooltip
 from aqt.operations import QueryOp
 from anki.collection import Collection
+from anki.hooks import addHook
 import json, os, gzip, time
 from datetime import datetime
 
@@ -140,9 +141,7 @@ def on_export_failed(exc: Exception):
 
 
 def export_notes_json():
-    config = mw.addonManager.getConfig(__name__)
-    if not config:
-        raise Exception("Add-on config not found.")
+    config = mw.addonManager.getConfig(__name__) or {}
     show_progress = bool(config.get("export_notes_show_progress", True))
 
     op = QueryOp(
@@ -159,6 +158,7 @@ def export_notes_json():
 
 
 def add_menu_item():
+    """Add menu entry under Tools → Kiku Note Manager"""
     kiku_menu = QMenu("Kiku Note Manager", mw)
     mw.form.menuTools.addMenu(kiku_menu)
 
@@ -167,4 +167,13 @@ def add_menu_item():
     kiku_menu.addAction(export_action)
 
 
+def on_profile_loaded():
+    """Auto-run export if enabled in config."""
+    config = mw.addonManager.getConfig(__name__) or {}
+    if config.get("export_notes_run_on_start", False):
+        export_notes_json()
+
+
+# ---- Register hooks ----
 add_menu_item()
+addHook("profileLoaded", on_profile_loaded)
