@@ -33,6 +33,7 @@ def export_notes_background(col: Collection) -> str:
     last_progress = 0
     processed = 0
 
+    # --- Stage 1: Export note data ---
     for nid in note_ids:
         note = col.get_note(nid)
         model = note.note_type()
@@ -81,18 +82,33 @@ def export_notes_background(col: Collection) -> str:
             )
             last_progress = now
 
-    # Write chunk files
+    # --- Stage 2: Write chunk files ---
     total_notes = 0
     manifest_chunks = []
+
+    # Reset progress bar for chunk writing
+    mw.taskman.run_on_main(
+        lambda: mw.progress.update(label="Writing chunk files...", value=0, max=10)
+    )
 
     for i in range(10):
         chunk_data = chunks[i]
         if not chunk_data:
+            # Still increment progress for empty chunks to keep it smooth
+            mw.taskman.run_on_main(
+                lambda i=i: mw.progress.update(
+                    label=f"Writing chunk files... ({i + 1}/10)",
+                    value=i + 1,
+                    max=10,
+                )
+            )
             continue
+
         filename = f"_kiku_notes_{i}.json.gz"
         chunk_path = os.path.join(media_dir, filename)
         with gzip.open(chunk_path, "wt", encoding="utf-8") as f:
             json.dump(chunk_data, f, ensure_ascii=False)
+
         total_notes += len(chunk_data)
         manifest_chunks.append(
             {
@@ -101,6 +117,20 @@ def export_notes_background(col: Collection) -> str:
                 "range": [stats[i]["min"], stats[i]["max"]],
             }
         )
+
+        # Update chunk progress
+        mw.taskman.run_on_main(
+            lambda i=i: mw.progress.update(
+                label=f"Writing chunk files... ({i + 1}/10)",
+                value=i + 1,
+                max=10,
+            )
+        )
+
+    # --- Stage 3: Write manifest ---
+    mw.taskman.run_on_main(
+        lambda: mw.progress.update(label="Writing manifest...", value=10, max=10)
+    )
 
     manifest = {
         "profile": profile_name,
@@ -135,7 +165,7 @@ def export_notes_json():
 
 
 def add_menu_item():
-    action = QAction("Export Notes JSON (with Progress %)", mw)
+    action = QAction("Export Notes JSON (with Chunk Progress)", mw)
     qconnect(action.triggered, export_notes_json)
     mw.form.menuTools.addAction(action)
 
