@@ -370,6 +370,13 @@ body {
       @apply flex;
     }
   }
+
+  .pitch-field {
+    @apply hidden;
+    &[data-has-pitch="true"] {
+      @apply flex;
+    }
+  }
 }
 
 /*

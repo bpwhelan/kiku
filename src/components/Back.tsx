@@ -80,6 +80,14 @@ export function Back(props: { onExitNested?: () => void }) {
     "data-nsfw": card.isNsfw ? "true" : "false",
   });
 
+  const pitchFieldDataset: () => DatasetProp = () => ({
+    "data-has-pitch": isServer
+      ? "{{#PitchPosition}}true{{/PitchPosition}}"
+      : ankiFields.PitchPosition
+        ? "true"
+        : "",
+  });
+
   const expressionInnerHtml = () => {
     if (card.nested) return ankiFields.Expression;
     return isServer
@@ -177,7 +185,10 @@ export function Back(props: { onExitNested?: () => void }) {
                     ? "{{#ExpressionFurigana}}{{furigana:ExpressionFurigana}}{{/ExpressionFurigana}}{{^ExpressionFurigana}}{{Expression}}{{/ExpressionFurigana}}"
                     : undefined}
                 </div>
-                <div class={`mt-6 flex gap-4 pitch`}>
+                <div
+                  class={`mt-6 flex gap-4 pitch pitch-field`}
+                  {...pitchFieldDataset()}
+                >
                   {ankiFields.PitchPosition && card.ready ? (
                     <Suspense fallback={<span>&nbsp;</span>}>
                       <Lazy.Pitches />

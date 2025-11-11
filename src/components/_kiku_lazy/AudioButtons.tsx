@@ -79,9 +79,7 @@ export default function AudioButtons(props: { position: 1 | 2 }) {
           ref={(ref) => setCard("sentenceAudioRef", ref)}
           innerHTML={card.nested ? undefined : ankiFields.SentenceAudio}
         >
-          {card.nested && (
-            <AudioTag text={ankiFields.SentenceAudio.repeat(2)} />
-          )}
+          {card.nested && <AudioTag text={ankiFields.SentenceAudio} />}
         </div>
         {ankiFields.ExpressionAudio && (
           <NotePlayIcon
