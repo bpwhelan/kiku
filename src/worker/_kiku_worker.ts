@@ -234,18 +234,22 @@ class AppWorker {
 
   static async getSimilarKanjiDBs() {
     if (AppWorker.dbCache) return AppWorker.dbCache;
-    AppWorker.dbCache = {};
+    const dbCache: Record<
+      string,
+      Record<string, Array<string | { score: number; kan: string }>>
+    > = {};
     const allSources = [
       ...AppWorker.similar_kanji_sources(),
       // ...WorkerMain.alternative_similar_kanji_sources,
     ];
     for (const src of allSources) {
-      if (!AppWorker.dbCache[src.file]) {
+      if (!dbCache[src.file]) {
         const res = await fetch(`${src.file}`);
         if (!res.ok) throw new Error(`Failed to load ${src.file}`);
-        AppWorker.dbCache[src.file] = await res.json();
+        dbCache[src.file] = await res.json();
       }
     }
+    AppWorker.dbCache = dbCache;
     return AppWorker.dbCache;
   }
 }

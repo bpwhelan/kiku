@@ -115,7 +115,7 @@ export default function KanjiList(props: {
 }
 
 function KanjiText(props: { kanji: string }) {
-  const [card, setCard] = useCardStore();
+  const [card] = useCardStore();
   const [kanji, setKanji] = createSignal<Kanji>();
 
   onMount(async () => {
@@ -125,7 +125,6 @@ function KanjiText(props: { kanji: string }) {
         type: "lookup",
         payload: props.kanji,
       });
-      console.log(lookup, props.kanji);
       setKanji(lookup);
     }
   });

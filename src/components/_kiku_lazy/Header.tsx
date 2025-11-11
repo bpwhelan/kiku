@@ -67,7 +67,7 @@ export default function Header(props: {
           <Match
             when={!card.nested && card.kanjiLoading && props.side === "back"}
           >
-            <span class="loading loading-spinner loading-xs text-base-content-soft animate-fade-in-sm"></span>
+            <span class="loading loading-spinner loading-xs text-base-content-faint animate-fade-in-sm"></span>
           </Match>
           <Match when={!card.nested && props.onKanjiClick}>
             <div
