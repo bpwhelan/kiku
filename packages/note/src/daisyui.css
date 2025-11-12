@@ -1,0 +1,84 @@
+@plugin "daisyui" {
+  themes: all;
+  include:
+    properties, reset, rootcolor, rootscrollgutter, rootscrolllock, svg, scrollbar, button, input, label, fieldset, select, alert, badge,
+    toast, collapse, status, toggle, list, loading;
+}
+
+/* biome-ignore format: this looks nicer */
+@theme {
+  --color-base-content-primary: black;
+  --color-base-content-subtle-100: color-mix( in srgb, var(--color-base-content) 10%, var(--color-base-100));
+  --color-base-content-subtle-200: color-mix( in srgb, var(--color-base-content) 20%, var(--color-base-100));
+  --color-base-content-subtle-300: color-mix( in srgb, var(--color-base-content) 30%, var(--color-base-100));
+  --color-base-content-subtle-400: color-mix( in srgb, var(--color-base-content) 40%, var(--color-base-100));
+  --color-base-content-subtle-500: color-mix( in srgb, var(--color-base-content) 50%, var(--color-base-100));
+  --color-base-content-subtle-600: color-mix( in srgb, var(--color-base-content) 60%, var(--color-base-100));
+  --color-base-content-subtle-700: color-mix( in srgb, var(--color-base-content) 70%, var(--color-base-100));
+  --color-base-content-subtle-800: color-mix( in srgb, var(--color-base-content) 80%, var(--color-base-100));
+  --color-base-content-subtle-900: color-mix( in srgb, var(--color-base-content) 90%, var(--color-base-100));
+  --color-base-content-faint: var(--color-base-content-subtle-300);
+  --color-base-content-soft: var(--color-base-content-subtle-500);
+  --color-base-content-calm: var(--color-base-content-subtle-700);
+}
+
+/* biome-ignore format: this looks nicer */
+@layer base {
+  [data-theme] {
+    --color-base-content-subtle-100: color-mix( in srgb, var(--color-base-content) 10%, var(--color-base-100));
+    --color-base-content-subtle-200: color-mix( in srgb, var(--color-base-content) 20%, var(--color-base-100));
+    --color-base-content-subtle-300: color-mix( in srgb, var(--color-base-content) 30%, var(--color-base-100));
+    --color-base-content-subtle-400: color-mix( in srgb, var(--color-base-content) 40%, var(--color-base-100));
+    --color-base-content-subtle-500: color-mix( in srgb, var(--color-base-content) 50%, var(--color-base-100));
+    --color-base-content-subtle-600: color-mix( in srgb, var(--color-base-content) 60%, var(--color-base-100));
+    --color-base-content-subtle-700: color-mix( in srgb, var(--color-base-content) 70%, var(--color-base-100));
+    --color-base-content-subtle-800: color-mix( in srgb, var(--color-base-content) 80%, var(--color-base-100));
+    --color-base-content-subtle-900: color-mix( in srgb, var(--color-base-content) 90%, var(--color-base-100));
+    --color-base-content-faint: var(--color-base-content-subtle-300);
+    --color-base-content-soft: var(--color-base-content-subtle-500);
+    --color-base-content-calm: var(--color-base-content-subtle-700);
+  }
+
+  [data-theme="light"],
+  [data-theme="corporate"],
+  [data-theme="valentine"],
+  [data-theme="halloween"],
+  [data-theme="forest"],
+  [data-theme="aqua"],
+  [data-theme="lofi"],
+  [data-theme="fantasy"],
+  [data-theme="luxury"],
+  [data-theme="dracula"],
+  [data-theme="cmyk"],
+  [data-theme="autumn"],
+  [data-theme="lemonade"],
+  [data-theme="night"],
+  [data-theme="coffee"],
+  [data-theme="winter"],
+  [data-theme="dim"],
+  [data-theme="nord"],
+  [data-theme="sunset"],
+  [data-theme="caramellatte"],
+  [data-theme="abyss"],
+  [data-theme="silk"],
+  [data-theme="temp"] {
+    --color-base-content-primary: var(--color-primary);
+  }
+
+  [data-theme="dark"],
+  [data-theme="cupcake"],
+  [data-theme="bumblebee"],
+  [data-theme="emerald"],
+  [data-theme="synthwave"],
+  [data-theme="retro"],
+  [data-theme="cyberpunk"],
+  [data-theme="garden"],
+  [data-theme="pastel"],
+  [data-theme="wireframe"],
+  [data-theme="black"],
+  [data-theme="business"],
+  [data-theme="acid"],
+  [data-theme="temp"] {
+    --color-base-content-primary: color-mix( in srgb, var(--color-primary) 50%, var(--color-base-content));
+  }
+}
