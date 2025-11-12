@@ -2,7 +2,7 @@
   "name": "docs",
   "version": "0.0.0",
   "scripts": {
-    "dev": "vitepress dev",
+    "dev": "vitepress dev --port 5174",
     "build": "vitepress build",
     "preview": "vitepress preview"
   },
@@ -10,4 +10,3 @@
     "vitepress": "2.0.0-alpha.12"
   }
 }
-
