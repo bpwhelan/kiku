@@ -17,7 +17,6 @@ import {
   validateConfig,
 } from "./util/config.ts";
 import { env } from "./util/general.ts";
-import { useAnkiWeb } from "./util/hooks.ts";
 
 declare global {
   var KIKU_STATE: {
@@ -40,6 +39,11 @@ export async function init({
   ssr?: boolean;
 }) {
   try {
+    if (window.location.origin.includes("ankiuser.net")) {
+      const kikuCss = document.getElementById("kiku-css");
+      kikuCss?.remove();
+    }
+
     const root =
       document.getElementById("root") ??
       document.querySelector("[data-kiku-root]");
@@ -96,7 +100,6 @@ export async function init({
 
     const [config, setConfig] = createStore(config$);
     window.KIKU_STATE.relax = false;
-    useAnkiWeb();
 
     if (side === "front") {
       const App = () => (
