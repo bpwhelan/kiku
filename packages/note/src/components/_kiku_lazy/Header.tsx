@@ -21,8 +21,7 @@ export default function Header(props: {
 
   onMount(() => {
     setTimeout(() => {
-      if (window.KIKU_STATE.initDelay)
-        setInitDelay(window.KIKU_STATE.initDelay);
+      if (KIKU_STATE.initDelay) setInitDelay(KIKU_STATE.initDelay);
     }, 200);
   });
 

@@ -35,7 +35,7 @@ export function Back(props: { onExitNested?: () => void }) {
   onMount(() => {
     setTimeout(() => {
       setCard("ready", true);
-      globalThis.KIKU_STATE.relax = true;
+      KIKU_STATE.relax = true;
 
       async function setKanji() {
         const kanjiList = extractKanji(
@@ -173,7 +173,7 @@ export function Back(props: { onExitNested?: () => void }) {
             <div
               class="flex rounded-lg gap-4 sm:h-56 flex-col sm:flex-row"
               classList={{
-                "animate-fade-in": globalThis.KIKU_STATE.relax,
+                "animate-fade-in": KIKU_STATE.relax,
               }}
             >
               <div class="flex-1 bg-base-200 p-4 rounded-lg flex flex-col items-center justify-center">

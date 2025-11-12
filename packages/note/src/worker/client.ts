@@ -5,9 +5,7 @@ export class WorkerClient {
   private ready: Promise<void>;
 
   constructor() {
-    const isAnkiWeb = window.location.origin.includes("ankiuser.net");
-
-    if (isAnkiWeb) {
+    if (KIKU_STATE.isAnkiWeb) {
       this.worker = new Worker("/study/media/_kiku_worker.js", {
         type: "module",
       });
@@ -22,7 +20,7 @@ export class WorkerClient {
       payload: {
         baseUrl: import.meta.env.DEV
           ? "/"
-          : isAnkiWeb
+          : KIKU_STATE.isAnkiWeb
             ? `${window.location.origin}/study/media/`
             : `${window.location.origin}/`,
       },

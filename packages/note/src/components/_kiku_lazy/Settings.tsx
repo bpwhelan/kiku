@@ -146,15 +146,14 @@ export default function Settings(props: {
   >({});
   function getRootDatasetMismatches() {
     const mismatches = Object.entries(config).filter(([key, value]) => {
-      const rootDataValue =
-        globalThis.KIKU_STATE.rootDataset[key as keyof KikuConfig];
+      const rootDataValue = KIKU_STATE.rootDataset[key as keyof KikuConfig];
       return (
         String(rootDataValue).replaceAll('"', "'") !==
         value.toString().replaceAll('"', "'")
       );
     });
     const mismatches$ = mismatches.map(([key]) => {
-      return [key, globalThis.KIKU_STATE.rootDataset[key as keyof KikuConfig]];
+      return [key, KIKU_STATE.rootDataset[key as keyof KikuConfig]];
     });
 
     const mismatches$2 = Object.fromEntries(mismatches$);
@@ -571,15 +570,13 @@ export default function Settings(props: {
                   <ClipboardCopyIcon
                     class="size-5 text-base-content-calm cursor-pointer"
                     on:click={() => {
-                      copyToClipboard(
-                        toDatasetString(globalThis.KIKU_STATE.rootDataset),
-                      );
+                      copyToClipboard(toDatasetString(KIKU_STATE.rootDataset));
                     }}
                   />
                 </div>
                 <pre class="text-xs bg-base-200 p-4 rounded-lg overflow-auto">
                   <span class="opacity-25 select-none">{"<div\n"}</span>
-                  {toDatasetString(globalThis.KIKU_STATE.rootDataset)}
+                  {toDatasetString(KIKU_STATE.rootDataset)}
                   <span class="opacity-25 select-none">{"\n>"}</span>
                 </pre>
               </div>
@@ -670,7 +667,7 @@ export default function Settings(props: {
         </div>
       </div>
 
-      <Portal mount={window.KIKU_STATE.root}>
+      <Portal mount={KIKU_STATE.root}>
         <div class="max-w-4xl mx-auto w-full relative">
           <div class="flex flex-row gap-2 justify-end animate-fade-in absolute bottom-0 right-0 mx-4 mb-4">
             <div class="btn" on:click={props.onCancelClick}>

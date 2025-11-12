@@ -25,10 +25,12 @@ declare global {
     config?: KikuConfig;
     root?: HTMLElement;
     rootDataset: KikuConfig;
+    isAnkiWeb?: boolean;
   };
 }
 globalThis.KIKU_STATE = {
   rootDataset: defaultConfig,
+  isAnkiWeb: window.location.origin.includes("ankiuser.net"),
 };
 
 export async function init({
@@ -39,7 +41,7 @@ export async function init({
   ssr?: boolean;
 }) {
   try {
-    if (window.location.origin.includes("ankiuser.net")) {
+    if (KIKU_STATE.isAnkiWeb) {
       const kikuCss = document.getElementById("kiku-css");
       kikuCss?.remove();
     }
@@ -48,7 +50,7 @@ export async function init({
       document.getElementById("root") ??
       document.querySelector("[data-kiku-root]");
     if (!root) throw new Error("root not found");
-    globalThis.KIKU_STATE.root = root;
+    KIKU_STATE.root = root;
 
     const qa = document.querySelector("#qa");
     if (qa?.shadowRoot) qa.shadowRoot.innerHTML = "";
@@ -68,11 +70,11 @@ export async function init({
 
     let config$: KikuConfig;
     try {
-      if (globalThis.KIKU_STATE.config) config$ = globalThis.KIKU_STATE.config;
+      if (KIKU_STATE.config) config$ = KIKU_STATE.config;
       config$ = validateConfig(
         await (await fetch(env.KIKU_CONFIG_FILE)).json(),
       );
-      globalThis.KIKU_STATE.config = config$;
+      KIKU_STATE.config = config$;
     } catch {
       config$ = defaultConfig;
     }
@@ -101,12 +103,12 @@ export async function init({
         fontSizeSmMiscInfo: rootDataset.fontSizeSmMiscInfo,
         fontSizeSmHint: rootDataset.fontSizeSmHint,
       };
-      globalThis.KIKU_STATE.rootDataset = rootDataset$;
+      KIKU_STATE.rootDataset = rootDataset$;
     })();
     updateConfigDataset(root, config$);
 
     const [config, setConfig] = createStore(config$);
-    window.KIKU_STATE.relax = false;
+    KIKU_STATE.relax = false;
 
     if (side === "front") {
       const App = () => (
