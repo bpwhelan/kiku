@@ -1,0 +1,42 @@
+/*
+ *    ────────────────────────────── Jitendex ─────────────────────────────
+*/
+[data-sc-content="example-sentence"] {
+  background-color: var(--color-base-300) !important;
+  border-color: var(--color-primary) !important;
+}
+
+[data-sc-content="example-keyword"] {
+  color: var(--color-base-content-primary) !important;
+}
+
+[data-jitendex-tag="true"] {
+  background-color: var(--color-secondary) !important;
+  color: var(--color-secondary-content) !important;
+}
+
+[data-jitendex-i="true"] {
+  color: var(--color-base-content-calm) !important;
+}
+
+/*
+ *    ─────────────────────────────── JMdict ──────────────────────────────
+*/
+
+[data-details="JMdict"] > .dict-group__tag-list::before {
+  content: "(";
+}
+
+[data-details="JMdict"] > .dict-group__tag-list::after {
+  content: ") ";
+}
+
+[data-details="JMdict"]
+  .dict-group__tag-list
+  .dict-group__tag:not(:first-child)::before {
+  content: ", ";
+}
+
+ol:has(> li[data-details="JMdict"]) {
+  list-style-type: disc;
+}

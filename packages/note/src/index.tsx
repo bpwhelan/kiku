@@ -16,7 +16,7 @@ import {
   validateConfig,
 } from "./util/config.ts";
 import { env } from "./util/general.ts";
-import "./tailwind.css";
+import "./styles/tailwind.css";
 
 declare global {
   var KIKU_STATE: {

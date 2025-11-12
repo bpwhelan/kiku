@@ -3,9 +3,49 @@
 @import "tailwindcss";
 @import "./tailwindFontSize.css";
 @import "./daisyui.css";
+@import "./dictionary.css";
+
+/* biome-ignore format: this looks nicer */
+@theme {
+  --animate-fade-in: fade-in 400ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  --animate-fade-in-sm: fade-in-sm 300ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  @keyframes fade-in {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fade-in-sm {
+    from { opacity: 0; transform: translateY(2px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+}
+
+@custom-variant hover (&:hover);
 
 /* biome-ignore format: this looks nicer */
 @layer base {
+  @font-face {
+    font-family: "Hina Mincho";
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url("_kiku_font_hina-mincho.woff2") format("woff2");
+  }
+
+  @font-face {
+    font-family: "Klee One";
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url("_kiku_font_klee-one.woff2") format("woff2");
+  }
+
+  @font-face {
+    font-family: "IBM Plex Sans JP";
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url("_kiku_font_ibm-plex-sans-jp.woff2") format("woff2");
+  }
   [data-use-system-font-primary="true"] .font-primary { font-family: var(--system-font-primary); }
   [data-use-system-font-secondary="true"] .font-secondary { font-family: var(--system-font-secondary); }
 
@@ -26,84 +66,6 @@
   [data-use-system-font-secondary="false"][data-web-font-secondary="IBM Plex Sans JP"] .font-secondary,
   [data-use-system-font-secondary="false"][data-web-font-secondary="IBM Plex Sans JP"][data-font-scope="local"] .font-secondary
   { font-family: "IBM Plex Sans JP", sans-serif; font-weight: 400; font-style: normal; }
-}
-
-@font-face {
-  font-family: "Hina Mincho";
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url("_kiku_font_hina-mincho.woff2") format("woff2");
-}
-
-@font-face {
-  font-family: "Klee One";
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url("_kiku_font_klee-one.woff2") format("woff2");
-}
-
-@font-face {
-  font-family: "IBM Plex Sans JP";
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url("_kiku_font_ibm-plex-sans-jp.woff2") format("woff2");
-}
-
-@custom-variant hover (&:hover);
-
-* {
-  box-sizing: border-box;
-}
-
-a {
-  color: inherit;
-}
-
-html {
-  font-size: 1rem;
-}
-
-body {
-  margin: 0rem;
-  background: var(--color-base-100);
-}
-
-@theme {
-  --animate-fade-in: fade-in 400ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  --animate-fade-in-sm: fade-in-sm 300ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-*::-webkit-scrollbar {
-  background-color: var(--color-base-200) !important;
-}
-
-*::-webkit-scrollbar-thumb {
-  background-color: var(--color-base-content-subtle-100) !important;
-}
-
-@keyframes fade-in {
-  from {
-    opacity: 0;
-    transform: translateY(4px); /* subtle lift */
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes fade-in-sm {
-  from {
-    opacity: 0;
-    transform: translateY(2px); /* subtle lift */
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }
 
 @utility gutter-stable {
@@ -197,45 +159,23 @@ body {
   }
 }
 
-/*
- *    ────────────────────────────── Jitendex ─────────────────────────────
-*/
-[data-sc-content="example-sentence"] {
-  background-color: var(--color-base-300) !important;
-  border-color: var(--color-primary) !important;
+:root {
+  font-size: 16px;
 }
 
-[data-sc-content="example-keyword"] {
-  color: var(--color-base-content-primary) !important;
+body {
+  margin: 0rem;
+  background: var(--color-base-100);
 }
 
-[data-jitendex-tag="true"] {
-  background-color: var(--color-secondary) !important;
-  color: var(--color-secondary-content) !important;
+*::-webkit-scrollbar {
+  background-color: var(--color-base-200) !important;
 }
 
-[data-jitendex-i="true"] {
-  color: var(--color-base-content-calm) !important;
+*::-webkit-scrollbar-thumb {
+  background-color: var(--color-base-content-subtle-100) !important;
 }
 
-/*
- *    ─────────────────────────────── JMdict ──────────────────────────────
-*/
-
-[data-details="JMdict"] > .dict-group__tag-list::before {
-  content: "(";
-}
-
-[data-details="JMdict"] > .dict-group__tag-list::after {
-  content: ") ";
-}
-
-[data-details="JMdict"]
-  .dict-group__tag-list
-  .dict-group__tag:not(:first-child)::before {
-  content: ", ";
-}
-
-ol:has(> li[data-details="JMdict"]) {
-  list-style-type: disc;
+#root a {
+  color: inherit;
 }
