@@ -177,6 +177,6 @@ body {
   background-color: var(--color-base-content-subtle-100) !important;
 }
 
-#root a {
-  color: inherit;
+[data-kiku-root] {
+  position: relative;
 }
