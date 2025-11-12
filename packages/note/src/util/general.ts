@@ -1,10 +1,6 @@
 import { isServer } from "solid-js/web";
-import {
-  type AnkiFields,
-  ankiFieldsSkeleton,
-  exampleFields6,
-  exampleFields8,
-} from "#/types";
+import { type AnkiFields, ankiFieldsSkeleton } from "#/types";
+import { exampleFields8 } from "./examples";
 
 // biome-ignore format: this looks nicer
 export const env = {
