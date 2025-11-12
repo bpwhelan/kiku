@@ -1,4 +1,3 @@
-import AppWorker from "#/worker/_kiku_worker?worker";
 import type { Key, WorkerChannels, WorkerResponse } from "./_kiku_worker";
 
 export class WorkerClient {
@@ -6,11 +5,26 @@ export class WorkerClient {
   private ready: Promise<void>;
 
   constructor() {
-    this.worker = new AppWorker();
+    const isAnkiWeb = window.location.origin.includes("ankiuser.net");
+
+    if (isAnkiWeb) {
+      this.worker = new Worker("/study/media/_kiku_worker.js", {
+        type: "module",
+      });
+    } else {
+      this.worker = new Worker(new URL("./_kiku_worker.ts", import.meta.url), {
+        type: "module",
+      });
+    }
+
     this.ready = this.invoke({
       type: "init",
       payload: {
-        baseUrl: import.meta.env.DEV ? "/" : `${window.location.origin}/`,
+        baseUrl: import.meta.env.DEV
+          ? "/"
+          : isAnkiWeb
+            ? `${window.location.origin}/study/media/`
+            : `${window.location.origin}/`,
       },
     }).then(() => {});
   }
