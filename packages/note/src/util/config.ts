@@ -167,5 +167,6 @@ export function updateConfigDataset(el: HTMLElement, config: KikuConfig) {
   };
   Object.entries(cssVar).forEach(([key, value]) => {
     document.documentElement.style.setProperty(key, value);
+    el.style.setProperty(key, value);
   });
 }

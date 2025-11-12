@@ -1,3 +1,5 @@
+/* https://github.com/saadeghi/daisyui/issues/4209#issuecomment-3512250505 */
+@layer theme, base, components, utilities.daisyui.component;
 @import "tailwindcss";
 @import "./tailwindFontSize.css";
 @import "./daisyui.css";

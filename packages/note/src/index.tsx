@@ -1,8 +1,7 @@
 /* @refresh reload */
+import { createStore } from "solid-js/store";
 import { hydrate, render } from "solid-js/web";
 import { Back } from "./components/Back.tsx";
-import "./tailwind.css";
-import { createStore } from "solid-js/store";
 import { Front } from "./components/Front.tsx";
 import {
   AnkiFieldContextProvider,
@@ -17,6 +16,7 @@ import {
   validateConfig,
 } from "./util/config.ts";
 import { env } from "./util/general.ts";
+import "./tailwind.css";
 
 declare global {
   var KIKU_STATE: {
@@ -53,11 +53,18 @@ export async function init({
     const qa = document.querySelector("#qa");
     if (qa?.shadowRoot) qa.shadowRoot.innerHTML = "";
     const shadow = qa?.shadowRoot ?? qa?.attachShadow({ mode: "open" });
-    const link = document.createElement("link");
-    link.rel = "stylesheet";
-    link.href = "_kiku.css";
-    shadow?.appendChild(link);
     shadow?.appendChild(root);
+    const tailwind = document.querySelector(
+      "[data-vite-dev-id='/home/yym/repos/kiku/packages/note/src/tailwind.css']",
+    );
+    if (tailwind) {
+      shadow?.appendChild(tailwind.cloneNode(true));
+    } else {
+      const link = document.createElement("link");
+      link.rel = "stylesheet";
+      link.href = "./_kiku.css";
+      shadow?.appendChild(link);
+    }
 
     let config$: KikuConfig;
     try {
