@@ -104,8 +104,8 @@ export function useAnkiDroid() {
   const reverse = config.ankiDroidReverseSwipeDirection === "true";
 
   const threshold = 60;
-  const deadzone = 20;
-  const duration = 80;
+  const deadzone = 10;
+  const duration = 150;
   const scrollTolerance = 15;
 
   let startX = 0;
@@ -171,11 +171,11 @@ export function useAnkiDroid() {
         stage = 3;
       }
 
+      const clamped = Math.max(-threshold, Math.min(diffX, threshold));
       const target = stageValue * direction;
 
-      // add small smooth transition between steps
       el.style.transition = `transform ${duration}ms ease-out`;
-      el.style.transform = `translateX(${target}px)`;
+      el.style.transform = `translateX(${clamped}px)`;
 
       deltaX = target;
 
@@ -204,8 +204,8 @@ export function useAnkiDroid() {
           ankiDroidAPI?.ankiAnswerEase3();
         }
       }
+      return;
     }
-
     snapBack();
   }
 
