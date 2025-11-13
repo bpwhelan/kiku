@@ -63,6 +63,8 @@ export default function Settings(props: {
       useSystemFontSecondary: config.useSystemFontSecondary ? config.useSystemFontSecondary : defaultConfig.useSystemFontSecondary,
       //TODO: configurable
       ankiConnectPort: "8765",
+      ankiDroidEnableIntegration: config.ankiDroidEnableIntegration ? config.ankiDroidEnableIntegration : defaultConfig.ankiDroidEnableIntegration,
+      ankiDroidReverseSwipeDirection: config.ankiDroidReverseSwipeDirection ? config.ankiDroidReverseSwipeDirection : defaultConfig.ankiDroidReverseSwipeDirection,
       fontSizeBaseExpression: config.fontSizeBaseExpression ? config.fontSizeBaseExpression : defaultConfig.fontSizeBaseExpression,
       fontSizeBasePitch: config.fontSizeBasePitch ? config.fontSizeBasePitch : defaultConfig.fontSizeBasePitch,
       fontSizeBaseSentence: config.fontSizeBaseSentence ? config.fontSizeBaseSentence : defaultConfig.fontSizeBaseSentence,

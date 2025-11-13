@@ -92,6 +92,8 @@ export async function init({
         systemFontSecondary: rootDataset.systemFontSecondary,
         useSystemFontSecondary: rootDataset.useSystemFontSecondary,
         ankiConnectPort: rootDataset.ankiConnectPort,
+        ankiDroidEnableIntegration: rootDataset.ankiDroidEnableIntegration,
+        ankiDroidReverseSwipeDirection: rootDataset.ankiDroidReverseSwipeDirection,
         fontSizeBaseExpression: rootDataset.fontSizeBaseExpression,
         fontSizeBasePitch: rootDataset.fontSizeBasePitch,
         fontSizeBaseSentence: rootDataset.fontSizeBaseSentence,

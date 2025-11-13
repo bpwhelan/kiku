@@ -1,6 +1,6 @@
 import { createEffect, onCleanup } from "solid-js";
 import { isServer } from "solid-js/web";
-import { useCardStore } from "#/components/shared/Context";
+import { useCardStore, useConfig } from "#/components/shared/Context";
 
 declare global {
   var AnkiDroidJS: {
@@ -12,14 +12,17 @@ function reverseEase(ease: "ease1" | "ease3") {
   return ease === "ease1" ? "ease3" : "ease1";
 }
 
-export function useAnkiDroid(options?: { reverseSwipeDirection?: boolean }) {
+export function useAnkiDroid() {
   if (isServer) return;
   if (window.innerWidth > 768) return;
   if (typeof AnkiDroidJS === "undefined" && !import.meta.env.DEV) return;
 
+  const [config] = useConfig();
+  if (config.ankiDroidEnableIntegration === "false") return;
+
   const [card, setCard] = useCardStore();
   const el$ = () => card.contentRef;
-  const reverse = options?.reverseSwipeDirection ?? false;
+  const reverse = config.ankiDroidReverseSwipeDirection === "true";
 
   const threshold = 100;
   const deadzone = 20;

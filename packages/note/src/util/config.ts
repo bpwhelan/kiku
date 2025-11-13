@@ -12,6 +12,8 @@ export type KikuConfig = {
   systemFontSecondary: string;
   useSystemFontSecondary: "true" | "false";
   ankiConnectPort: string;
+  ankiDroidEnableIntegration: "true" | "false";
+  ankiDroidReverseSwipeDirection: "true" | "false";
   fontSizeBaseExpression: ResponsiveFontSize;
   fontSizeBasePitch: ResponsiveFontSize;
   fontSizeBaseSentence: ResponsiveFontSize;
@@ -35,6 +37,8 @@ export const defaultConfig: KikuConfig = {
   systemFontSecondary: "'Hiragino Mincho ProN', 'Noto Serif CJK JP', 'Noto Serif JP', 'Yu Mincho', HanaMinA, HanaMinB, serif",
   useSystemFontSecondary: "true",
   ankiConnectPort: "8765",
+  ankiDroidEnableIntegration: "true",
+  ankiDroidReverseSwipeDirection: "false",
   fontSizeBaseExpression: "text-5xl",
   fontSizeBasePitch: "text-xl",
   fontSizeBaseSentence: "text-2xl",
@@ -84,11 +88,13 @@ export function validateConfig(config: KikuConfig): KikuConfig {
       theme: daisyUIThemes.includes(config.theme) ? config.theme : defaultConfig.theme,
       webFontPrimary: webFonts.includes(config.webFontPrimary) ? config.webFontPrimary : defaultConfig.webFontPrimary,
       systemFontPrimary: typeof config.systemFontPrimary === "string" ? config.systemFontPrimary : defaultConfig.systemFontPrimary,
-      useSystemFontPrimary: typeof config.useSystemFontPrimary === "string" && config.useSystemFontPrimary === "true" ? "true" : defaultConfig.useSystemFontPrimary,
+      useSystemFontPrimary: typeof config.useSystemFontPrimary === "string" ? config.useSystemFontPrimary === "true" ? "true" : "false" : defaultConfig.useSystemFontPrimary,
       webFontSecondary: webFonts.includes(config.webFontSecondary) ? config.webFontSecondary : defaultConfig.webFontSecondary,
       systemFontSecondary: typeof config.systemFontSecondary === "string" ? config.systemFontSecondary : defaultConfig.systemFontSecondary,
-      useSystemFontSecondary: typeof config.useSystemFontSecondary === "string" && config.useSystemFontSecondary === "true" ? "true" : defaultConfig.useSystemFontSecondary,
-      ankiConnectPort: typeof config.ankiConnectPort === "number" && config.ankiConnectPort > 0 ? config.ankiConnectPort : defaultConfig.ankiConnectPort,
+      useSystemFontSecondary: typeof config.useSystemFontSecondary === "string" ? config.useSystemFontSecondary === "true" ? "true" : "false" : defaultConfig.useSystemFontSecondary,
+      ankiConnectPort: typeof config.ankiConnectPort === "string" && Number(config.ankiConnectPort) > 0 ? config.ankiConnectPort : defaultConfig.ankiConnectPort,
+      ankiDroidEnableIntegration: typeof config.ankiDroidEnableIntegration === "string" ? config.ankiDroidEnableIntegration === "true" ? "true" : "false" : defaultConfig.ankiDroidEnableIntegration,
+      ankiDroidReverseSwipeDirection: typeof config.ankiDroidReverseSwipeDirection === "string" ? config.ankiDroidReverseSwipeDirection === "true" ? "true" : "false" : defaultConfig.ankiDroidReverseSwipeDirection,
       fontSizeBaseExpression: validateResponsiveFontSize( config.fontSizeBaseExpression, defaultConfig.fontSizeBaseExpression,),
       fontSizeBasePitch: validateResponsiveFontSize( config.fontSizeBasePitch, defaultConfig.fontSizeBasePitch,),
       fontSizeBaseSentence: validateResponsiveFontSize( config.fontSizeBaseSentence, defaultConfig.fontSizeBaseSentence,),
