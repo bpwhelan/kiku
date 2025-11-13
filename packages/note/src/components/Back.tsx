@@ -101,7 +101,7 @@ export function Back(props: { onExitNested?: () => void }) {
 
   return (
     <Layout>
-      {card.ready && <Lazy.AnkiDroid />}
+      {card.ready && !card.nested && <Lazy.AnkiDroid />}
       <Switch>
         <Match when={card.screen === "settings" && !card.nested && card.ready}>
           <Lazy.Settings
