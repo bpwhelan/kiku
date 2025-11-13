@@ -86,6 +86,10 @@ function reverseEase(ease: "ease1" | "ease3") {
   return ease === "ease1" ? "ease3" : "ease1";
 }
 
+function easeOutExpo(x: number): number {
+  return x === 1 ? 1 : 1 - 2 ** (-10 * x);
+}
+
 export function useAnkiDroid() {
   if (isServer) return;
   if (window.innerWidth > 768) return;
@@ -103,7 +107,7 @@ export function useAnkiDroid() {
   const el$ = () => card.contentRef;
   const reverse = config.ankiDroidReverseSwipeDirection === "true";
 
-  const threshold = 60;
+  const threshold = 120;
   const deadzone = 10;
   const duration = 150;
   const scrollTolerance = 15;
@@ -149,8 +153,8 @@ export function useAnkiDroid() {
       const direction = diffX > 0 ? 1 : -1;
 
       // 3 stages of slide thresholds
-      const stage1 = threshold * 0.25;
-      const stage2 = threshold * 0.5;
+      const stage1 = threshold * 0;
+      const stage2 = threshold * 0.99;
       const stage3 = threshold;
 
       let stageValue = 0;
@@ -171,8 +175,10 @@ export function useAnkiDroid() {
         stage = 3;
       }
 
-      const clamped = Math.max(-threshold, Math.min(diffX, threshold));
       const target = stageValue * direction;
+
+      const multiplier = easeOutExpo(abs / threshold / 50);
+      const clamped = multiplier * Math.min(abs, threshold) * direction;
 
       el.style.transition = `transform ${duration}ms ease-out`;
       el.style.transform = `translateX(${clamped}px)`;
