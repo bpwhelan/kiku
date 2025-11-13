@@ -1,4 +1,6 @@
-import { onCleanup } from "solid-js";
+import { createEffect, onCleanup } from "solid-js";
+import { isServer } from "solid-js/web";
+import { useCardStore } from "#/components/shared/Context";
 
 declare global {
   var AnkiDroidJS: {
@@ -6,7 +8,13 @@ declare global {
   };
 }
 
-export function useAnkiDroid(root: HTMLElement) {
+export function useAnkiDroid(container: HTMLElement) {
+  if (isServer) return;
+  if (window.innerWidth > 768) return;
+  if (typeof AnkiDroidJS === "undefined" && !import.meta.env.DEV) return;
+
+  const [card] = useCardStore();
+
   const threshold = 80; // how far before triggering swipe
   const deadzone = 20; // ignore small jitters
   const duration = 150; // ms snap duration
@@ -25,7 +33,7 @@ export function useAnkiDroid(root: HTMLElement) {
     startY = t.clientY;
     deltaX = 0;
     isScrolling = false;
-    root.style.transition = "none";
+    container.style.transition = "none";
   }
 
   function handleTouchMove(e: TouchEvent) {
@@ -41,7 +49,7 @@ export function useAnkiDroid(root: HTMLElement) {
       Math.abs(diffY) > Math.abs(diffX)
     ) {
       isScrolling = true;
-      root.style.transform = "";
+      container.style.transform = "";
       return;
     }
 
@@ -66,8 +74,8 @@ export function useAnkiDroid(root: HTMLElement) {
       const target = stageValue * direction;
 
       // add small smooth transition between steps
-      root.style.transition = `transform ${duration}ms ease-out`;
-      root.style.transform = `translateX(${target}px)`;
+      container.style.transition = `transform ${duration}ms ease-out`;
+      container.style.transform = `translateX(${target}px)`;
 
       deltaX = target;
     }
@@ -88,30 +96,43 @@ export function useAnkiDroid(root: HTMLElement) {
   }
 
   function snapBack() {
+    if (card.backRef === undefined) return;
     isAnimating = true;
-    root.style.transition = `transform ${duration}ms ease-out`;
-    root.style.transform = "translateX(0)";
+    container.style.transition = `transform ${duration}ms ease-out`;
+    container.style.transform = "translateX(0)";
 
     const timer = setTimeout(cleanup, duration + 100);
     const end = () => cleanup();
 
     function cleanup() {
+      if (card.backRef === undefined) return;
       clearTimeout(timer);
-      root.removeEventListener("transitionend", end);
+      card.backRef.removeEventListener("transitionend", end);
       isAnimating = false;
-      root.style.transition = "";
+      container.style.transition = "";
     }
 
-    root.addEventListener("transitionend", end);
+    card.backRef.addEventListener("transitionend", end);
   }
 
-  root.addEventListener("touchstart", handleTouchStart, { passive: true });
-  root.addEventListener("touchmove", handleTouchMove, { passive: false });
-  root.addEventListener("touchend", handleTouchEnd, { passive: true });
+  createEffect(() => {
+    if (card.backRef === undefined) return;
+    card.backRef.addEventListener("touchstart", handleTouchStart, {
+      passive: true,
+    });
+    card.backRef.addEventListener("touchmove", handleTouchMove, {
+      passive: false,
+    });
+    card.backRef.addEventListener("touchend", handleTouchEnd, {
+      passive: true,
+    });
 
-  onCleanup(() => {
-    root.removeEventListener("touchstart", handleTouchStart);
-    root.removeEventListener("touchmove", handleTouchMove);
-    root.removeEventListener("touchend", handleTouchEnd);
+    onCleanup(() => {
+      if (card.backRef === undefined) return;
+
+      card.backRef.removeEventListener("touchstart", handleTouchStart);
+      card.backRef.removeEventListener("touchmove", handleTouchMove);
+      card.backRef.removeEventListener("touchend", handleTouchEnd);
+    });
   });
 }
