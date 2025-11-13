@@ -141,6 +141,7 @@ export default function Settings(props: {
       <ThemeSettings />
       <FontSettings />
       <FontSizeSettings />
+      <AnkiDroidSettings />
       <DebugSettings />
       <Portal mount={KIKU_STATE.root}>
         <div class="max-w-4xl mx-auto w-full relative">
@@ -173,7 +174,7 @@ function ThemeSettings() {
   return (
     <div class="flex flex-col gap-4 animate-fade-in">
       <div class="text-2xl font-bold">Theme</div>
-      <div class="grid grid-cols-[repeat(auto-fit,minmax(9.8rem,1fr))] rounded-box gap-4 p-2">
+      <div class="grid grid-cols-[repeat(auto-fit,minmax(10rem,1fr))] rounded-box gap-4 p-2">
         {daisyUIThemes.map((theme) => {
           return (
             <div
@@ -499,6 +500,53 @@ function FontSizeSettingsFieldset(props: {
         })}
       </select>
     </fieldset>
+  );
+}
+
+function AnkiDroidSettings() {
+  const [config, setConfig] = useConfig();
+
+  return (
+    <div class="flex flex-col gap-2 animate-fade-in">
+      <div class="text-2xl font-bold">AnkiDroid</div>
+      <div>
+        <div class="grid grid-cols-[repeat(auto-fit,minmax(10rem,1fr))] rounded-box gap-x-4 gap-y-2">
+          <fieldset class="fieldset bg-base-100 border-base-300 rounded-box">
+            <legend class="fieldset-legend">Enable Integration</legend>
+            <label class="label">
+              <input
+                type="checkbox"
+                checked={config.ankiDroidEnableIntegration === "true"}
+                class="toggle"
+                on:change={(e) => {
+                  setConfig(
+                    "ankiDroidEnableIntegration",
+                    e.target.checked ? "true" : "false",
+                  );
+                }}
+              />
+            </label>
+          </fieldset>
+
+          <fieldset class="fieldset bg-base-100 border-base-300 rounded-box">
+            <legend class="fieldset-legend">Reverse Swipe Direction</legend>
+            <label class="label">
+              <input
+                type="checkbox"
+                checked={config.ankiDroidReverseSwipeDirection === "true"}
+                class="toggle"
+                on:change={(e) => {
+                  setConfig(
+                    "ankiDroidReverseSwipeDirection",
+                    e.target.checked ? "true" : "false",
+                  );
+                }}
+              />
+            </label>
+          </fieldset>
+        </div>
+      </div>
+    </div>
   );
 }
 
