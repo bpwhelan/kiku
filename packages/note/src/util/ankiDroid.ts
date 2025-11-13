@@ -8,18 +8,23 @@ declare global {
   };
 }
 
-export function useAnkiDroid() {
+function reverseEase(ease: "ease1" | "ease3") {
+  return ease === "ease1" ? "ease3" : "ease1";
+}
+
+export function useAnkiDroid(options?: { reverseSwipeDirection?: boolean }) {
   if (isServer) return;
   if (window.innerWidth > 768) return;
   if (typeof AnkiDroidJS === "undefined" && !import.meta.env.DEV) return;
 
   const [card, setCard] = useCardStore();
   const el$ = () => card.contentRef;
+  const reverse = options?.reverseSwipeDirection ?? false;
 
-  const threshold = 80; // how far before triggering swipe
-  const deadzone = 20; // ignore small jitters
-  const duration = 150; // ms snap duration
-  const scrollTolerance = 15; // px vertical diff before assuming scroll
+  const threshold = 100;
+  const deadzone = 20;
+  const duration = 150;
+  const scrollTolerance = 15;
 
   let startX = 0;
   let startY = 0;
@@ -94,7 +99,9 @@ export function useAnkiDroid() {
 
       // 💡 update store color only on stage ≥ 2
       if (stage >= 2) {
-        setCard("slideDirection", direction > 0 ? "ease3" : "ease1");
+        let ease: "ease1" | "ease3" = direction > 0 ? "ease3" : "ease1";
+        if (reverse) ease = reverseEase(ease);
+        setCard("slideDirection", ease);
       } else {
         setCard("slideDirection", undefined);
       }
@@ -105,13 +112,10 @@ export function useAnkiDroid() {
     if (isAnimating || isScrolling) return;
 
     if (Math.abs(deltaX) >= threshold) {
-      if (deltaX > 0) {
-        console.log("ease3");
-        if (!import.meta.env.DEV) AnkiDroidJS.ankiDroidInvoke("ease3");
-      } else {
-        console.log("ease1");
-        if (!import.meta.env.DEV) AnkiDroidJS?.ankiDroidInvoke("ease1");
-      }
+      let ease: "ease1" | "ease3" = deltaX > 0 ? "ease3" : "ease1";
+      if (reverse) ease = reverseEase(ease);
+      console.log(ease);
+      if (!import.meta.env.DEV) AnkiDroidJS?.ankiDroidInvoke(ease);
     }
 
     snapBack();
