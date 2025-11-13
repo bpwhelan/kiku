@@ -163,6 +163,12 @@ type CardStore = {
   screen: "main" | "settings" | "kanji" | "nested";
   ready: boolean;
   slideDirection: undefined | "ease1" | "ease3";
+  toast: {
+    success: (message: string) => void;
+    error: (message: string) => void;
+  };
+  toastMessage: string | undefined;
+  toastType: "success" | "error";
   imageModal?: string;
   pictureIndex: number;
   pictures: HTMLImageElement[];
@@ -181,6 +187,7 @@ type CardStore = {
   nested: boolean;
   manifest: KikuNotesManifest | undefined;
   worker: WorkerClient | undefined;
+  ankiConnectAvailable: boolean;
 };
 
 const CardStoreContext =
@@ -191,7 +198,8 @@ export function CardStoreContextProvider(props: {
   nested?: boolean;
   side: "front" | "back";
 }) {
-  const store = createStore<CardStore>({
+  let timeout: number;
+  const [card, setCard] = createStore<CardStore>({
     side: props.side,
     layoutRef: undefined,
     contentRef: undefined,
@@ -203,6 +211,26 @@ export function CardStoreContextProvider(props: {
     screen: "main",
     ready: false,
     slideDirection: undefined,
+    toast: {
+      success: (message: string) => {
+        if (timeout) clearTimeout(timeout);
+        setCard("toastType", "success");
+        setCard("toastMessage", message);
+        timeout = setTimeout(() => {
+          setCard("toastMessage", undefined);
+        }, 3000);
+      },
+      error: (message: string) => {
+        if (timeout) clearTimeout(timeout);
+        setCard("toastType", "error");
+        setCard("toastMessage", message);
+        timeout = setTimeout(() => {
+          setCard("toastMessage", undefined);
+        }, 3000);
+      },
+    },
+    toastMessage: undefined,
+    toastType: "success",
     imageModal: undefined,
     pictureIndex: 0,
     pictures: [],
@@ -215,10 +243,11 @@ export function CardStoreContextProvider(props: {
     nested: props.nested ?? false,
     manifest: undefined,
     worker: undefined,
+    ankiConnectAvailable: false,
   });
 
   return (
-    <CardStoreContext.Provider value={store}>
+    <CardStoreContext.Provider value={[card, setCard]}>
       {props.children}
     </CardStoreContext.Provider>
   );

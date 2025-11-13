@@ -47,6 +47,19 @@ export function Layout(props: { children: JSX.Element }) {
       >
         {props.children}
       </div>
+      {card.toastMessage && (
+        <div class="toast toast-top toast-center">
+          <div
+            class="alert"
+            classList={{
+              "alert-error": card.toastType === "error",
+              "alert-success": card.toastType === "success",
+            }}
+          >
+            <span>{card.toastMessage}</span>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
