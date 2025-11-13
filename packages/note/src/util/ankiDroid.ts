@@ -2,9 +2,83 @@ import { createEffect, onCleanup } from "solid-js";
 import { isServer } from "solid-js/web";
 import { useCardStore, useConfig } from "#/components/shared/Context";
 
+type AnkiResponse<T = unknown> = {
+  success: boolean;
+  value?: T;
+  error?: string;
+};
+
+interface AnkiDroidAPI {
+  ankiGetNewCardCount(): Promise<AnkiResponse>;
+  ankiGetLrnCardCount(): Promise<AnkiResponse>;
+  ankiGetRevCardCount(): Promise<AnkiResponse>;
+  ankiGetETA(): Promise<AnkiResponse>;
+  ankiGetCardMark(): Promise<AnkiResponse>;
+  ankiGetCardFlag(): Promise<AnkiResponse>;
+  ankiGetNextTime1(): Promise<AnkiResponse>;
+  ankiGetNextTime2(): Promise<AnkiResponse>;
+  ankiGetNextTime3(): Promise<AnkiResponse>;
+  ankiGetNextTime4(): Promise<AnkiResponse>;
+  ankiGetCardReps(): Promise<AnkiResponse>;
+  ankiGetCardInterval(): Promise<AnkiResponse>;
+  ankiGetCardFactor(): Promise<AnkiResponse>;
+  ankiGetCardMod(): Promise<AnkiResponse>;
+  ankiGetCardId(): Promise<AnkiResponse>;
+  ankiGetCardNid(): Promise<AnkiResponse>;
+  ankiGetCardType(): Promise<AnkiResponse>;
+  ankiGetCardDid(): Promise<AnkiResponse>;
+  ankiGetCardLeft(): Promise<AnkiResponse>;
+  ankiGetCardODid(): Promise<AnkiResponse>;
+  ankiGetCardODue(): Promise<AnkiResponse>;
+  ankiGetCardQueue(): Promise<AnkiResponse>;
+  ankiGetCardLapses(): Promise<AnkiResponse>;
+  ankiGetCardDue(): Promise<AnkiResponse>;
+  ankiIsInFullscreen(): Promise<AnkiResponse>;
+  ankiIsTopbarShown(): Promise<AnkiResponse>;
+  ankiIsInNightMode(): Promise<AnkiResponse>;
+  ankiIsDisplayingAnswer(): Promise<AnkiResponse>;
+  ankiGetDeckName(): Promise<AnkiResponse>;
+  ankiIsActiveNetworkMetered(): Promise<AnkiResponse>;
+  ankiTtsFieldModifierIsAvailable(): Promise<AnkiResponse>;
+  ankiTtsIsSpeaking(): Promise<AnkiResponse>;
+  ankiTtsStop(): Promise<AnkiResponse>;
+  ankiBuryCard(): Promise<AnkiResponse>;
+  ankiBuryNote(): Promise<AnkiResponse>;
+  ankiSuspendCard(): Promise<AnkiResponse>;
+  ankiSuspendNote(): Promise<AnkiResponse>;
+  ankiAddTagToCard(): Promise<AnkiResponse>;
+  ankiResetProgress(): Promise<AnkiResponse>;
+  ankiMarkCard(): Promise<AnkiResponse>;
+  ankiToggleFlag(): Promise<AnkiResponse>;
+  ankiSearchCard(): Promise<AnkiResponse>;
+  ankiSearchCardWithCallback(): Promise<AnkiResponse>;
+  ankiTtsSpeak(): Promise<AnkiResponse>;
+  ankiTtsSetLanguage(): Promise<AnkiResponse>;
+  ankiTtsSetPitch(): Promise<AnkiResponse>;
+  ankiTtsSetSpeechRate(): Promise<AnkiResponse>;
+  ankiEnableHorizontalScrollbar(): Promise<AnkiResponse>;
+  ankiEnableVerticalScrollbar(): Promise<AnkiResponse>;
+  ankiSetCardDue(): Promise<AnkiResponse>;
+  ankiShowNavigationDrawer(): Promise<AnkiResponse>;
+  ankiShowOptionsMenu(): Promise<AnkiResponse>;
+  ankiShowToast(): Promise<AnkiResponse>;
+  ankiShowAnswer(): Promise<AnkiResponse>;
+  ankiAnswerEase1(): Promise<AnkiResponse>;
+  ankiAnswerEase2(): Promise<AnkiResponse>;
+  ankiAnswerEase3(): Promise<AnkiResponse>;
+  ankiAnswerEase4(): Promise<AnkiResponse>;
+  ankiSttSetLanguage(): Promise<AnkiResponse>;
+  ankiSttStart(): Promise<AnkiResponse>;
+  ankiSttStop(): Promise<AnkiResponse>;
+  ankiAddTagToNote(): Promise<AnkiResponse>;
+  ankiSetNoteTags(): Promise<AnkiResponse>;
+  ankiGetNoteTags(): Promise<AnkiResponse>;
+}
+
 declare global {
   var AnkiDroidJS: {
-    ankiDroidInvoke: (direction: "ease1" | "ease3") => void;
+    new (contract: { version: string; developer?: string }): AnkiDroidAPI;
+    prototype: AnkiDroidAPI;
   };
 }
 
@@ -17,6 +91,11 @@ export function useAnkiDroid() {
   if (window.innerWidth > 768) return;
   if (typeof AnkiDroidJS === "undefined" && !import.meta.env.DEV) return;
 
+  const ankiDroidAPI =
+    typeof AnkiDroidJS === "undefined"
+      ? undefined
+      : new AnkiDroidJS({ version: "0.0.3", developer: "youyoumu" });
+
   const [config] = useConfig();
   if (config.ankiDroidEnableIntegration === "false") return;
 
@@ -24,9 +103,9 @@ export function useAnkiDroid() {
   const el$ = () => card.contentRef;
   const reverse = config.ankiDroidReverseSwipeDirection === "true";
 
-  const threshold = 100;
+  const threshold = 60;
   const deadzone = 20;
-  const duration = 150;
+  const duration = 80;
   const scrollTolerance = 15;
 
   let startX = 0;
@@ -70,8 +149,8 @@ export function useAnkiDroid() {
       const direction = diffX > 0 ? 1 : -1;
 
       // 3 stages of slide thresholds
-      const stage1 = threshold * 0.3;
-      const stage2 = threshold * 0.6;
+      const stage1 = threshold * 0.25;
+      const stage2 = threshold * 0.5;
       const stage3 = threshold;
 
       let stageValue = 0;
@@ -118,7 +197,13 @@ export function useAnkiDroid() {
       let ease: "ease1" | "ease3" = deltaX > 0 ? "ease3" : "ease1";
       if (reverse) ease = reverseEase(ease);
       console.log(ease);
-      if (!import.meta.env.DEV) AnkiDroidJS?.ankiDroidInvoke(ease);
+      if (!import.meta.env.DEV) {
+        if (ease === "ease1") {
+          ankiDroidAPI?.ankiAnswerEase1();
+        } else if (ease === "ease3") {
+          ankiDroidAPI?.ankiAnswerEase3();
+        }
+      }
     }
 
     snapBack();

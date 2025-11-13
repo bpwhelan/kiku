@@ -29,7 +29,7 @@ export function Layout(props: { children: JSX.Element }) {
   return (
     <div
       ref={(ref) => setCard("layoutRef", ref)}
-      class="max-w-4xl mx-auto overflow-auto gutter-stable h-svh font-primary transition-colors"
+      class="max-w-4xl mx-auto overflow-auto sm:gutter-stable h-svh font-primary transition-colors"
       classList={{
         "bg-base-300": card.slideDirection === undefined,
         "bg-error": card.slideDirection === "ease1",
@@ -42,7 +42,7 @@ export function Layout(props: { children: JSX.Element }) {
       }}
     >
       <div
-        class="flex flex-col gap-6 p-2 sm:p-4 bg-base-100"
+        class="flex flex-col gap-6 p-2 sm:p-4 bg-base-100 min-h-full"
         ref={(ref) => setCard("contentRef", ref)}
       >
         {props.children}
