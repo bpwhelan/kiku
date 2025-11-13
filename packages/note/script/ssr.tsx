@@ -19,7 +19,7 @@ globalThis.KIKU_STATE = {
 export function getSsrTemplate() {
   const frontTemplate = renderToString(() => (
     <AnkiFieldContextProvider>
-      <CardStoreContextProvider>
+      <CardStoreContextProvider side="front">
         <BreakpointContextProvider>
           <ConfigContextProvider value={[config, setConfig]}>
             <Front />
@@ -30,7 +30,7 @@ export function getSsrTemplate() {
   ));
   const backTemplate = renderToString(() => (
     <AnkiFieldContextProvider>
-      <CardStoreContextProvider>
+      <CardStoreContextProvider side="back">
         <BreakpointContextProvider>
           <ConfigContextProvider value={[config, setConfig]}>
             <Back />

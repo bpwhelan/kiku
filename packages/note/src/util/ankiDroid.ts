@@ -8,12 +8,13 @@ declare global {
   };
 }
 
-export function useAnkiDroid(container: HTMLElement) {
+export function useAnkiDroid() {
   if (isServer) return;
   if (window.innerWidth > 768) return;
   if (typeof AnkiDroidJS === "undefined" && !import.meta.env.DEV) return;
 
   const [card] = useCardStore();
+  const el$ = () => card.contentRef;
 
   const threshold = 80; // how far before triggering swipe
   const deadzone = 20; // ignore small jitters
@@ -27,16 +28,20 @@ export function useAnkiDroid(container: HTMLElement) {
   let isScrolling = false;
 
   function handleTouchStart(e: TouchEvent) {
+    const el = el$();
+    if (el === undefined) return;
     if (isAnimating) return;
     const t = e.touches[0];
     startX = t.clientX;
     startY = t.clientY;
     deltaX = 0;
     isScrolling = false;
-    container.style.transition = "none";
+    el.style.transition = "none";
   }
 
   function handleTouchMove(e: TouchEvent) {
+    const el = el$();
+    if (el === undefined) return;
     if (isAnimating || isScrolling) return;
 
     const t = e.touches[0];
@@ -49,7 +54,7 @@ export function useAnkiDroid(container: HTMLElement) {
       Math.abs(diffY) > Math.abs(diffX)
     ) {
       isScrolling = true;
-      container.style.transform = "";
+      el.style.transform = "";
       return;
     }
 
@@ -74,8 +79,8 @@ export function useAnkiDroid(container: HTMLElement) {
       const target = stageValue * direction;
 
       // add small smooth transition between steps
-      container.style.transition = `transform ${duration}ms ease-out`;
-      container.style.transform = `translateX(${target}px)`;
+      el.style.transition = `transform ${duration}ms ease-out`;
+      el.style.transform = `translateX(${target}px)`;
 
       deltaX = target;
     }
@@ -96,43 +101,48 @@ export function useAnkiDroid(container: HTMLElement) {
   }
 
   function snapBack() {
-    if (card.backRef === undefined) return;
+    const el = el$();
+    if (el === undefined) return;
     isAnimating = true;
-    container.style.transition = `transform ${duration}ms ease-out`;
-    container.style.transform = "translateX(0)";
+    el.style.transition = `transform ${duration}ms ease-out`;
+    el.style.transform = "translateX(0)";
 
     const timer = setTimeout(cleanup, duration + 100);
     const end = () => cleanup();
 
     function cleanup() {
-      if (card.backRef === undefined) return;
+      const el = el$();
+      if (el === undefined) return;
       clearTimeout(timer);
-      card.backRef.removeEventListener("transitionend", end);
+      el.removeEventListener("transitionend", end);
       isAnimating = false;
-      container.style.transition = "";
+      el.style.transition = "";
     }
 
-    card.backRef.addEventListener("transitionend", end);
+    el.addEventListener("transitionend", end);
   }
 
   createEffect(() => {
-    if (card.backRef === undefined) return;
-    card.backRef.addEventListener("touchstart", handleTouchStart, {
+    const el = el$();
+    if (el === undefined) return;
+    if (card.side !== "back" || card.screen !== "main" || card.nested) return;
+    el.addEventListener("touchstart", handleTouchStart, {
       passive: true,
     });
-    card.backRef.addEventListener("touchmove", handleTouchMove, {
+    el.addEventListener("touchmove", handleTouchMove, {
       passive: false,
     });
-    card.backRef.addEventListener("touchend", handleTouchEnd, {
+    el.addEventListener("touchend", handleTouchEnd, {
       passive: true,
     });
 
     onCleanup(() => {
-      if (card.backRef === undefined) return;
+      const el = el$();
+      if (el === undefined) return;
 
-      card.backRef.removeEventListener("touchstart", handleTouchStart);
-      card.backRef.removeEventListener("touchmove", handleTouchMove);
-      card.backRef.removeEventListener("touchend", handleTouchEnd);
+      el.removeEventListener("touchstart", handleTouchStart);
+      el.removeEventListener("touchmove", handleTouchMove);
+      el.removeEventListener("touchend", handleTouchEnd);
     });
   });
 }

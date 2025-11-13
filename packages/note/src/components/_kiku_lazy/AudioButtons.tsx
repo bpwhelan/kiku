@@ -1,4 +1,5 @@
 import { For, onMount, Show } from "solid-js";
+import { Portal } from "solid-js/web";
 import { useAnkiField, useCardStore } from "../shared/Context";
 import { PlayIcon } from "./Icons";
 
@@ -104,25 +105,27 @@ export default function AudioButtons(props: { position: 1 | 2 }) {
 
   if (props.position === 2)
     return (
-      <div class="absolute bottom-4 left-4 flex sm:hidden flex-col gap-2 items-center">
-        {ankiFields.ExpressionAudio && (
-          <NotePlayIcon
-            color="primary"
-            on:click={() => {
-              card.expressionAudioRef?.querySelector("a")?.click();
-            }}
-          ></NotePlayIcon>
-        )}
-        {card.sentenceAudios?.map((el) => {
-          return (
+      <Portal mount={card.layoutRef}>
+        <div class="absolute bottom-4 left-4 flex sm:hidden flex-col gap-2 items-center">
+          {ankiFields.ExpressionAudio && (
             <NotePlayIcon
-              color="secondary"
+              color="primary"
               on:click={() => {
-                el.click();
+                card.expressionAudioRef?.querySelector("a")?.click();
               }}
             ></NotePlayIcon>
-          );
-        })}
-      </div>
+          )}
+          {card.sentenceAudios?.map((el) => {
+            return (
+              <NotePlayIcon
+                color="secondary"
+                on:click={() => {
+                  el.click();
+                }}
+              ></NotePlayIcon>
+            );
+          })}
+        </div>
+      </Portal>
     );
 }

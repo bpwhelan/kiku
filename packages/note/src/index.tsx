@@ -113,7 +113,7 @@ export async function init({
     if (side === "front") {
       const App = () => (
         <AnkiFieldContextProvider>
-          <CardStoreContextProvider>
+          <CardStoreContextProvider side="front">
             <BreakpointContextProvider>
               <ConfigContextProvider value={[config, setConfig]}>
                 <Front />
@@ -127,7 +127,7 @@ export async function init({
     } else if (side === "back") {
       const App = () => (
         <AnkiFieldContextProvider>
-          <CardStoreContextProvider>
+          <CardStoreContextProvider side="back">
             <BreakpointContextProvider>
               <ConfigContextProvider value={[config, setConfig]}>
                 <Back />

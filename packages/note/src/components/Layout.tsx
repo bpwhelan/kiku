@@ -4,14 +4,13 @@ import { useCardStore } from "./shared/Context";
 let counter = 0;
 
 export function Layout(props: { children: JSX.Element }) {
-  const [card] = useCardStore();
+  const [card, setCard] = useCardStore();
   if (card.nested) return props.children;
-  const [layoutElement, setLayoutElement] = createSignal<HTMLDivElement>();
   const [offset, setOffset] = createSignal(0);
 
   if (KIKU_STATE.isAnkiWeb) {
     onMount(() => {
-      const el = layoutElement();
+      const el = card.layoutRef;
       if (!el) return;
       function autoResize() {
         if (!el) return;
@@ -29,15 +28,20 @@ export function Layout(props: { children: JSX.Element }) {
 
   return (
     <div
-      ref={setLayoutElement}
-      class="max-w-4xl mx-auto overflow-auto p-2 sm:p-4 gutter-stable h-svh font-primary"
+      ref={(ref) => setCard("layoutRef", ref)}
+      class="max-w-4xl mx-auto overflow-auto gutter-stable h-svh font-primary bg-base-300"
       style={{
         height: KIKU_STATE.isAnkiWeb
           ? `calc(100svh - ${offset()}px)`
           : undefined,
       }}
     >
-      <div class="flex flex-col gap-6 ">{props.children}</div>
+      <div
+        class="flex flex-col gap-6 p-2 sm:p-4 bg-base-100"
+        ref={(ref) => setCard("contentRef", ref)}
+      >
+        {props.children}
+      </div>
     </div>
   );
 }
