@@ -1,4 +1,3 @@
-import AnkiDroid from "./AnkiDroid";
 import AudioButtons from "./AudioButtons";
 import BackBody from "./BackBody";
 import BackFooter from "./BackFooter";
@@ -8,6 +7,7 @@ import KanjiList from "./KanjiList";
 import PicturePagination from "./PicturePagination";
 import Pitches from "./Pitches";
 import Settings from "./Settings";
+import UseAnkiDroid from "./UseAnkiDroid";
 
 export {
   Header,
@@ -19,5 +19,5 @@ export {
   Pitches,
   PicturePagination,
   KanjiList,
-  AnkiDroid,
+  UseAnkiDroid,
 };

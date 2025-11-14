@@ -26,7 +26,7 @@ const Lazy = {
   Pitches: lazy(async () => ({ default: (await import("./_kiku_lazy")).Pitches, })),
   PicturePagination: lazy(async () => ({ default: (await import("./_kiku_lazy")).PicturePagination, })),
   KanjiList: lazy(async () => ({ default: (await import("./_kiku_lazy")).KanjiList, })),
-  AnkiDroid: lazy(async () => ({ default: (await import("./_kiku_lazy")).AnkiDroid, })),
+  UseAnkiDroid: lazy(async () => ({ default: (await import("./_kiku_lazy")).UseAnkiDroid, })),
 };
 
 export function Back(props: { onExitNested?: () => void }) {
@@ -110,7 +110,7 @@ export function Back(props: { onExitNested?: () => void }) {
 
   return (
     <Layout>
-      {card.ready && !card.nested && <Lazy.AnkiDroid />}
+      {card.ready && !card.nested && <Lazy.UseAnkiDroid />}
       <Switch>
         <Match when={card.screen === "settings" && !card.nested && card.ready}>
           <Lazy.Settings

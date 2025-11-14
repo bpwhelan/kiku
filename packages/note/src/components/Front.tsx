@@ -11,7 +11,7 @@ const Lazy = {
   AudioButtons: lazy(async () => ({ default: (await import("./_kiku_lazy")).AudioButtons, })),
   Header: lazy(async () => ({ default: (await import("./_kiku_lazy")).Header, })),
   PicturePagination: lazy(async () => ({ default: (await import("./_kiku_lazy")).PicturePagination, })),
-  AnkiDroid: lazy(async () => ({ default: (await import("./_kiku_lazy")).AnkiDroid, })),
+  UseAnkiDroid: lazy(async () => ({ default: (await import("./_kiku_lazy")).UseAnkiDroid, })),
 };
 
 export function Front() {
@@ -59,7 +59,7 @@ export function Front() {
 
   return (
     <Layout>
-      {card.ready && !card.nested && <Lazy.AnkiDroid />}
+      {card.ready && !card.nested && <Lazy.UseAnkiDroid />}
       <div class="flex justify-between flex-row h-5 min-h-5">
         {card.ready && <Lazy.Header side="front" />}
       </div>

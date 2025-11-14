@@ -90,7 +90,7 @@ function easeOutQuad(x: number): number {
   return 1 - (1 - x) * (1 - x);
 }
 
-export default function AnkiDroid() {
+export default function UseAnkiDroid() {
   if (isServer) return;
   if (window.innerWidth > 768) return;
   if (typeof AnkiDroidJS === "undefined" && !import.meta.env.DEV) return;
