@@ -36,7 +36,7 @@ export default function ImageModal(props: {
         class="picture-modal"
         on:click={props["on:click"]}
         {...pictureModalDataset()}
-        innerHTML={props.img}
+        innerHTML={props.img ?? ""}
       ></div>
     </Portal>
   );
