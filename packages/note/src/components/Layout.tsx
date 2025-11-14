@@ -29,7 +29,7 @@ export function Layout(props: { children: JSX.Element }) {
   return (
     <div
       ref={(ref) => setCard("layoutRef", ref)}
-      class="max-w-4xl mx-auto overflow-y-auto overflow-x-hidden sm:gutter-stable h-svh font-primary transition-colors"
+      class="max-w-4xl mx-auto overflow-y-auto overflow-x-hidden gutter-stable h-svh font-primary transition-colors"
       style={{
         height: KIKU_STATE.isAnkiWeb
           ? `calc(100svh - ${offset()}px)`

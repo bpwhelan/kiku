@@ -31,3 +31,4 @@ __pycache__
 packages/addon/meta.json
 .env
 .release
+todo.txt
