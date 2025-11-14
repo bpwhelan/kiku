@@ -159,7 +159,7 @@ type CardStore = {
   expressionAudioRef?: HTMLDivElement;
   sentenceFieldRef?: HTMLDivElement;
   sentenceAudioRef?: HTMLDivElement;
-  sentenceAudios?: HTMLAnchorElement[];
+  sentenceAudios?: HTMLAnchorElement[] | HTMLAudioElement[];
   screen: "main" | "settings" | "kanji" | "nested";
   ready: boolean;
   toast: {

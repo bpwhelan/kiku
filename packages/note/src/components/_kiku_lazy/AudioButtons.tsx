@@ -8,25 +8,12 @@ function AudioTag(props: { text: string }) {
   const matches = [...props.text.matchAll(/\[sound:([^\]]+)\]/g)];
   const sounds = matches.map((m) => m[1]);
 
-  const handleClick = (audio: HTMLAudioElement | undefined, e: MouseEvent) => {
-    e.preventDefault();
-    if (audio) {
-      audio.currentTime = 0;
-      void audio.play();
-    }
-  };
-
   return (
     <Show when={sounds.length > 0}>
       <div class="flex flex-wrap gap-2">
         <For each={sounds}>
           {(src) => {
-            let audioRef: HTMLAudioElement | undefined;
-            return (
-              <a href="#" onClick={(e) => handleClick(audioRef, e)}>
-                <audio ref={audioRef} src={src} preload="none" />
-              </a>
-            );
+            return <audio src={src} preload="none" />;
           }}
         </For>
       </div>
@@ -64,7 +51,38 @@ export default function AudioButtons(props: { position: 1 | 2 }) {
   onMount(() => {
     const aaa = card.sentenceAudioRef?.querySelectorAll("a");
     if (aaa && !card.sentenceAudios) setCard("sentenceAudios", Array.from(aaa));
+    const audios = card.sentenceAudioRef?.querySelectorAll("audio");
+    if (aaa?.length === 0 && audios && audios.length > 0) {
+      setCard("sentenceAudios", Array.from(audios));
+    }
   });
+
+  const NotePlayIcons = () => {
+    return (
+      <>
+        {ankiFields.ExpressionAudio && (
+          <NotePlayIcon
+            color="primary"
+            on:click={() => {
+              card.expressionAudioRef?.querySelector("a")?.click();
+              card.expressionAudioRef?.querySelector("audio")?.play();
+            }}
+          ></NotePlayIcon>
+        )}
+        {card.sentenceAudios?.map((el) => {
+          return (
+            <NotePlayIcon
+              color="secondary"
+              on:click={() => {
+                el.click();
+                if (el instanceof HTMLAudioElement) el.play();
+              }}
+            ></NotePlayIcon>
+          );
+        })}
+      </>
+    );
+  };
 
   if (props.position === 1)
     return (
@@ -83,24 +101,7 @@ export default function AudioButtons(props: { position: 1 | 2 }) {
         >
           {card.nested && <AudioTag text={ankiFields.SentenceAudio} />}
         </div>
-        {ankiFields.ExpressionAudio && (
-          <NotePlayIcon
-            color="primary"
-            on:click={() => {
-              card.expressionAudioRef?.querySelector("a")?.click();
-            }}
-          ></NotePlayIcon>
-        )}
-        {card.sentenceAudios?.map((el) => {
-          return (
-            <NotePlayIcon
-              color="secondary"
-              on:click={() => {
-                el.click();
-              }}
-            ></NotePlayIcon>
-          );
-        })}
+        <NotePlayIcons />
       </>
     );
 
@@ -108,24 +109,7 @@ export default function AudioButtons(props: { position: 1 | 2 }) {
     return (
       <Portal mount={card.layoutRef}>
         <div class="absolute bottom-4 left-4 flex sm:hidden flex-col gap-2 items-center">
-          {ankiFields.ExpressionAudio && (
-            <NotePlayIcon
-              color="primary"
-              on:click={() => {
-                card.expressionAudioRef?.querySelector("a")?.click();
-              }}
-            ></NotePlayIcon>
-          )}
-          {card.sentenceAudios?.map((el) => {
-            return (
-              <NotePlayIcon
-                color="secondary"
-                on:click={() => {
-                  el.click();
-                }}
-              ></NotePlayIcon>
-            );
-          })}
+          <NotePlayIcons />
         </div>
       </Portal>
     );
