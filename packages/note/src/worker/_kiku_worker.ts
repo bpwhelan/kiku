@@ -8,6 +8,54 @@ type SimilarKanjiDB = Record<
 >;
 type SimilarKanjiDBs = Record<string, SimilarKanjiDB>;
 
+export const AnkiConnect = {
+  invoke: async (action: string, params: Record<string, unknown> = {}) => {
+    const res = await fetch("http://127.0.0.1:8765", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action, version: 6, params }),
+    });
+
+    const result = await res.json();
+    if (result.error) {
+      throw new Error(result.error);
+    }
+    return result;
+  },
+  query: async (query: string) => {
+    AnkiConnect.invoke("findNotes", {
+      query: query,
+    });
+  },
+  queryKanji: async (kanjiList: string[]) => {
+    const result: Record<string, AnkiNote[]> = {};
+    const kanjiSet = new Set(kanjiList);
+
+    for (const kanji of kanjiSet) {
+      // Query only notes whose Expression field contains this kanji
+      // and whose model is Kiku or Lapis
+      const query = `("note:Kiku" OR "note:Lapis") AND "Expression:*${kanji}*"`;
+
+      // 1. find note IDs
+      const idsRes = await AnkiConnect.invoke("findNotes", { query });
+      const noteIds: number[] = idsRes.result ?? [];
+
+      if (noteIds.length === 0) continue;
+
+      // 2. fetch full note info
+      const notesRes = await AnkiConnect.invoke("notesInfo", {
+        notes: noteIds,
+      });
+      const notes: AnkiNote[] = notesRes.result ?? [];
+
+      // 3. assign to the result
+      result[kanji] = notes;
+    }
+
+    return result;
+  },
+};
+
 export class Nex {
   assetsPath: string;
   env: Env;
@@ -70,39 +118,40 @@ export class Nex {
   }
 
   async query(kanjiList: string[]) {
-    const result: Record<string, AnkiNote[]> = {};
-    const manifest = await this.manifest();
+    try {
+      const result: Record<string, AnkiNote[]> = {};
+      const manifest = await this.manifest();
+      const kanjiSet = new Set(kanjiList);
 
-    // Create a quick lookup for kanji to reduce nested loops
-    const kanjiSet = new Set(kanjiList);
-    console.log("DEBUG[1059]: kanjiSet=", kanjiSet);
+      for (const chunk of manifest.chunks) {
+        const res = await fetch(`${this.assetsPath}/${chunk.file}`);
+        if (!res.body) throw new Error(`No body for ${chunk.file}`);
 
-    for (const chunk of manifest.chunks) {
-      const res = await fetch(`${this.assetsPath}/${chunk.file}`);
-      if (!res.body) throw new Error(`No body for ${chunk.file}`);
+        const ds = new DecompressionStream("gzip");
+        const decompressed = res.body.pipeThrough(ds);
+        const text = await new Response(decompressed).text();
+        const notes = JSON.parse(text) as AnkiNote[];
 
-      const ds = new DecompressionStream("gzip");
-      const decompressed = res.body.pipeThrough(ds);
-      const text = await new Response(decompressed).text();
-      const notes = JSON.parse(text) as AnkiNote[];
+        for (const note of notes) {
+          // Skip irrelevant models early
+          if (note.modelName !== "Kiku" && note.modelName !== "Lapis") continue;
 
-      for (const note of notes) {
-        // Skip irrelevant models early
-        if (note.modelName !== "Kiku" && note.modelName !== "Lapis") continue;
+          const expr = note.fields.Expression.value;
 
-        const expr = note.fields.Expression.value;
-
-        // Only check relevant kanji that actually appear in the expression
-        for (const kanji of kanjiSet) {
-          if (expr.includes(kanji)) {
-            result[kanji] ??= [];
-            result[kanji].push(note);
+          // Only check relevant kanji that actually appear in the expression
+          for (const kanji of kanjiSet) {
+            if (expr.includes(kanji)) {
+              result[kanji] ??= [];
+              result[kanji].push(note);
+            }
           }
         }
       }
+      return result;
+    } catch {
+      const result = await AnkiConnect.queryKanji(kanjiList);
+      return result;
     }
-
-    return result;
   }
 
   async querySharedAndSimilar(kanjiList: string[]) {
