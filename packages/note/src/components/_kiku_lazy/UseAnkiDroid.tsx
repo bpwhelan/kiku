@@ -234,8 +234,8 @@ export default function UseAnkiDroid() {
         <div
           class="absolute top-1/2 -translate-y-1/2 left-0 bg-error/30 flex justify-center items-center rounded-full transition-transform"
           style={{
-            height: `${48 + 24 * progress()}px`,
-            width: `${48 + 24 * progress()}px`,
+            height: xIconOffset() > 0 ? `${48 + 24 * progress()}px` : undefined,
+            width: xIconOffset() > 0 ? `${48 + 24 * progress()}px` : undefined,
             transform: `translateX(${(48 + 12 - xIconOffset()) * -1}px)`,
             opacity: `${progress() - 0.2}`,
           }}
@@ -254,8 +254,10 @@ export default function UseAnkiDroid() {
         <div
           class="absolute top-1/2 -translate-y-1/2 right-0 bg-success/30 flex justify-center items-center rounded-full transition-transform"
           style={{
-            height: `${48 + 24 * progress()}px`,
-            width: `${48 + 24 * progress()}px`,
+            height:
+              checkIconOffset() > 0 ? `${48 + 24 * progress()}px` : undefined,
+            width:
+              checkIconOffset() > 0 ? `${48 + 24 * progress()}px` : undefined,
             transform: `translateX(${48 + 12 - checkIconOffset()}px)`,
             opacity: `${progress() - 0.2}`,
           }}
