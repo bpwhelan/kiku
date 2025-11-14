@@ -11,6 +11,7 @@ const Lazy = {
   AudioButtons: lazy(async () => ({ default: (await import("./_kiku_lazy")).AudioButtons, })),
   Header: lazy(async () => ({ default: (await import("./_kiku_lazy")).Header, })),
   PicturePagination: lazy(async () => ({ default: (await import("./_kiku_lazy")).PicturePagination, })),
+  AnkiDroid: lazy(async () => ({ default: (await import("./_kiku_lazy")).AnkiDroid, })),
 };
 
 export function Front() {
@@ -58,6 +59,7 @@ export function Front() {
 
   return (
     <Layout>
+      {card.ready && !card.nested && <Lazy.AnkiDroid />}
       <div class="flex justify-between flex-row h-5 min-h-5">
         {card.ready && <Lazy.Header side="front" />}
       </div>
@@ -65,6 +67,7 @@ export function Front() {
         <div
           class="flex rounded-lg gap-4 sm:h-56 flex-col sm:flex-row"
           on:click={() => setCard("clicked", (prev) => !prev)}
+          on:touchend={(e) => e.stopPropagation()}
         >
           <div class="flex-1 bg-base-200 p-4 rounded-lg flex flex-col items-center justify-center">
             <div

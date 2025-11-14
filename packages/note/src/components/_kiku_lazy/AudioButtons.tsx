@@ -46,6 +46,7 @@ export function NotePlayIcon(props: {
         "bg-secondary text-secondary-content": props.color === "secondary",
       }}
       on:click={props["on:click"]}
+      on:touchend={(e) => e.stopPropagation()}
     />
   );
 }

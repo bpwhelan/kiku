@@ -117,6 +117,7 @@ export default function AnkiDroid() {
   let startY = 0;
   let deltaX = 0;
   let isScrolling = false;
+  let isSwiping = false;
 
   const [checkIconOffset, setCheckIconOffset] = createSignal(0);
   const [xIconOffset, setXIconOffset] = createSignal(0);
@@ -130,7 +131,7 @@ export default function AnkiDroid() {
     startY = t.clientY;
     deltaX = 0;
     isScrolling = false;
-    el.style.transition = "none";
+    isSwiping = false;
   }
 
   function handleTouchMove(e: TouchEvent) {
@@ -140,6 +141,11 @@ export default function AnkiDroid() {
     const t = e.touches[0];
     const diffX = t.clientX - startX;
     const diffY = t.clientY - startY;
+
+    if (Math.abs(diffY) > DEADZONE || Math.abs(diffX) > DEADZONE) {
+      isSwiping = true;
+    }
+    if (card.side === "front") return;
 
     // Detect vertical scroll intent
     if (
@@ -179,19 +185,25 @@ export default function AnkiDroid() {
   }
 
   function handleTouchEnd() {
-    setCheckIconOffset(0);
-    setXIconOffset(0);
+    if (card.side === "front") {
+      console.log("DEBUG[1056]: isSwiping=", isSwiping);
+      if (isSwiping) return;
+      ankiDroidAPI?.ankiShowAnswer();
+    } else if (card.side === "back") {
+      setCheckIconOffset(0);
+      setXIconOffset(0);
 
-    if (isScrolling) return;
-    if (Math.abs(deltaX) >= THRESHOLD) {
-      let ease: "ease1" | "ease3" = deltaX > 0 ? "ease3" : "ease1";
-      if (reverse) ease = reverseEase(ease);
-      console.log(ease);
-      if (!import.meta.env.DEV) {
-        if (ease === "ease1") {
-          ankiDroidAPI?.ankiAnswerEase1();
-        } else if (ease === "ease3") {
-          ankiDroidAPI?.ankiAnswerEase3();
+      if (isScrolling) return;
+      if (Math.abs(deltaX) >= THRESHOLD) {
+        let ease: "ease1" | "ease3" = deltaX > 0 ? "ease3" : "ease1";
+        if (reverse) ease = reverseEase(ease);
+        console.log(ease);
+        if (!import.meta.env.DEV) {
+          if (ease === "ease1") {
+            ankiDroidAPI?.ankiAnswerEase1();
+          } else if (ease === "ease3") {
+            ankiDroidAPI?.ankiAnswerEase3();
+          }
         }
       }
     }
@@ -200,7 +212,7 @@ export default function AnkiDroid() {
   createEffect(() => {
     const el = el$();
     if (el === undefined) return;
-    if (card.side !== "back" || card.screen !== "main" || card.nested) return;
+    if (card.screen !== "main" || card.nested) return;
     el.addEventListener("touchstart", handleTouchStart, { passive: true });
     el.addEventListener("touchmove", handleTouchMove, { passive: false });
     el.addEventListener("touchend", handleTouchEnd, { passive: true });
@@ -213,6 +225,8 @@ export default function AnkiDroid() {
       el.removeEventListener("touchend", handleTouchEnd);
     });
   });
+
+  if (card.side === "front") return null;
 
   return (
     <>

@@ -48,6 +48,7 @@ export default function Header(props: {
             on:click={() => {
               setConfig("theme", nextTheme());
             }}
+            on:touchend={(e) => e.stopPropagation()}
           >
             <PaintbrushIcon class="size-5 cursor-pointer text-base-content-soft"></PaintbrushIcon>
             <div class="text-base-content-soft text-sm">
