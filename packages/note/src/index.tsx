@@ -32,6 +32,7 @@ declare global {
     assetsPath: string;
     logger: Logger;
   };
+  var pycmd: () => void;
 }
 globalThis.KIKU_STATE = {
   rootDataset: defaultConfig,

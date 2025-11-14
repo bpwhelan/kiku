@@ -900,6 +900,9 @@ function DebugSettings() {
                   <div class="text-lg">Expected Root Dataset</div>
                   <ClipboardCopyIcon
                     class="size-5 text-base-content-calm cursor-pointer"
+                    classList={{
+                      hidden: typeof pycmd !== "undefined",
+                    }}
                     on:click={() => {
                       copyToClipboard(toDatasetString(rootDataset()));
                     }}
@@ -917,6 +920,9 @@ function DebugSettings() {
                   <div class="text-lg">Current Root Dataset</div>
                   <ClipboardCopyIcon
                     class="size-5 text-base-content-calm cursor-pointer"
+                    classList={{
+                      hidden: typeof pycmd !== "undefined",
+                    }}
                     on:click={() => {
                       copyToClipboard(toDatasetString(KIKU_STATE.rootDataset));
                     }}
@@ -935,6 +941,9 @@ function DebugSettings() {
                   <div class="text-lg">Expected CSS Variable</div>
                   <ClipboardCopyIcon
                     class="size-5 text-base-content-calm cursor-pointer"
+                    classList={{
+                      hidden: typeof pycmd !== "undefined",
+                    }}
                     on:click={() => {
                       copyToClipboard(toCssVarString(cssVar()));
                     }}
@@ -952,6 +961,9 @@ function DebugSettings() {
                   <div class="text-lg">Current CSS Variable</div>
                   <ClipboardCopyIcon
                     class="size-5 text-base-content-calm cursor-pointer"
+                    classList={{
+                      hidden: typeof pycmd !== "undefined",
+                    }}
                     on:click={() => {
                       copyToClipboard(toCssVarString(getCurrentCssVar()));
                     }}
@@ -969,6 +981,9 @@ function DebugSettings() {
                   <div class="text-lg">Config</div>
                   <ClipboardCopyIcon
                     class="size-5 text-base-content-calm cursor-pointer"
+                    classList={{
+                      hidden: typeof pycmd !== "undefined",
+                    }}
                     on:click={() => {
                       copyToClipboard(JSON.stringify({ ...config }, null, 2));
                     }}
@@ -984,6 +999,9 @@ function DebugSettings() {
                   <div class="text-lg">Anki Fields</div>
                   <ClipboardCopyIcon
                     class="size-5 text-base-content-calm cursor-pointer"
+                    classList={{
+                      hidden: typeof pycmd !== "undefined",
+                    }}
                     on:click={() => {
                       copyToClipboard(
                         JSON.stringify({ ...ankiFields }, null, 2),
@@ -1001,6 +1019,9 @@ function DebugSettings() {
                     <div class="text-lg">Kiku Files</div>
                     <ClipboardCopyIcon
                       class="size-5 text-base-content-calm cursor-pointer"
+                      classList={{
+                        hidden: typeof pycmd !== "undefined",
+                      }}
                       on:click={() => {
                         copyToClipboard(kikuFiles() ?? "");
                       }}
@@ -1016,6 +1037,9 @@ function DebugSettings() {
                   <div class="text-lg">Logs</div>
                   <ClipboardCopyIcon
                     class="size-5 text-base-content-calm cursor-pointer"
+                    classList={{
+                      hidden: typeof pycmd !== "undefined",
+                    }}
                     on:click={() => {
                       copyToClipboard(logs() ?? "");
                     }}
