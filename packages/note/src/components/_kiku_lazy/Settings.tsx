@@ -5,6 +5,7 @@ import {
   type DatasetProp,
   defaultConfig,
   type KikuConfig,
+  rootDatasetConfigWhitelist,
 } from "#/util/config";
 import { type WebFont, webFonts } from "#/util/fonts";
 import { daisyUIThemes } from "#/util/theme";
@@ -724,24 +725,27 @@ function DebugSettings() {
     <>
       <Show
         when={
-          Object.keys(rootDatasetMismatches()).length > 0 ||
-          Object.keys(cssVarMismatches()).length > 0
+          Object.keys(rootDatasetMismatches()).length > 0 &&
+          Object.keys(rootDatasetMismatches()).some((key) =>
+            rootDatasetConfigWhitelist.has(key as keyof KikuConfig),
+          )
         }
       >
-        <Show when={Object.keys(rootDatasetMismatches()).length > 0}>
-          <div role="alert" class="alert alert-warning">
-            <TriangleAlertIcon />
-            <span>
-              Root Dataset mismatches, FOUC (Flash Of Unstyled Content) may
-              occur. <br />
-              <span class="text-xs">
-                {Object.keys(rootDatasetMismatches())
-                  .map((key) => toDatasetKey(toDashed(key)))
-                  .join(", ")}
-              </span>
+        <div role="alert" class="alert alert-warning">
+          <TriangleAlertIcon />
+          <span>
+            Root Dataset mismatches, FOUC (Flash Of Unstyled Content) may occur.{" "}
+            <br />
+            <span class="text-xs">
+              {Object.keys(rootDatasetMismatches())
+                .filter((key) =>
+                  rootDatasetConfigWhitelist.has(key as keyof KikuConfig),
+                )
+                .map((key) => toDatasetKey(toDashed(key)))
+                .join(", ")}
             </span>
-          </div>
-        </Show>
+          </span>
+        </div>
 
         <Show when={Object.keys(cssVarMismatches()).length > 0}>
           <div role="alert" class="alert alert-warning">

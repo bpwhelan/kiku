@@ -55,6 +55,20 @@ export const defaultConfig: KikuConfig = {
   fontSizeSmHint: "sm:text-2xl",
 };
 
+export const rootDatasetConfigWhitelist = new Set<keyof KikuConfig>([
+  "theme",
+  "webFontPrimary",
+  "systemFontPrimary",
+  "useSystemFontPrimary",
+  "webFontSecondary",
+  "systemFontSecondary",
+  "useSystemFontSecondary",
+]);
+Object.keys(defaultConfig).forEach((key) => {
+  if (key.startsWith("fontSize"))
+    rootDatasetConfigWhitelist.add(key as keyof KikuConfig);
+});
+
 // biome-ignore format: this looks nicer
 export const tailwindResponsiveFontSizes = [
   "text-xs", "text-sm", "text-base", "text-lg", "text-xl", "text-2xl", "text-3xl", "text-4xl",
