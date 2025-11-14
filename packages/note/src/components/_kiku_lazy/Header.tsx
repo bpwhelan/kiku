@@ -17,11 +17,12 @@ export default function Header(props: {
 }) {
   const [card] = useCardStore();
   const [config, setConfig] = useConfig();
-  const [initDelay, setInitDelay] = createSignal<number | null>(null);
+  const [startupTime, setStartupTime] = createSignal<number | null>(null);
 
   onMount(() => {
     setTimeout(() => {
-      if (KIKU_STATE.initDelay) setInitDelay(KIKU_STATE.initDelay);
+      if (KIKU_STATE.startupTime)
+        setStartupTime(Math.round(KIKU_STATE.startupTime));
     }, 200);
   });
 
@@ -57,8 +58,8 @@ export default function Header(props: {
           </div>
 
           <div class="text-base-content-soft bg-warning/10 rounded-sm px-1 text-sm">
-            {initDelay()}
-            {initDelay() && "ms"}
+            {startupTime()}
+            {startupTime() && "ms"}
           </div>
         </Show>
       </div>

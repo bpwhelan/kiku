@@ -24,7 +24,7 @@ const logger = new Logger();
 declare global {
   var KIKU_STATE: {
     relax?: boolean;
-    initDelay?: number;
+    startupTime?: number;
     config?: KikuConfig;
     root?: HTMLElement;
     rootDataset: KikuConfig;

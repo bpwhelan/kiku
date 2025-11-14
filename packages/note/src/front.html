@@ -153,9 +153,8 @@ import { init } from "./_kiku.js";
 async function initAnki() {
   const now = performance.now();
   await init({ side: "front", ssr: true });
-  const delay = Math.round(performance.now() - now);
   window.KIKU_STATE ??= {};
-  window.KIKU_STATE.initDelay = delay;
+  window.KIKU_STATE.startupTime = performance.now() - now;
 }
 initAnki();
 </script>
