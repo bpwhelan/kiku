@@ -90,6 +90,10 @@ function easeOutQuad(x: number): number {
   return 1 - (1 - x) * (1 - x);
 }
 
+function snapTo4(n: number) {
+  return (n >> 2) << 2;
+}
+
 export default function UseAnkiDroid() {
   if (isServer) return;
   if (window.innerWidth > 768) return;
@@ -172,13 +176,13 @@ export default function UseAnkiDroid() {
       if (direction > 0) {
         requestAnimationFrame(() => {
           if (isScrolling) return;
-          setXIconOffset(Math.abs(offset));
+          setXIconOffset(snapTo4(Math.abs(offset)));
           setCheckIconOffset(0);
         });
       } else {
         requestAnimationFrame(() => {
           if (isScrolling) return;
-          setCheckIconOffset(Math.abs(offset));
+          setCheckIconOffset(snapTo4(Math.abs(offset)));
           setXIconOffset(0);
         });
       }

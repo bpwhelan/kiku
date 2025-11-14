@@ -62,7 +62,7 @@ export default function Header(props: {
           </div>
         </Show>
       </div>
-      <div class="flex gap-4 items-center">
+      <div class="flex gap-2 items-center">
         <Switch>
           <Match
             when={
