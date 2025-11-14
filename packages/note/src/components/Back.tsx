@@ -91,7 +91,13 @@ export function Back(props: { onExitNested?: () => void }) {
   });
 
   const expressionInnerHtml = () => {
-    if (card.nested) return ankiFields.Expression;
+    if (card.nested) {
+      if (ankiFields.Expression && ankiFields.ExpressionReading) {
+        return `<ruby>${ankiFields.Expression}<rt>${ankiFields.ExpressionReading}</rt></ruby>`;
+      }
+      if (ankiFields.Expression) return ankiFields.Expression;
+      return ankiFields.ExpressionReading;
+    }
     return isServer
       ? undefined
       : ankiFields.ExpressionFurigana

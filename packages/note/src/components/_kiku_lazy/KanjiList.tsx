@@ -64,13 +64,25 @@ export default function KanjiList(props: {
                     <For each={Array.isArray(data) ? data : data.shared}>
                       {(data) => {
                         const leech = data.tags.includes("leech");
+                        const expressionInnerHtml = () => {
+                          if (
+                            data.fields.Expression.value &&
+                            data.fields.ExpressionReading.value
+                          ) {
+                            return `<ruby>${data.fields.Expression.value}<rt>${data.fields.ExpressionReading.value}</rt></ruby>`;
+                          }
+                          if (data.fields.Expression.value)
+                            return data.fields.Expression.value;
+                          return data.fields.ExpressionReading.value;
+                        };
+
                         return (
                           <>
                             <li class="p-4 pb-0 tracking-wide flex gap-2 items-start justify-between">
                               <div class="flex gap-2 items-end">
                                 <div
                                   class=" font-secondary sentence"
-                                  innerHTML={data.fields.Expression.value.replaceAll(
+                                  innerHTML={expressionInnerHtml().replaceAll(
                                     kanji,
                                     `<span class="text-base-content-primary">${kanji}</span>`,
                                   )}
