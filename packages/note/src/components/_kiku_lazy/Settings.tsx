@@ -80,6 +80,8 @@ export default function Settings(props: {
       webFontSecondary: config.webFontSecondary ? config.webFontSecondary : defaultConfig.webFontSecondary,
       systemFontSecondary: config.systemFontSecondary ? config.systemFontSecondary : defaultConfig.systemFontSecondary,
       useSystemFontSecondary: config.useSystemFontSecondary ? config.useSystemFontSecondary : defaultConfig.useSystemFontSecondary,
+      showTheme: config.showTheme ? config.showTheme : defaultConfig.showTheme,
+      showStartupTime: config.showStartupTime ? config.showStartupTime : defaultConfig.showStartupTime,
       //TODO: configurable
       ankiConnectPort: "8765",
       ankiDroidEnableIntegration: config.ankiDroidEnableIntegration ? config.ankiDroidEnableIntegration : defaultConfig.ankiDroidEnableIntegration,
@@ -223,6 +225,19 @@ function ThemeSettings() {
           );
         })}
       </div>
+      <fieldset class="fieldset bg-base-100 border-base-300 rounded-box w-64 py-4">
+        <legend class="fieldset-legend">Show Theme</legend>
+        <label class="label">
+          <input
+            type="checkbox"
+            checked={config.showTheme === "true"}
+            class="toggle"
+            on:change={(e) => {
+              setConfig("showTheme", e.target.checked ? "true" : "false");
+            }}
+          />
+        </label>
+      </fieldset>
     </div>
   );
 }
@@ -553,7 +568,7 @@ function AnkiDroidSettings() {
 }
 
 function DebugSettings() {
-  const [config] = useConfig();
+  const [config, setConfig] = useConfig();
   const [card] = useCardStore();
   const { ankiFields } = useAnkiField<"back">();
   const [kikuFiles, setKikuFiles] = createSignal<string>();
@@ -723,6 +738,23 @@ function DebugSettings() {
           <div class="collapse-title text-lg font-bold">Debug</div>
           <div class="collapse-content text-sm">
             <div class="flex flex-col gap-4 animate-fade-in ">
+              <fieldset class="fieldset bg-base-100 border-base-300 rounded-box w-64 py-4">
+                <legend class="fieldset-legend">Show Startup Time</legend>
+                <label class="label">
+                  <input
+                    type="checkbox"
+                    checked={config.showStartupTime === "true"}
+                    class="toggle"
+                    on:change={(e) => {
+                      setConfig(
+                        "showStartupTime",
+                        e.target.checked ? "true" : "false",
+                      );
+                    }}
+                  />
+                </label>
+              </fieldset>
+
               <div class="flex flex-col gap-2">
                 <div class="flex gap-2 items-center">
                   <div class="text-lg">Expected Root Dataset</div>

@@ -44,23 +44,26 @@ export default function Header(props: {
             }}
             on:click={props.onSettingsClick}
           ></BoltIcon>
-          <div
-            class="flex gap-2 items-center cursor-pointer"
-            on:click={() => {
-              setConfig("theme", nextTheme());
-            }}
-            on:touchend={(e) => e.stopPropagation()}
-          >
-            <PaintbrushIcon class="size-5 cursor-pointer text-base-content-soft"></PaintbrushIcon>
-            <div class="text-base-content-soft text-sm">
-              {capitalize(config.theme)}
+          <Show when={config.showTheme === "true"}>
+            <div
+              class="flex gap-2 items-center cursor-pointer"
+              on:click={() => {
+                setConfig("theme", nextTheme());
+              }}
+              on:touchend={(e) => e.stopPropagation()}
+            >
+              <PaintbrushIcon class="size-5 cursor-pointer text-base-content-soft"></PaintbrushIcon>
+              <div class="text-base-content-soft text-sm">
+                {capitalize(config.theme)}
+              </div>
             </div>
-          </div>
-
-          <div class="text-base-content-soft bg-warning/10 rounded-sm px-1 text-sm">
-            {startupTime()}
-            {startupTime() && "ms"}
-          </div>
+          </Show>
+          <Show when={config.showStartupTime === "true"}>
+            <div class="text-base-content-soft bg-warning/10 rounded-sm px-1 text-sm">
+              {startupTime()}
+              {startupTime() && "ms"}
+            </div>
+          </Show>
         </Show>
       </div>
       <div class="flex gap-2 items-center">

@@ -11,6 +11,8 @@ export type KikuConfig = {
   webFontSecondary: WebFont;
   systemFontSecondary: string;
   useSystemFontSecondary: "true" | "false";
+  showTheme: "true" | "false";
+  showStartupTime: "true" | "false";
   ankiConnectPort: string;
   ankiDroidEnableIntegration: "true" | "false";
   ankiDroidReverseSwipeDirection: "true" | "false";
@@ -36,6 +38,8 @@ export const defaultConfig: KikuConfig = {
   webFontSecondary: "IBM Plex Sans JP",
   systemFontSecondary: "'Hiragino Mincho ProN', 'Noto Serif CJK JP', 'Noto Serif JP', 'Yu Mincho', HanaMinA, HanaMinB, serif",
   useSystemFontSecondary: "true",
+  showTheme: "true",
+  showStartupTime: "true",
   ankiConnectPort: "8765",
   ankiDroidEnableIntegration: "true",
   ankiDroidReverseSwipeDirection: "false",
@@ -93,6 +97,8 @@ export function validateConfig(config: KikuConfig): KikuConfig {
       webFontSecondary: webFonts.includes(config.webFontSecondary) ? config.webFontSecondary : defaultConfig.webFontSecondary,
       systemFontSecondary: typeof config.systemFontSecondary === "string" ? config.systemFontSecondary : defaultConfig.systemFontSecondary,
       useSystemFontSecondary: typeof config.useSystemFontSecondary === "string" ? config.useSystemFontSecondary === "true" ? "true" : "false" : defaultConfig.useSystemFontSecondary,
+      showTheme: typeof config.showTheme === "string" ? config.showTheme === "true" ? "true" : "false" : defaultConfig.showTheme,
+      showStartupTime: typeof config.showStartupTime === "string" ? config.showStartupTime === "true" ? "true" : "false" : defaultConfig.showStartupTime,
       ankiConnectPort: typeof config.ankiConnectPort === "string" && Number(config.ankiConnectPort) > 0 ? config.ankiConnectPort : defaultConfig.ankiConnectPort,
       ankiDroidEnableIntegration: typeof config.ankiDroidEnableIntegration === "string" ? config.ankiDroidEnableIntegration === "true" ? "true" : "false" : defaultConfig.ankiDroidEnableIntegration,
       ankiDroidReverseSwipeDirection: typeof config.ankiDroidReverseSwipeDirection === "string" ? config.ankiDroidReverseSwipeDirection === "true" ? "true" : "false" : defaultConfig.ankiDroidReverseSwipeDirection,
