@@ -26,11 +26,13 @@ declare global {
     root?: HTMLElement;
     rootDataset: KikuConfig;
     isAnkiWeb?: boolean;
+    assetsPath: string;
   };
 }
 globalThis.KIKU_STATE = {
   rootDataset: defaultConfig,
   isAnkiWeb: window.location.origin.includes("ankiuser.net"),
+  assetsPath: window.location.origin,
 };
 
 export async function init({
@@ -42,9 +44,10 @@ export async function init({
 }) {
   try {
     if (KIKU_STATE.isAnkiWeb) {
+      document.documentElement.setAttribute("data-theme", "none");
+      KIKU_STATE.assetsPath = `${window.location.origin}/study/media`;
       const kikuCss = document.getElementById("kiku-css");
       kikuCss?.remove();
-      document.documentElement.setAttribute("data-is-ankiweb", "true");
     }
 
     const root =

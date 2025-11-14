@@ -661,7 +661,8 @@ function DebugSettings() {
       ]);
     }
 
-    if (KIKU_STATE.isAnkiWeb) return {};
+    if (window.document.documentElement.getAttribute("data-theme") === "none")
+      return {};
     return Object.fromEntries(mismatches);
   }
 

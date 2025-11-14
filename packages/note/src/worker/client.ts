@@ -5,9 +5,8 @@ export class WorkerClient {
   private ready: Promise<void>;
 
   constructor() {
-    //TODO: modular anki web stuff
-    if (KIKU_STATE.isAnkiWeb) {
-      this.worker = new Worker("/study/media/_kiku_worker.js", {
+    if (KIKU_STATE.assetsPath !== window.location.origin) {
+      this.worker = new Worker(`${KIKU_STATE.assetsPath}/_kiku_worker.js`, {
         type: "module",
       });
     } else {
@@ -19,11 +18,7 @@ export class WorkerClient {
     this.ready = this.invoke({
       type: "init",
       payload: {
-        baseUrl: import.meta.env.DEV
-          ? "/"
-          : KIKU_STATE.isAnkiWeb
-            ? `${window.location.origin}/study/media/`
-            : `${window.location.origin}/`,
+        baseUrl: import.meta.env.DEV ? "/" : `${KIKU_STATE.assetsPath}/`,
       },
     }).then(() => {});
   }

@@ -160,7 +160,8 @@ export type Dataset = {
 export type DatasetProp = Partial<Dataset>;
 
 export function updateConfigDataset(el: HTMLElement, config: KikuConfig) {
-  if (!KIKU_STATE.isAnkiWeb) {
+  const dataTheme = document.documentElement.getAttribute("data-theme");
+  if (dataTheme !== "none") {
     document.documentElement.setAttribute("data-theme", config.theme);
   }
   Object.entries(config).forEach(([key, value]) => {

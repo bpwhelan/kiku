@@ -1,5 +1,5 @@
 @plugin "daisyui" {
-  root: ":root:not([data-is-ankiweb])";
+  root: ":root:not([data-theme='none'])";
   themes: all;
   include:
     properties, reset, rootcolor, rootscrollgutter, rootscrolllock, svg, scrollbar, button, input, label, fieldset, select, alert, badge, toast, collapse, status, toggle, list, loading;

@@ -14,6 +14,7 @@ const [config, setConfig] = createStore(defaultConfig);
 
 globalThis.KIKU_STATE = {
   rootDataset: defaultConfig,
+  assetsPath: "",
 };
 
 export function getSsrTemplate() {
