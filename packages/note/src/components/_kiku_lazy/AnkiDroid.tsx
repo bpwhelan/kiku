@@ -147,6 +147,8 @@ export default function AnkiDroid() {
       Math.abs(diffY) > Math.abs(diffX)
     ) {
       isScrolling = true;
+      setCheckIconOffset(0);
+      setXIconOffset(0);
       return;
     }
 
@@ -162,11 +164,15 @@ export default function AnkiDroid() {
 
       if (direction > 0) {
         requestAnimationFrame(() => {
+          if (isScrolling) return;
           setXIconOffset(Math.abs(offset));
+          setCheckIconOffset(0);
         });
       } else {
         requestAnimationFrame(() => {
+          if (isScrolling) return;
           setCheckIconOffset(Math.abs(offset));
+          setXIconOffset(0);
         });
       }
     }
@@ -212,7 +218,7 @@ export default function AnkiDroid() {
     <>
       <Portal mount={KIKU_STATE.root}>
         <div
-          class="absolute top-1/2 -translate-y-1/2 left-0 bg-error/30 flex justify-center items-center rounded-full"
+          class="absolute top-1/2 -translate-y-1/2 left-0 bg-error/30 flex justify-center items-center rounded-full transition-transform"
           style={{
             height: `${48 + 24 * progress()}px`,
             width: `${48 + 24 * progress()}px`,
@@ -221,7 +227,7 @@ export default function AnkiDroid() {
         >
           <XIcon
             ref={xIconRef}
-            class="size-12 rounded-full p-2 shadow-lg transition-all"
+            class="size-12 rounded-full p-2 shadow-lg transition-colors"
             classList={{
               "bg-base-100 text-base-content-primary": progress() !== 1,
               "bg-error text-error-content": progress() === 1,
@@ -231,7 +237,7 @@ export default function AnkiDroid() {
       </Portal>
       <Portal mount={KIKU_STATE.root}>
         <div
-          class="absolute top-1/2 -translate-y-1/2 right-0 bg-success/30 flex justify-center items-center rounded-full"
+          class="absolute top-1/2 -translate-y-1/2 right-0 bg-success/30 flex justify-center items-center rounded-full transition-transform"
           style={{
             height: `${48 + 24 * progress()}px`,
             width: `${48 + 24 * progress()}px`,
@@ -240,7 +246,7 @@ export default function AnkiDroid() {
         >
           <CheckIcon
             ref={checkIconRef}
-            class="size-12 rounded-full p-2 transition-all shadow-lg"
+            class="size-12 rounded-full p-2 transition-colors shadow-lg"
             classList={{
               "bg-base-100 text-base-content-primary": progress() !== 1,
               "bg-success text-success-content": progress() === 1,
