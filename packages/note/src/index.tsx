@@ -17,6 +17,9 @@ import {
 } from "./util/config.ts";
 import { env } from "./util/general.ts";
 import "./styles/tailwind.css";
+import { Logger } from "./util/logger.ts";
+
+const logger = new Logger();
 
 declare global {
   var KIKU_STATE: {
@@ -27,13 +30,43 @@ declare global {
     rootDataset: KikuConfig;
     isAnkiWeb?: boolean;
     assetsPath: string;
+    logger: Logger;
   };
 }
 globalThis.KIKU_STATE = {
   rootDataset: defaultConfig,
   isAnkiWeb: window.location.origin.includes("ankiuser.net"),
   assetsPath: window.location.origin,
+  logger,
 };
+
+export function attachGlobalErrorHandlers(logger: Logger) {
+  // 1 Catch runtime errors (syntax, thrown errors, etc.)
+  window.addEventListener("error", (event) => {
+    logger.error("GlobalError:", event.message, {
+      file: event.filename,
+      line: event.lineno,
+      col: event.colno,
+      error: event.error?.stack ?? String(event.error),
+    });
+  });
+
+  // 2 Catch unhandled Promise rejections
+  window.addEventListener("unhandledrejection", (event) => {
+    logger.error("UnhandledRejection:", {
+      reason: event.reason instanceof Error ? event.reason.stack : event.reason,
+    });
+  });
+
+  // 3 Optional: Catch console.error calls
+  const originalConsoleError = console.error;
+  console.error = (...args: unknown[]) => {
+    logger.error("ConsoleError:", ...args);
+    originalConsoleError.apply(console, args);
+  };
+}
+
+attachGlobalErrorHandlers(logger);
 
 export async function init({
   side,
@@ -44,6 +77,7 @@ export async function init({
 }) {
   try {
     if (KIKU_STATE.isAnkiWeb) {
+      logger.info("AnkiWeb detected");
       document.documentElement.setAttribute("data-theme", "none");
       KIKU_STATE.assetsPath = `${window.location.origin}/study/media`;
       const kikuCss = document.getElementById("kiku-css");
@@ -55,6 +89,7 @@ export async function init({
       document.querySelector("[data-kiku-root]");
     if (!root) throw new Error("root not found");
     KIKU_STATE.root = root;
+    logger.debug("rootDataset", root.dataset);
 
     const qa = document.querySelector("#qa");
     if (qa?.shadowRoot) qa.shadowRoot.innerHTML = "";
@@ -80,6 +115,7 @@ export async function init({
       );
       KIKU_STATE.config = config$;
     } catch {
+      logger.warn("Failed to load config, using default config");
       config$ = defaultConfig;
     }
 

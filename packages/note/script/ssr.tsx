@@ -1,6 +1,7 @@
 import { createStore } from "solid-js/store";
 import { generateHydrationScript, renderToString } from "solid-js/web";
 import { Front } from "#/components/Front";
+import { Logger } from "#/util/logger";
 import { Back } from "../src/components/Back";
 import {
   AnkiFieldContextProvider,
@@ -12,9 +13,12 @@ import { defaultConfig } from "../src/util/config";
 
 const [config, setConfig] = createStore(defaultConfig);
 
+const logger = new Logger();
+
 globalThis.KIKU_STATE = {
   rootDataset: defaultConfig,
   assetsPath: "",
+  logger,
 };
 
 export function getSsrTemplate() {
