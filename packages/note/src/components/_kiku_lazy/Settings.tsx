@@ -661,6 +661,7 @@ function DebugSettings() {
       ]);
     }
 
+    if (KIKU_STATE.isAnkiWeb) return {};
     return Object.fromEntries(mismatches);
   }
 

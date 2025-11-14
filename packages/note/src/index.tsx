@@ -44,6 +44,7 @@ export async function init({
     if (KIKU_STATE.isAnkiWeb) {
       const kikuCss = document.getElementById("kiku-css");
       kikuCss?.remove();
+      document.documentElement.setAttribute("data-is-ankiweb", "true");
     }
 
     const root =
