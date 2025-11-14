@@ -63,19 +63,25 @@ export default function KanjiList(props: {
                   <ul class="list bg-base-100 rounded-box shadow-md">
                     <For each={Array.isArray(data) ? data : data.shared}>
                       {(data) => {
+                        const leech = data.tags.includes("leech");
                         return (
                           <>
-                            <li class="p-4 pb-0 tracking-wide flex gap-2 items-end">
-                              <div
-                                class=" font-secondary sentence"
-                                innerHTML={data.fields.Expression.value.replaceAll(
-                                  kanji,
-                                  `<span class="text-base-content-primary">${kanji}</span>`,
-                                )}
-                              ></div>
-                              <div class="text-base-content-calm">
-                                {new Date(data.noteId).toLocaleDateString()}
+                            <li class="p-4 pb-0 tracking-wide flex gap-2 items-start justify-between">
+                              <div class="flex gap-2 items-end">
+                                <div
+                                  class=" font-secondary sentence"
+                                  innerHTML={data.fields.Expression.value.replaceAll(
+                                    kanji,
+                                    `<span class="text-base-content-primary">${kanji}</span>`,
+                                  )}
+                                ></div>
+                                <div class="text-base-content-calm">
+                                  {new Date(data.noteId).toLocaleDateString()}
+                                </div>
                               </div>
+                              {leech && (
+                                <div class="status status-warning"></div>
+                              )}
                             </li>
 
                             <li class="list-row">
