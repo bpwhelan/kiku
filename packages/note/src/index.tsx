@@ -25,7 +25,6 @@ declare global {
   var KIKU_STATE: {
     relax?: boolean;
     startupTime?: number;
-    config?: KikuConfig;
     root?: HTMLElement;
     isAnkiWeb?: boolean;
     assetsPath: string;
@@ -108,11 +107,17 @@ export async function init({
 
     let config$: KikuConfig;
     try {
-      if (KIKU_STATE.config) config$ = KIKU_STATE.config;
-      config$ = validateConfig(
-        await (await fetch(env.KIKU_CONFIG_FILE)).json(),
-      );
-      KIKU_STATE.config = config$;
+      const cache = sessionStorage.getItem("kiku-config");
+      if (cache) {
+        logger.info("config cache hit");
+        config$ = JSON.parse(cache);
+      } else {
+        logger.info("config cache miss");
+        config$ = validateConfig(
+          await (await fetch(env.KIKU_CONFIG_FILE)).json(),
+        );
+        sessionStorage.setItem("kiku-config", JSON.stringify(config$));
+      }
     } catch {
       logger.warn("Failed to load config, using default config");
       config$ = defaultConfig;
