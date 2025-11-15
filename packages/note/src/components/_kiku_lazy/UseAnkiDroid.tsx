@@ -107,8 +107,8 @@ export default function UseAnkiDroid() {
       ? undefined
       : new AnkiDroidJS({ version: "0.0.3", developer: "youyoumu" });
 
-  let checkIconRef: SVGSVGElement | undefined;
-  let xIconRef: SVGSVGElement | undefined;
+  let rightIconRef: SVGSVGElement | undefined;
+  let leftIconRef: SVGSVGElement | undefined;
 
   const [card] = useCardStore();
   const el$ = () => card.contentRef;
@@ -123,9 +123,10 @@ export default function UseAnkiDroid() {
   let deltaX = 0;
   let isScrolling = false;
   let isSwiping = false;
+  let isTouching = false;
 
-  const [rightIconOffset, setCheckIconOffset] = createSignal(0);
-  const [leftIconOffset, setXIconOffset] = createSignal(0);
+  const [rightIconOffset, setRightIconOffset] = createSignal(0);
+  const [leftIconOffset, setLeftIconOffset] = createSignal(0);
   const [progress, setProgress] = createSignal(0);
 
   function handleTouchStart(e: TouchEvent) {
@@ -137,6 +138,7 @@ export default function UseAnkiDroid() {
     deltaX = 0;
     isScrolling = false;
     isSwiping = false;
+    isTouching = true;
   }
 
   function handleTouchMove(e: TouchEvent) {
@@ -158,8 +160,8 @@ export default function UseAnkiDroid() {
       Math.abs(diffY) > Math.abs(diffX)
     ) {
       isScrolling = true;
-      setCheckIconOffset(0);
-      setXIconOffset(0);
+      setRightIconOffset(0);
+      setLeftIconOffset(0);
       return;
     }
 
@@ -175,27 +177,28 @@ export default function UseAnkiDroid() {
 
       if (direction > 0) {
         requestAnimationFrame(() => {
-          if (isScrolling) return;
-          setXIconOffset(snapTo4(Math.abs(offset)));
-          setCheckIconOffset(0);
+          if (isScrolling || !isTouching) return;
+          setLeftIconOffset(snapTo4(Math.abs(offset)));
+          setRightIconOffset(0);
         });
       } else {
         requestAnimationFrame(() => {
-          if (isScrolling) return;
-          setCheckIconOffset(snapTo4(Math.abs(offset)));
-          setXIconOffset(0);
+          if (isScrolling || !isTouching) return;
+          setRightIconOffset(snapTo4(Math.abs(offset)));
+          setLeftIconOffset(0);
         });
       }
     }
   }
 
   function handleTouchEnd() {
+    isTouching = false;
     if (card.side === "front") {
       if (isSwiping) return;
       ankiDroidAPI?.ankiShowAnswer();
     } else if (card.side === "back") {
-      setCheckIconOffset(0);
-      setXIconOffset(0);
+      setRightIconOffset(0);
+      setLeftIconOffset(0);
 
       if (isScrolling) return;
       if (Math.abs(deltaX) >= THRESHOLD) {
@@ -235,14 +238,14 @@ export default function UseAnkiDroid() {
   return (
     <Portal mount={KIKU_STATE.root}>
       <Icon
-        ref={xIconRef}
+        ref={leftIconRef}
         side="left"
         color={reverse ? "error" : "success"}
         offset={leftIconOffset()}
         progress={progress()}
       />
       <Icon
-        ref={checkIconRef}
+        ref={rightIconRef}
         side="right"
         color={reverse ? "success" : "error"}
         offset={rightIconOffset()}
@@ -260,6 +263,7 @@ function Icon(props: {
   progress: number;
 }) {
   const direction = () => (props.side === "right" ? 1 : -1);
+  const offset = () => props.offset;
 
   return (
     <div
@@ -271,9 +275,9 @@ function Icon(props: {
       style={{
         left: props.side === "left" ? "0" : undefined,
         right: props.side === "right" ? "0" : undefined,
-        height: props.offset > 0 ? `${48 + 24 * props.progress}px` : undefined,
-        width: props.offset > 0 ? `${48 + 24 * props.progress}px` : undefined,
-        transform: `translateX(${(48 + 12 - props.offset) * direction()}px)`,
+        height: offset() > 0 ? `${48 + 24 * props.progress}px` : undefined,
+        width: offset() > 0 ? `${48 + 24 * props.progress}px` : undefined,
+        transform: `translateX(${(48 + 12 - offset()) * direction()}px)`,
         opacity: `${props.progress - 0.2}`,
       }}
     >
