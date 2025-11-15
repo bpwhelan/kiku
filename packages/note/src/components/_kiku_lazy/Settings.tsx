@@ -11,6 +11,7 @@ import {
   defaultConfig,
   getCssVar,
   type KikuConfig,
+  type RootDatasetKey,
   rootDatasetConfigWhitelist,
   type TailwindSize,
   tailwindSize,
@@ -651,8 +652,8 @@ function DebugSettings() {
     const mismatches = Object.fromEntries(
       Object.entries(config).filter(([key, value]) => {
         return (
-          rootDatasetConfigWhitelist.has(key as keyof KikuConfig) &&
-          KIKU_STATE.rootDataset[key as keyof KikuConfig] !== value
+          rootDatasetConfigWhitelist.has(key as RootDatasetKey) &&
+          KIKU_STATE.rootDataset[key as RootDatasetKey] !== value
         );
       }),
     );
@@ -662,7 +663,7 @@ function DebugSettings() {
   const rootDataset = () => {
     return Object.fromEntries(
       Object.entries(config).filter(([key]) => {
-        return rootDatasetConfigWhitelist.has(key as keyof KikuConfig);
+        return rootDatasetConfigWhitelist.has(key as RootDatasetKey);
       }),
     );
   };
@@ -678,7 +679,7 @@ function DebugSettings() {
         when={
           Object.keys(rootDatasetMismatches()).length > 0 &&
           Object.keys(rootDatasetMismatches()).some((key) =>
-            rootDatasetConfigWhitelist.has(key as keyof KikuConfig),
+            rootDatasetConfigWhitelist.has(key as RootDatasetKey),
           )
         }
       >

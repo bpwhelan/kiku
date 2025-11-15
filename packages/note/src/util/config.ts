@@ -102,10 +102,17 @@ export const defaultCssVar: CssVar = {
   "--line-height-sm-hint": tailwindFontSizeVar[defaultConfig.fontSizeSmHint].lineHeight,    
 };
 
-export const rootDatasetConfigWhitelist = new Set<keyof KikuConfig>([
-  "kikuRoot",
-  "theme",
-]);
+const rootDatasetArray = ["kikuRoot", "theme"] as const;
+export type RootDatasetKey = (typeof rootDatasetArray)[number];
+export type RootDataset = Partial<Record<RootDatasetKey, string>>;
+export const rootDatasetConfigWhitelist = new Set<RootDatasetKey>(
+  rootDatasetArray,
+);
+rootDatasetConfigWhitelist.forEach((key) => {
+  if (!Object.keys(defaultConfig).includes(key)) {
+    throw new Error(`RootDataset key "${key}" is not in defaultConfig`);
+  }
+});
 
 export function validateConfig(config: KikuConfig): KikuConfig {
   try {

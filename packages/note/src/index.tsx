@@ -14,6 +14,7 @@ import {
   defaultConfig,
   defaultCssVar,
   type KikuConfig,
+  type RootDataset,
   updateConfigState,
   validateConfig,
 } from "./util/config.ts";
@@ -29,7 +30,7 @@ declare global {
     startupTime?: number;
     config?: KikuConfig;
     root?: HTMLElement;
-    rootDataset: KikuConfig;
+    rootDataset: RootDataset;
     isAnkiWeb?: boolean;
     assetsPath: string;
     logger: Logger;
@@ -122,7 +123,7 @@ export async function init({
       config$ = defaultConfig;
     }
 
-    const rootDataset = { ...root.dataset };
+    const rootDataset = { ...root.dataset } as RootDataset;
     KIKU_STATE.rootDataset = rootDataset;
 
     updateConfigState(root, config$);
