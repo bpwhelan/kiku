@@ -20,10 +20,8 @@ export default function Header(props: {
   const [startupTime, setStartupTime] = createSignal<number | null>(null);
 
   onMount(() => {
-    setTimeout(() => {
-      if (KIKU_STATE.startupTime)
-        setStartupTime(Math.round(KIKU_STATE.startupTime));
-    }, 200);
+    if (KIKU_STATE.startupTime)
+      setStartupTime(Math.round(KIKU_STATE.startupTime));
   });
 
   return (
