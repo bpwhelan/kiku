@@ -93,6 +93,10 @@ export async function init({
     if (qa?.shadowRoot) qa.shadowRoot.innerHTML = "";
     const shadow = qa?.shadowRoot ?? qa?.attachShadow({ mode: "open" });
     shadow?.appendChild(root);
+    const style = qa?.querySelector("style");
+    if (style) {
+      shadow?.appendChild(style.cloneNode(true));
+    }
     const tailwind = document.querySelector(
       "[data-vite-dev-id='/home/yym/repos/kiku/packages/note/src/styles/tailwind.css']",
     );
@@ -102,7 +106,7 @@ export async function init({
       const link = document.createElement("link");
       link.rel = "stylesheet";
       link.href = "./_kiku.css";
-      shadow?.appendChild(link);
+      shadow?.prepend(link);
     }
 
     let config$: KikuConfig;

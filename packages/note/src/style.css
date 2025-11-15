@@ -98,4 +98,12 @@
 *
 */
 
+@layer theme, base, components, utilities.daisyui.component, custom;
+
 /* __CSS_VARIABLE__ */
+
+@layer custom {
+  [data-theme] {
+    /* custom theme here */
+  }
+}
