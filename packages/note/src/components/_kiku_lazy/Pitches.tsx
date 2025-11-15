@@ -38,34 +38,37 @@ function Pitch(props: { kana: string; pitchNum: number; index: number }) {
   };
 
   return (
-    <div class="flex items-start gap-1 animate-fade-in-sm">
-      <div {...pitchDataset}>
-        {pitchInfo.morae.map((mora, i) => {
-          return (
-            <span
-              classList={{
-                "border-primary": isEven,
-                "border-secondary": !isEven,
-                "border-t-2": pitchInfo.pattern[i] === 1,
-                "pitch-segment":
-                  pitchInfo.pattern[i] === 1 && pitchInfo.pattern[i + 1] === 0,
-              }}
-            >
-              {mora}
-            </span>
-          );
-        })}
-      </div>
-      <div
-        class="text-sm px-0.5 rounded-sm leading-tight"
-        classList={{
-          "bg-primary": isEven,
-          "bg-secondary": !isEven,
-          "text-primary-content": isEven,
-          "text-secondary-content": !isEven,
-        }}
-      >
-        {pitchInfo.pitchNum}
+    <div class="tooltip" data-tip={pitchInfo.patternName}>
+      <div class="flex items-start gap-1 animate-fade-in-sm">
+        <div {...pitchDataset}>
+          {pitchInfo.morae.map((mora, i) => {
+            return (
+              <span
+                classList={{
+                  "border-primary": isEven,
+                  "border-secondary": !isEven,
+                  "border-t-2": pitchInfo.pattern[i] === 1,
+                  "pitch-segment":
+                    pitchInfo.pattern[i] === 1 &&
+                    pitchInfo.pattern[i + 1] === 0,
+                }}
+              >
+                {mora}
+              </span>
+            );
+          })}
+        </div>
+        <div
+          class="text-sm px-0.5 rounded-sm leading-tight"
+          classList={{
+            "bg-primary": isEven,
+            "bg-secondary": !isEven,
+            "text-primary-content": isEven,
+            "text-secondary-content": !isEven,
+          }}
+        >
+          {pitchInfo.pitchNum}
+        </div>
       </div>
     </div>
   );
