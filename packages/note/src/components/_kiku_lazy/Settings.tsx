@@ -14,6 +14,7 @@ import {
   type RootDatasetKey,
   rootDatasetConfigWhitelist,
   type TailwindSize,
+  tailwindFontSizeVar,
   tailwindSize,
 } from "#/util/config";
 import { type WebFont, webFonts } from "#/util/fonts";
@@ -499,7 +500,15 @@ function FontSizeSettingsFieldset(props: {
 
           <div class="tooltip">
             <div class="tooltip-content">
-              <div class={`font-secondary`}>あ</div>
+              <div
+                class={`font-secondary`}
+                style={{
+                  "font-size": tailwindFontSizeVar[configValue()].fontSize,
+                  "line-height": tailwindFontSizeVar[configValue()].lineHeight,
+                }}
+              >
+                あ
+              </div>
             </div>
             <input
               on:change={(e) => {
@@ -656,9 +665,6 @@ function DebugSettings() {
   };
 
   const cssVar = () => getCssVar(config);
-  createEffect(() => {
-    console.log(cssVar());
-  });
 
   return (
     <div class="pb-32">
