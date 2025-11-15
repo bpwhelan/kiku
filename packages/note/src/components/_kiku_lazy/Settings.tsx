@@ -41,7 +41,7 @@ function toDatasetKey(str: string) {
   return `data-${str}`;
 }
 
-function toDatasetString(obj: Record<string, string | number>) {
+function toDatasetString(obj: Record<string, string | number | boolean>) {
   return Object.entries(obj)
     .map(([key, value]) => {
       const dashed = toDashed(key);
@@ -244,10 +244,10 @@ function ThemeSettings() {
         <label class="label">
           <input
             type="checkbox"
-            checked={config.showTheme === "true"}
+            checked={config.showTheme}
             class="toggle"
             on:change={(e) => {
-              setConfig("showTheme", e.target.checked ? "true" : "false");
+              setConfig("showTheme", e.target.checked);
             }}
           />
         </label>
@@ -268,7 +268,7 @@ function FontSettings() {
           <fieldset
             class="fieldset"
             classList={{
-              hidden: config.useSystemFontPrimary === "true",
+              hidden: config.useSystemFontPrimary,
             }}
             on:change={(e) => {
               const target = e.target as HTMLSelectElement;
@@ -294,7 +294,7 @@ function FontSettings() {
           <fieldset
             class="fieldset"
             classList={{
-              hidden: config.useSystemFontPrimary !== "true",
+              hidden: !config.useSystemFontPrimary,
             }}
           >
             <legend class="fieldset-legend">
@@ -335,16 +335,13 @@ function FontSettings() {
             <label class="label text-base-content-soft">
               <input
                 type="checkbox"
-                checked={config.useSystemFontPrimary === "true"}
+                checked={config.useSystemFontPrimary}
                 class="toggle"
                 on:change={(e) => {
-                  setConfig(
-                    "useSystemFontPrimary",
-                    e.target.checked ? "true" : "false",
-                  );
+                  setConfig("useSystemFontPrimary", e.target.checked);
                 }}
               />
-              {config.useSystemFontPrimary === "true"
+              {config.useSystemFontPrimary
                 ? "Using System Font"
                 : "Using Web Font"}
             </label>
@@ -358,7 +355,7 @@ function FontSettings() {
           <fieldset
             class="fieldset"
             classList={{
-              hidden: config.useSystemFontSecondary === "true",
+              hidden: config.useSystemFontSecondary,
             }}
             on:change={(e) => {
               const target = e.target as HTMLSelectElement;
@@ -387,7 +384,7 @@ function FontSettings() {
           <fieldset
             class="fieldset"
             classList={{
-              hidden: config.useSystemFontSecondary !== "true",
+              hidden: !config.useSystemFontSecondary,
             }}
           >
             <legend class="fieldset-legend">
@@ -428,16 +425,13 @@ function FontSettings() {
             <label class="label text-base-content-soft">
               <input
                 type="checkbox"
-                checked={config.useSystemFontSecondary === "true"}
+                checked={config.useSystemFontSecondary}
                 class="toggle"
                 on:change={(e) => {
-                  setConfig(
-                    "useSystemFontSecondary",
-                    e.target.checked ? "true" : "false",
-                  );
+                  setConfig("useSystemFontSecondary", e.target.checked);
                 }}
               />
-              {config.useSystemFontSecondary === "true"
+              {config.useSystemFontSecondary
                 ? "Using System Font"
                 : "Using Web Font"}
             </label>
@@ -588,13 +582,10 @@ function AnkiDroidSettings() {
             <label class="label">
               <input
                 type="checkbox"
-                checked={config.ankiDroidEnableIntegration === "true"}
+                checked={config.ankiDroidEnableIntegration}
                 class="toggle"
                 on:change={(e) => {
-                  setConfig(
-                    "ankiDroidEnableIntegration",
-                    e.target.checked ? "true" : "false",
-                  );
+                  setConfig("ankiDroidEnableIntegration", e.target.checked);
                 }}
               />
             </label>
@@ -605,13 +596,10 @@ function AnkiDroidSettings() {
             <label class="label">
               <input
                 type="checkbox"
-                checked={config.ankiDroidReverseSwipeDirection === "true"}
+                checked={config.ankiDroidReverseSwipeDirection}
                 class="toggle"
                 on:change={(e) => {
-                  setConfig(
-                    "ankiDroidReverseSwipeDirection",
-                    e.target.checked ? "true" : "false",
-                  );
+                  setConfig("ankiDroidReverseSwipeDirection", e.target.checked);
                 }}
               />
             </label>
@@ -680,6 +668,9 @@ function DebugSettings() {
   };
 
   const cssVar = () => getCssVar(config);
+  createEffect(() => {
+    console.log(cssVar());
+  });
 
   return (
     <>
@@ -706,7 +697,6 @@ function DebugSettings() {
         </div>
       </Show>
       <div class="pb-32">
-        {/* NOTE: collapse arrow broke button color https://github.com/saadeghi/daisyui/issues/4209 */}
         <div class="collapse bg-base-100 border border-base-300">
           <input type="checkbox" />
           <div class="collapse-title text-lg font-bold">Debug</div>
@@ -749,13 +739,10 @@ function DebugSettings() {
                   <label class="label">
                     <input
                       type="checkbox"
-                      checked={config.showStartupTime === "true"}
+                      checked={config.showStartupTime}
                       class="toggle"
                       on:change={(e) => {
-                        setConfig(
-                          "showStartupTime",
-                          e.target.checked ? "true" : "false",
-                        );
+                        setConfig("showStartupTime", e.target.checked);
                       }}
                     />
                   </label>

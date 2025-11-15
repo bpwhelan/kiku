@@ -99,7 +99,7 @@ export default function UseAnkiDroid() {
   if (window.innerWidth > 768) return;
   if (typeof AnkiDroidJS === "undefined" && !import.meta.env.DEV) return;
   const [config] = useConfig();
-  if (config.ankiDroidEnableIntegration === "false") return;
+  if (!config.ankiDroidEnableIntegration) return;
   KIKU_STATE.logger.info("Using AnkiDroid");
 
   const ankiDroidAPI =
@@ -112,7 +112,7 @@ export default function UseAnkiDroid() {
 
   const [card] = useCardStore();
   const el$ = () => card.contentRef;
-  const reverse = config.ankiDroidReverseSwipeDirection === "true";
+  const reverse = config.ankiDroidReverseSwipeDirection;
 
   const THRESHOLD = 60;
   const DEADZONE = 10;

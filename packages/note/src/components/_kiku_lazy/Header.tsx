@@ -44,7 +44,7 @@ export default function Header(props: {
             }}
             on:click={props.onSettingsClick}
           ></BoltIcon>
-          <Show when={config.showTheme === "true"}>
+          <Show when={config.showTheme}>
             <div
               class="flex gap-2 items-center cursor-pointer"
               on:click={() => {
@@ -58,7 +58,7 @@ export default function Header(props: {
               </div>
             </div>
           </Show>
-          <Show when={config.showStartupTime === "true"}>
+          <Show when={config.showStartupTime}>
             <div class="text-base-content-soft bg-warning/10 rounded-sm px-1 text-sm">
               {startupTime()}
               {startupTime() && "ms"}

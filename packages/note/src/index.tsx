@@ -122,7 +122,7 @@ export async function init({
       config$ = defaultConfig;
     }
 
-    const rootDataset = { ...root.dataset } as KikuConfig;
+    const rootDataset = { ...root.dataset };
     KIKU_STATE.rootDataset = rootDataset;
 
     updateConfigState(root, config$);

@@ -6,15 +6,15 @@ export type KikuConfig = {
   theme: DaisyUITheme;
   webFontPrimary: WebFont;
   systemFontPrimary: string;
-  useSystemFontPrimary: "true" | "false";
+  useSystemFontPrimary: boolean;
   webFontSecondary: WebFont;
   systemFontSecondary: string;
-  useSystemFontSecondary: "true" | "false";
-  showTheme: "true" | "false";
-  showStartupTime: "true" | "false";
+  useSystemFontSecondary: boolean;
+  showTheme: boolean;
+  showStartupTime: boolean;
   ankiConnectPort: string;
-  ankiDroidEnableIntegration: "true" | "false";
-  ankiDroidReverseSwipeDirection: "true" | "false";
+  ankiDroidEnableIntegration: boolean;
+  ankiDroidReverseSwipeDirection: boolean;
   fontSizeBaseExpression: TailwindSize;
   fontSizeBasePitch: TailwindSize;
   fontSizeBaseSentence: TailwindSize;
@@ -33,15 +33,15 @@ export const defaultConfig: KikuConfig = {
   theme: "light",
   webFontPrimary: "Klee One",
   systemFontPrimary: "'Inter', 'SF Pro Display', 'Liberation Sans', 'Segoe UI', 'Hiragino Kaku Gothic ProN', 'Noto Sans CJK JP', 'Noto Sans JP', 'Meiryo', HanaMinA, HanaMinB, sans-serif",
-  useSystemFontPrimary: "true",
+  useSystemFontPrimary: true,
   webFontSecondary: "IBM Plex Sans JP",
   systemFontSecondary: "'Hiragino Mincho ProN', 'Noto Serif CJK JP', 'Noto Serif JP', 'Yu Mincho', HanaMinA, HanaMinB, serif",
-  useSystemFontSecondary: "true",
-  showTheme: "true",
-  showStartupTime: "true",
+  useSystemFontSecondary: true,
+  showTheme: true,
+  showStartupTime: true,
   ankiConnectPort: "8765",
-  ankiDroidEnableIntegration: "true",
-  ankiDroidReverseSwipeDirection: "false",
+  ankiDroidEnableIntegration: true,
+  ankiDroidReverseSwipeDirection: false,
   fontSizeBaseExpression: "5xl",
   fontSizeBasePitch: "xl",
   fontSizeBaseSentence: "2xl",
@@ -118,15 +118,15 @@ export function validateConfig(config: KikuConfig): KikuConfig {
       theme: daisyUIThemes.includes(config.theme) ? config.theme : defaultConfig.theme,
       webFontPrimary: webFonts.includes(config.webFontPrimary) ? config.webFontPrimary : defaultConfig.webFontPrimary,
       systemFontPrimary: typeof config.systemFontPrimary === "string" ? config.systemFontPrimary : defaultConfig.systemFontPrimary,
-      useSystemFontPrimary: typeof config.useSystemFontPrimary === "string" ? config.useSystemFontPrimary === "true" ? "true" : "false" : defaultConfig.useSystemFontPrimary,
+      useSystemFontPrimary: typeof config.useSystemFontPrimary === "boolean" ? config.useSystemFontPrimary : defaultConfig.useSystemFontPrimary,
       webFontSecondary: webFonts.includes(config.webFontSecondary) ? config.webFontSecondary : defaultConfig.webFontSecondary,
       systemFontSecondary: typeof config.systemFontSecondary === "string" ? config.systemFontSecondary : defaultConfig.systemFontSecondary,
-      useSystemFontSecondary: typeof config.useSystemFontSecondary === "string" ? config.useSystemFontSecondary === "true" ? "true" : "false" : defaultConfig.useSystemFontSecondary,
-      showTheme: typeof config.showTheme === "string" ? config.showTheme === "true" ? "true" : "false" : defaultConfig.showTheme,
-      showStartupTime: typeof config.showStartupTime === "string" ? config.showStartupTime === "true" ? "true" : "false" : defaultConfig.showStartupTime,
+      useSystemFontSecondary: typeof config.useSystemFontSecondary === "boolean" ? config.useSystemFontSecondary : defaultConfig.useSystemFontSecondary,
+      showTheme: typeof config.showTheme === "boolean" ? config.showTheme : defaultConfig.showTheme,
+      showStartupTime: typeof config.showStartupTime === "boolean" ? config.showStartupTime : defaultConfig.showStartupTime,
       ankiConnectPort: typeof config.ankiConnectPort === "string" && Number(config.ankiConnectPort) > 0 && Number(config.ankiConnectPort) < 65535 ? config.ankiConnectPort : defaultConfig.ankiConnectPort,
-      ankiDroidEnableIntegration: typeof config.ankiDroidEnableIntegration === "string" ? config.ankiDroidEnableIntegration === "true" ? "true" : "false" : defaultConfig.ankiDroidEnableIntegration,
-      ankiDroidReverseSwipeDirection: typeof config.ankiDroidReverseSwipeDirection === "string" ? config.ankiDroidReverseSwipeDirection === "true" ? "true" : "false" : defaultConfig.ankiDroidReverseSwipeDirection,
+      ankiDroidEnableIntegration: typeof config.ankiDroidEnableIntegration === "boolean" ? config.ankiDroidEnableIntegration : defaultConfig.ankiDroidEnableIntegration,
+      ankiDroidReverseSwipeDirection: typeof config.ankiDroidReverseSwipeDirection === "boolean" ? config.ankiDroidReverseSwipeDirection : defaultConfig.ankiDroidReverseSwipeDirection,
       fontSizeBaseExpression: tailwindSize.includes(config.fontSizeBaseExpression) ? config.fontSizeBaseExpression : defaultConfig.fontSizeBaseExpression,
       fontSizeBasePitch: tailwindSize.includes(config.fontSizeBasePitch) ? config.fontSizeBasePitch : defaultConfig.fontSizeBasePitch,
       fontSizeBaseSentence: tailwindSize.includes(config.fontSizeBaseSentence) ? config.fontSizeBaseSentence : defaultConfig.fontSizeBaseSentence,
