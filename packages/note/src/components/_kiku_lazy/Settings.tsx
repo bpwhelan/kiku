@@ -116,7 +116,7 @@ export default function Settings(props: {
           {!card.ankiConnectAvailable && (
             <>
               <RefreshCwIcon
-                class="h-5 w-5 cursor-pointer text-base-content-soft"
+                class="size-5 cursor-pointer text-base-content-soft"
                 on:click={async () => {
                   try {
                     await checkAnkiConnect();
@@ -705,7 +705,7 @@ function DebugSettings() {
             <div class="flex gap-2 items-center">
               <div class="text-lg">Expected Root Dataset</div>
               <ClipboardCopyIcon
-                class="size-5 text-base-content-calm cursor-pointer"
+                class="size-4 text-base-content-calm cursor-pointer"
                 classList={{
                   hidden: typeof pycmd !== "undefined",
                 }}
@@ -725,7 +725,7 @@ function DebugSettings() {
             <div class="flex gap-2 items-center">
               <div class="text-lg">Expected CSS Variable</div>
               <ClipboardCopyIcon
-                class="size-5 text-base-content-calm cursor-pointer"
+                class="size-4 text-base-content-calm cursor-pointer"
                 classList={{
                   hidden: typeof pycmd !== "undefined",
                 }}
@@ -745,7 +745,7 @@ function DebugSettings() {
             <div class="flex gap-2 items-center">
               <div class="text-lg">Config</div>
               <ClipboardCopyIcon
-                class="size-5 text-base-content-calm cursor-pointer"
+                class="size-4 text-base-content-calm cursor-pointer"
                 classList={{
                   hidden: typeof pycmd !== "undefined",
                 }}
@@ -763,7 +763,7 @@ function DebugSettings() {
             <div class="flex gap-2 items-center">
               <div class="text-lg">Anki Fields</div>
               <ClipboardCopyIcon
-                class="size-5 text-base-content-calm cursor-pointer"
+                class="size-4 text-base-content-calm cursor-pointer"
                 classList={{
                   hidden: typeof pycmd !== "undefined",
                 }}
@@ -781,7 +781,7 @@ function DebugSettings() {
               <div class="flex gap-2 items-center">
                 <div class="text-lg">Kiku Files</div>
                 <ClipboardCopyIcon
-                  class="size-5 text-base-content-calm cursor-pointer"
+                  class="size-4 text-base-content-calm cursor-pointer"
                   classList={{
                     hidden: typeof pycmd !== "undefined",
                   }}
@@ -799,7 +799,7 @@ function DebugSettings() {
             <div class="flex gap-2 items-center">
               <div class="text-lg">Logs</div>
               <ClipboardCopyIcon
-                class="size-5 text-base-content-calm cursor-pointer"
+                class="size-4 text-base-content-calm cursor-pointer"
                 classList={{
                   hidden: typeof pycmd !== "undefined",
                 }}
@@ -809,7 +809,7 @@ function DebugSettings() {
               />
 
               <RefreshCwIcon
-                class="size-5 text-base-content-calm cursor-pointer"
+                class="size-4 text-base-content-calm cursor-pointer"
                 on:click={() => {
                   setLogs(KIKU_STATE.logger.get());
                 }}
