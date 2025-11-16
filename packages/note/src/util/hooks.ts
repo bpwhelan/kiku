@@ -3,7 +3,9 @@ import {
   useAnkiField,
   useBreakpoint,
   useCardStore,
+  useConfig,
 } from "#/components/shared/Context";
+import type { DaisyUITheme } from "./theme";
 
 export function useSentenceField() {
   const [card] = useCardStore();
@@ -73,17 +75,39 @@ export function useNavigationTransition() {
     direction: "back" | "forward",
     callback?: () => void,
   ) {
-    document.documentElement.dataset.transitionDirection = direction;
-
     if (document.startViewTransition && !bp.isAtLeast("sm")) {
-      console.log("test");
-      document.startViewTransition(() => {
-        callback?.() ?? setCard("screen", page);
-      });
+      document.documentElement.dataset.transitionDirection = direction;
+      document
+        .startViewTransition(() => {
+          callback?.() ?? setCard("screen", page);
+        })
+        .finished.then(() => {
+          document.documentElement.removeAttribute("data-transition-direction");
+        });
     } else {
       callback?.() ?? setCard("screen", page);
     }
   }
 
   return navigate;
+}
+
+export function useThemeTransition() {
+  const [config, setConfig] = useConfig();
+
+  function changeTheme(theme: DaisyUITheme) {
+    if (document.startViewTransition) {
+      document.documentElement.dataset.themeTransition = "true";
+      document
+        .startViewTransition(() => {
+          setConfig("theme", theme);
+        })
+        .finished.then(() => {
+          document.documentElement.removeAttribute("data-theme-transition");
+        });
+    } else {
+      setConfig("theme", theme);
+    }
+  }
+  return changeTheme;
 }

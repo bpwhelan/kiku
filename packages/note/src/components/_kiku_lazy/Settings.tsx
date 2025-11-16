@@ -18,6 +18,7 @@ import {
   tailwindSize,
 } from "#/util/config";
 import { type WebFont, webFonts } from "#/util/fonts";
+import { useThemeTransition } from "#/util/hooks";
 import { daisyUIThemes } from "#/util/theme";
 import {
   useAnkiField,
@@ -171,6 +172,7 @@ export default function Settings(props: {
 
 function ThemeSettings() {
   const [config, setConfig] = useConfig();
+  const changeTheme = useThemeTransition();
 
   return (
     <div class="flex flex-col gap-4 animate-fade-in">
@@ -184,7 +186,7 @@ function ThemeSettings() {
                 "outline-2": theme === config.theme,
               }}
               on:click={() => {
-                setConfig("theme", theme);
+                changeTheme(theme);
               }}
             >
               <div class="bg-base-100 text-base-content w-full cursor-pointer">

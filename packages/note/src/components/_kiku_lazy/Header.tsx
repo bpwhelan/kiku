@@ -1,4 +1,5 @@
 import { createSignal, Match, onMount, Show, Switch } from "solid-js";
+import { useThemeTransition } from "#/util/hooks";
 import { nextTheme } from "#/util/theme";
 import { useAnkiField, useCardStore, useConfig } from "../shared/Context";
 import {
@@ -18,6 +19,7 @@ export default function Header(props: {
   const [card] = useCardStore();
   const [config, setConfig] = useConfig();
   const [startupTime, setStartupTime] = createSignal<number | null>(null);
+  const changeTheme = useThemeTransition();
 
   onMount(() => {
     if (KIKU_STATE.startupTime)
@@ -46,7 +48,7 @@ export default function Header(props: {
             <div
               class="flex gap-2 items-center cursor-pointer"
               on:click={() => {
-                setConfig("theme", nextTheme());
+                changeTheme(nextTheme());
               }}
               on:touchend={(e) => e.stopPropagation()}
             >
