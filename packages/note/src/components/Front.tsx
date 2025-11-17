@@ -119,7 +119,7 @@ export function Front() {
       </div>
 
       {card.ready && ankiFields.IsAudioCard && (
-        <div class="flex gap-2 justify-center">
+        <div class="flex gap-2 justify-center animate-fade-in-sm">
           <Lazy.AudioButtons position={1} />
         </div>
       )}

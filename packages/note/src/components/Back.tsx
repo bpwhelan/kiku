@@ -231,8 +231,12 @@ export function Back(props: { onExitNested?: () => void }) {
                     ankiFields.PitchPosition && <span>&nbsp;</span>
                   )}
                 </div>
-                <div class="hidden sm:flex gap-2 sm:h-8 sm:mt-2">
-                  {card.ready && <Lazy.AudioButtons position={1} />}
+                <div class="hidden sm:block sm:h-8 sm:mt-2">
+                  {card.ready && (
+                    <div class="animate-fade-in-sm flex gap-2">
+                      <Lazy.AudioButtons position={1} />
+                    </div>
+                  )}
                 </div>
               </div>
               <PictureSection />

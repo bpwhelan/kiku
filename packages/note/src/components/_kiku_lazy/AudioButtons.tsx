@@ -30,7 +30,7 @@ export function NotePlayIcon(props: {
 }) {
   return (
     <PlayIcon
-      class="bg-primary rounded-full text-primary-content p-1 w-8 h-8 cursor-pointer animate-fade-in-sm"
+      class="bg-primary rounded-full text-primary-content p-1 w-8 h-8 cursor-pointer"
       classList={{
         "bg-primary text-primary-content": props.color === "primary",
         "bg-secondary text-secondary-content": props.color === "secondary",
@@ -124,7 +124,7 @@ export default function AudioButtons(props: { position: 1 | 2 }) {
   if (props.position === 2)
     return (
       <Portal mount={KIKU_STATE.root}>
-        <div class="absolute bottom-4 left-4 flex sm:hidden flex-col gap-2 items-center">
+        <div class="absolute bottom-4 left-4 flex sm:hidden flex-col gap-2 items-center animate-fade-in-sm">
           <NotePlayIcons />
         </div>
       </Portal>
