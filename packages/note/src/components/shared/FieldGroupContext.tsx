@@ -140,7 +140,6 @@ export function FieldGroupContextProvider(props: { children: JSX.Element }) {
         })?.outerHTML;
         sentenceAudioField = sentenceAudioFieldWithoutGroupHtml;
       }
-      console.log(sentenceField, pictureField, sentenceAudioField);
       setGroupStore("sentenceField", sentenceField ?? "");
       setGroupStore("pictureField", pictureField ?? "");
       setGroupStore("sentenceAudioField", sentenceAudioField ?? "");
