@@ -1,7 +1,8 @@
-import { For, onMount, Show } from "solid-js";
+import { createEffect, For, Show } from "solid-js";
 import { Portal } from "solid-js/web";
 import { useCardStore } from "#/components/shared/CardContext";
 import { useAnkiField } from "../shared/Context";
+import { useFieldGroup } from "../shared/FieldGroupContext";
 import { PlayIcon } from "./Icons";
 
 function AudioTag(props: { text: string }) {
@@ -43,6 +44,7 @@ export function NotePlayIcon(props: {
 export default function AudioButtons(props: { position: 1 | 2 }) {
   const { ankiFields } = useAnkiField<"back">();
   const [card, setCard] = useCardStore();
+  const { group } = useFieldGroup();
   const hiddenStyle = {
     width: "0",
     height: "0",
@@ -50,23 +52,20 @@ export default function AudioButtons(props: { position: 1 | 2 }) {
     position: "absolute",
   } as const;
 
-  onMount(() => {
-    const aaa = card.sentenceAudioRef?.querySelectorAll("a");
-    if (aaa) {
-      if (aaa.length && !card.sentenceAudios) {
-        setCard("sentenceAudios", Array.from(aaa));
-      }
+  createEffect(() => {
+    group.sentenceAudioField;
+    const anchors = card.sentenceAudioRef?.querySelectorAll("a");
+    if (anchors?.length) {
+      setCard("sentenceAudios", Array.from(anchors));
       KIKU_STATE.logger.info(
         "Number of detected anchor in sentence audios",
-        aaa.length,
+        anchors.length,
       );
     }
 
     const audios = card.sentenceAudioRef?.querySelectorAll("audio");
-    if (audios) {
-      if (audios.length && !card.sentenceAudios) {
-        setCard("sentenceAudios", Array.from(audios));
-      }
+    if (audios?.length) {
+      setCard("sentenceAudios", Array.from(audios));
       KIKU_STATE.logger.info(
         "Number of detected audio in sentence audios",
         audios?.length,
@@ -114,9 +113,9 @@ export default function AudioButtons(props: { position: 1 | 2 }) {
         <div
           style={hiddenStyle}
           ref={(ref) => setCard("sentenceAudioRef", ref)}
-          innerHTML={card.nested ? undefined : ankiFields.SentenceAudio}
+          innerHTML={card.nested ? undefined : group.sentenceAudioField}
         >
-          {card.nested && <AudioTag text={ankiFields.SentenceAudio} />}
+          {card.nested && <AudioTag text={group.sentenceAudioField} />}
         </div>
         <NotePlayIcons />
       </>
