@@ -27,8 +27,6 @@ type CardStore = {
   toastMessage: string | undefined;
   toastType: "success" | "error";
   imageModal?: string;
-  pictureIndex: number;
-  pictures: HTMLImageElement[];
   isNsfw: boolean;
   clicked: boolean;
   kanji: Record<
@@ -88,8 +86,6 @@ export function CardStoreContextProvider(props: {
     toastMessage: undefined,
     toastType: "success",
     imageModal: undefined,
-    pictureIndex: 0,
-    pictures: [],
     isNsfw: false,
     clicked: false,
     kanji: {},

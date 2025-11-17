@@ -3,7 +3,7 @@ import { createStore } from "solid-js/store";
 import { isServer } from "solid-js/web";
 import { useCardStore } from "#/components/shared/CardContext";
 import type { DatasetProp } from "#/util/config";
-import { usePictureField, useSentenceField } from "#/util/hooks";
+import { useSentenceField } from "#/util/hooks";
 import { Layout } from "./Layout";
 import { useAnkiField } from "./shared/Context";
 
@@ -19,7 +19,6 @@ export function Front() {
   const [card, setCard] = useCardStore();
   const { ankiFields } = useAnkiField<"front">();
   useSentenceField();
-  usePictureField();
 
   onMount(() => {
     setTimeout(() => {

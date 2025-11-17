@@ -1,13 +1,11 @@
-import { useCardStore } from "#/components/shared/CardContext";
 import { useFieldGroup } from "../shared/FieldGroupContext";
 import { ArrowLeftIcon } from "./Icons";
 
 export default function PicturePagination() {
-  const [card, setCard] = useCardStore();
   const { group, nextGroup, prevGroup, groupIds } = useFieldGroup();
 
   return (
-    card.pictures.length > 1 && (
+    groupIds.size > 1 && (
       <>
         <ArrowLeftIcon
           class="cursor-pointer size-5 sm:size-8 hover:scale-110 transition-transform"

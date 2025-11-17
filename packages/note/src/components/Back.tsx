@@ -8,7 +8,7 @@ import {
 import { type AnkiFields, ankiFieldsSkeleton } from "#/types";
 import type { DatasetProp } from "#/util/config";
 import { env, extractKanji } from "#/util/general";
-import { useNavigationTransition, usePictureField } from "#/util/hooks";
+import { useNavigationTransition } from "#/util/hooks";
 import { WorkerClient } from "#/worker/client";
 import { Layout } from "./Layout";
 import {
@@ -40,7 +40,6 @@ export function Back(props: { onExitNested?: () => void }) {
   const [card, setCard] = useCardStore();
   const [config] = useConfig();
   const { ankiFields } = useAnkiField<"back">();
-  usePictureField();
 
   const tags = ankiFields.Tags.split(" ");
 
@@ -289,7 +288,9 @@ function PictureSection() {
       <div
         ref={(ref) => setCard("pictureFieldRef", ref)}
         class="picture-field"
-        on:click={() => setCard("imageModal", group.pictureField)}
+        on:click={() => {
+          setCard("imageModal", group.pictureField);
+        }}
         {...pictureFieldDataset()}
         innerHTML={isServer ? undefined : group.pictureField}
       >

@@ -33,31 +33,6 @@ export function useSentenceField() {
   return sentenceField;
 }
 
-export function usePictureField() {
-  const [card, setCard] = useCardStore();
-  const { ankiFields } = useAnkiField();
-  onMount(() => {
-    const tempDiv = document.createElement("div");
-    tempDiv.innerHTML = ankiFields.Picture;
-    const imgs = Array.from(tempDiv.querySelectorAll("img"));
-    imgs.forEach((img) => {
-      img.dataset.index = imgs.indexOf(img).toString();
-    });
-    setCard("pictures", imgs);
-    if (card.pictureFieldRef) {
-      card.pictureFieldRef.replaceChildren(...imgs);
-    }
-    KIKU_STATE.logger.info("Number of detected picture:", imgs.length);
-  });
-
-  createEffect(() => {
-    card.pictures.forEach((img) => {
-      img.style.display =
-        img.dataset.index === card.pictureIndex.toString() ? "block" : "none";
-    });
-  });
-}
-
 export function useViewTransition() {
   function startViewTransition(
     callback: () => void,
