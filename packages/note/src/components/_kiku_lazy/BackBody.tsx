@@ -1,6 +1,6 @@
 import { createEffect, createSignal, onMount } from "solid-js";
 import { useAnkiField } from "../shared/Context";
-import { SentenceBack } from "./Sentence";
+import Sentence from "./Sentence";
 
 export default function BackBody(props: {
   onDefinitionPictureClick?: (picture: string) => void;
@@ -84,7 +84,7 @@ export default function BackBody(props: {
   return (
     <div class="flex sm:flex-col gap-8 flex-col-reverse animate-fade-in">
       <div class="flex justify-between gap-2 items-center text-center">
-        <SentenceBack />
+        <Sentence />
       </div>
       {pagesWithContent.length > 0 && (
         <div>

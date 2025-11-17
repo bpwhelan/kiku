@@ -1,11 +1,10 @@
-import { createEffect, lazy, onMount } from "solid-js";
-import { createStore } from "solid-js/store";
+import { createEffect, createSignal, lazy, onMount } from "solid-js";
 import { isServer } from "solid-js/web";
 import { useCardStore } from "#/components/shared/CardContext";
 import type { DatasetProp } from "#/util/config";
-import { useSentenceField } from "#/util/hooks";
 import { Layout } from "./Layout";
 import { useAnkiField } from "./shared/Context";
+import { useFieldGroup } from "./shared/FieldGroupContext";
 
 // biome-ignore format: this looks nicer
 const Lazy = {
@@ -13,32 +12,49 @@ const Lazy = {
   Header: lazy(async () => ({ default: (await import("./_kiku_lazy")).Header, })),
   PicturePagination: lazy(async () => ({ default: (await import("./_kiku_lazy")).PicturePagination, })),
   UseAnkiDroid: lazy(async () => ({ default: (await import("./_kiku_lazy")).UseAnkiDroid, })),
+  Sentence: lazy(async () => ({ default: (await import("./_kiku_lazy")).Sentence, })),
 };
 
 export function Front() {
   const [card, setCard] = useCardStore();
   const { ankiFields } = useAnkiField<"front">();
-  useSentenceField();
+  const [clicked, setClicked] = createSignal(false);
+  const { group } = useFieldGroup();
 
   onMount(() => {
     setTimeout(() => {
-      if (ankiFields.IsAudioCard && card.sentenceFieldRef) {
-        card.sentenceFieldRef.innerHTML =
-          card.sentenceFieldRef.innerHTML.replaceAll(
-            ankiFields.Expression,
-            "<span class='text-base-content-primary'>[...]<span>",
-          );
-      }
       setCard("ready", true);
     }, 100);
   });
 
   createEffect(() => {
-    setFlexIfXCardProp(
-      "data-is-audio-card",
-      ankiFields.IsAudioCard ? (card.ready ? "ready" : undefined) : undefined,
-    );
+    if (
+      ankiFields.IsAudioCard &&
+      card.sentenceFieldRef &&
+      group.sentenceField
+    ) {
+      card.sentenceFieldRef.innerHTML =
+        card.sentenceFieldRef.innerHTML.replaceAll(
+          ankiFields.Expression,
+          "<span class='text-base-content-primary'>[...]<span>",
+        );
+    }
   });
+
+  const hidden = () => {
+    if (isServer) return true;
+    if (
+      ankiFields.IsSentenceCard ||
+      ankiFields.IsWordAndSentenceCard ||
+      ankiFields.IsAudioCard
+    ) {
+      return false;
+    }
+    if (ankiFields.IsClickCard && clicked()) {
+      return false;
+    }
+    return true;
+  };
 
   const hintFieldDataset: () => DatasetProp = () => ({
     "data-has-hint": isServer
@@ -46,15 +62,6 @@ export function Front() {
       : ankiFields.Hint
         ? "true"
         : "",
-  });
-
-  // biome-ignore format: this looks nicer
-  const [flexIfXCardProp, setFlexIfXCardProp] = createStore({
-    "data-is-audio-card": isServer ? "{{IsAudioCard}}" : undefined,
-    "data-is-sentence-card": isServer ? "{{IsSentenceCard}}" : undefined,
-    "data-is-word-and-sentence-card": isServer ? "{{IsWordAndSentenceCard}}" : undefined,
-    "data-is-click-card": isServer ? "{{IsClickCard}}" : undefined,
-    "data-clicked": card.clicked ? "true" : undefined,
   });
 
   return (
@@ -66,7 +73,9 @@ export function Front() {
       <div class="flex flex-col gap-4">
         <div
           class="flex rounded-lg gap-4 sm:h-56 flex-col sm:flex-row"
-          on:click={() => setCard("clicked", (prev) => !prev)}
+          on:click={() => {
+            setClicked((prev) => !prev);
+          }}
           on:touchend={(e) => e.stopPropagation()}
         >
           <div class="flex-1 bg-base-200 p-4 rounded-lg flex flex-col items-center justify-center">
@@ -91,25 +100,22 @@ export function Front() {
           </div>
         </div>
         <div
-          class="hidden justify-between text-base-content-soft items-center gap-2 animate-fade-in h-5 sm:h-8 flex-if-x-card"
-          {...flexIfXCardProp}
+          class="justify-between text-base-content-soft items-center gap-2 animate-fade-in h-5 sm:h-8 flex"
+          classList={{
+            hidden: hidden(),
+          }}
         >
           {card.ready && <Lazy.PicturePagination />}
         </div>
       </div>
 
-      {/* TODO: animation */}
       <div
-        class="hidden flex-col gap-4 items-center text-center flex-if-x-card"
-        {...flexIfXCardProp}
+        class="flex-col gap-4 items-center text-center"
+        classList={{
+          hidden: hidden(),
+        }}
       >
-        <div
-          ref={(ref) => setCard("sentenceFieldRef", ref)}
-          class={`[&_b]:text-base-content-primary sentence font-secondary`}
-          innerHTML={isServer ? undefined : ankiFields["kanji:Sentence"]}
-        >
-          {isServer ? "{{kanji:Sentence}}" : undefined}
-        </div>
+        {card.ready && <Lazy.Sentence />}
       </div>
 
       {card.ready && ankiFields.IsAudioCard && (

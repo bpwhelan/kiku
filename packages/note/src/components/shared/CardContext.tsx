@@ -27,7 +27,6 @@ type CardStore = {
   toastType: "success" | "error";
   imageModal?: string;
   isNsfw: boolean;
-  clicked: boolean;
   kanji: Record<
     string,
     {
@@ -85,7 +84,6 @@ export function CardStoreContextProvider(props: {
     toastType: "success",
     imageModal: undefined,
     isNsfw: false,
-    clicked: false,
     kanji: {},
     kanjiStatus: "loading",
     selectedSimilarKanji: undefined,

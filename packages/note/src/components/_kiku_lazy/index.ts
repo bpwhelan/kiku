@@ -6,6 +6,7 @@ import KanjiList from "./KanjiList";
 import PictureModal from "./PictureModal";
 import PicturePagination from "./PicturePagination";
 import Pitches from "./Pitches";
+import Sentence from "./Sentence";
 import Settings from "./Settings";
 import UseAnkiDroid from "./UseAnkiDroid";
 
@@ -20,4 +21,5 @@ export {
   PicturePagination,
   KanjiList,
   UseAnkiDroid,
+  Sentence,
 };
