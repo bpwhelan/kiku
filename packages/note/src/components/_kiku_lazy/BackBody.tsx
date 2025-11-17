@@ -4,7 +4,6 @@ import { SentenceBack } from "./Sentence";
 
 export default function BackBody(props: {
   onDefinitionPictureClick?: (picture: string) => void;
-  sentenceIndex?: (sentencesLenght: number) => number | undefined;
 }) {
   let definitionEl: HTMLDivElement | undefined;
   const { ankiFields } = useAnkiField<"back">();

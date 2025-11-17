@@ -19,31 +19,31 @@ export function useSentenceField() {
       });
     }
 
-    if (card.sentenceFieldRef) {
-      const spans = Array.from(
-        card.sentenceFieldRef.querySelectorAll("span"),
-      ).filter((el) => el.parentNode === card.sentenceFieldRef);
-      spans.forEach((span, index) => {
-        span.dataset.index = index.toString();
-      });
-      KIKU_STATE.logger.info(
-        "Number of detected spans on sentence:",
-        spans.length,
-      );
-      setSentences(spans);
-    }
+    // if (card.sentenceFieldRef) {
+    //   const spans = Array.from(
+    //     card.sentenceFieldRef.querySelectorAll("span"),
+    //   ).filter((el) => el.parentNode === card.sentenceFieldRef);
+    //   spans.forEach((span, index) => {
+    //     span.dataset.index = index.toString();
+    //   });
+    //   KIKU_STATE.logger.info(
+    //     "Number of detected spans on sentence:",
+    //     spans.length,
+    //   );
+    //   setSentences(spans);
+    // }
   });
 
-  createEffect(() => {
-    const sentencesIndex =
-      card.pictures.length > 1 ? card.pictureIndex : undefined;
-    if (typeof sentencesIndex === "number") {
-      sentences().forEach((span) => {
-        span.style.display =
-          span.dataset.index === sentencesIndex.toString() ? "block" : "none";
-      });
-    }
-  });
+  // createEffect(() => {
+  //   const sentencesIndex =
+  //     card.pictures.length > 1 ? card.pictureIndex : undefined;
+  //   if (typeof sentencesIndex === "number") {
+  //     sentences().forEach((span) => {
+  //       span.style.display =
+  //         span.dataset.index === sentencesIndex.toString() ? "block" : "none";
+  //     });
+  //   }
+  // });
 
   return [sentences, setSentences] as const;
 }
@@ -63,6 +63,13 @@ export function usePictureField() {
       card.pictureFieldRef.replaceChildren(...imgs);
     }
     KIKU_STATE.logger.info("Number of detected picture:", imgs.length);
+  });
+
+  createEffect(() => {
+    card.pictures.forEach((img) => {
+      img.style.display =
+        img.dataset.index === card.pictureIndex.toString() ? "block" : "none";
+    });
   });
 }
 

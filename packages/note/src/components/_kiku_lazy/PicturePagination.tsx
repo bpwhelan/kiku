@@ -13,8 +13,9 @@ export default function PicturePagination() {
             setCard("pictureIndex", (prev) => {
               const newIndex =
                 (prev - 1 + card.pictures.length) % card.pictures.length;
-              const a = card.sentenceAudios;
-              a?.[newIndex]?.click();
+              //TODO: auto play audio
+              // const a = card.sentenceAudios;
+              // a?.[newIndex]?.click();
               return newIndex;
             });
           }}
@@ -25,8 +26,9 @@ export default function PicturePagination() {
           on:click={() => {
             setCard("pictureIndex", (prev) => {
               const newIndex = (prev + 1) % card.pictures.length;
-              const a = card.sentenceAudios;
-              a?.[newIndex]?.click();
+              //TODO: auto play audio
+              // const a = card.sentenceAudios;
+              // a?.[newIndex]?.click();
               return newIndex;
             });
           }}

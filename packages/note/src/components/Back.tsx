@@ -1,4 +1,4 @@
-import { createEffect, lazy, Match, onMount, Suspense, Switch } from "solid-js";
+import { lazy, Match, onMount, Suspense, Switch } from "solid-js";
 import { unwrap } from "solid-js/store";
 import { isServer } from "solid-js/web";
 import { type AnkiFields, ankiFieldsSkeleton } from "#/types";
@@ -84,13 +84,6 @@ export function Back(props: { onExitNested?: () => void }) {
 
     const tags = ankiFields.Tags.split(" ");
     setCard("isNsfw", tags.map((tag) => tag.toLowerCase()).includes("nsfw"));
-  });
-
-  createEffect(() => {
-    card.pictures.forEach((img) => {
-      img.style.display =
-        img.dataset.index === card.pictureIndex.toString() ? "block" : "none";
-    });
   });
 
   const pictureFieldDataset: () => DatasetProp = () => ({
@@ -267,10 +260,6 @@ export function Back(props: { onExitNested?: () => void }) {
             <Lazy.BackBody
               onDefinitionPictureClick={(picture) => {
                 setCard("imageModal", picture);
-              }}
-              sentenceIndex={(sentenceLength) => {
-                if (card.pictures.length !== sentenceLength) return undefined;
-                return card.pictures.length > 1 ? card.pictureIndex : undefined;
               }}
             />
           )}
