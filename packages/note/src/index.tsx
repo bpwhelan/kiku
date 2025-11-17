@@ -6,7 +6,6 @@ import { Front } from "./components/Front.tsx";
 import {
   AnkiFieldContextProvider,
   BreakpointContextProvider,
-  CardStoreContextProvider,
   ConfigContextProvider,
 } from "./components/shared/Context.tsx";
 import {
@@ -17,6 +16,7 @@ import {
 } from "./util/config.ts";
 import { env } from "./util/general.ts";
 import "./styles/tailwind.css";
+import { CardStoreContextProvider } from "./components/shared/CardContext.tsx";
 import { FieldGroupContextProvider } from "./components/shared/FieldGroupContext.tsx";
 import { Logger } from "./util/logger.ts";
 

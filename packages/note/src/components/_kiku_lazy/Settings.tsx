@@ -7,6 +7,7 @@ import {
   Show,
 } from "solid-js";
 import { Portal } from "solid-js/web";
+import { useCardStore } from "#/components/shared/CardContext";
 import {
   defaultConfig,
   getCssVar,
@@ -20,12 +21,7 @@ import {
 import { type WebFont, webFonts } from "#/util/fonts";
 import { useThemeTransition } from "#/util/hooks";
 import { daisyUIThemes } from "#/util/theme";
-import {
-  useAnkiField,
-  useBreakpoint,
-  useCardStore,
-  useConfig,
-} from "../shared/Context";
+import { useAnkiField, useBreakpoint, useConfig } from "../shared/Context";
 import {
   ArrowLeftIcon,
   ClipboardCopyIcon,

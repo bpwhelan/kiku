@@ -1,7 +1,7 @@
 import { createSignal, For, onMount, Show } from "solid-js";
+import { useCardStore } from "#/components/shared/CardContext";
 import type { Kanji } from "#/types";
 import { useNavigationTransition } from "#/util/hooks";
-import { useCardStore } from "../shared/Context";
 import { ArrowLeftIcon } from "./Icons";
 
 export default function KanjiList(props: {

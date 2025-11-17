@@ -1,6 +1,7 @@
 import { createEffect, createSignal, Match, onCleanup, Switch } from "solid-js";
 import { isServer, Portal } from "solid-js/web";
-import { useCardStore, useConfig } from "#/components/shared/Context";
+import { useCardStore } from "#/components/shared/CardContext";
+import { useConfig } from "#/components/shared/Context";
 import { CheckIcon, XIcon } from "./Icons";
 
 type AnkiResponse<T = unknown> = {

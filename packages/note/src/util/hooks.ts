@@ -1,12 +1,11 @@
 import { createEffect, onMount } from "solid-js";
-import { createStore } from "solid-js/store";
+import { useCardStore } from "#/components/shared/CardContext";
 import {
   useAnkiField,
   useBreakpoint,
-  useCardStore,
   useConfig,
 } from "#/components/shared/Context";
-import type { AnkiFields } from "#/types";
+
 import type { DaisyUITheme } from "./theme";
 
 export function useSentenceField() {

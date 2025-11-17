@@ -1,12 +1,12 @@
 import { createStore } from "solid-js/store";
 import { generateHydrationScript, renderToString } from "solid-js/web";
 import { Front } from "#/components/Front";
+import { CardStoreContextProvider } from "#/components/shared/CardContext";
 import { Logger } from "#/util/logger";
 import { Back } from "../src/components/Back";
 import {
   AnkiFieldContextProvider,
   BreakpointContextProvider,
-  CardStoreContextProvider,
   ConfigContextProvider,
 } from "../src/components/shared/Context";
 import { defaultConfig } from "../src/util/config";

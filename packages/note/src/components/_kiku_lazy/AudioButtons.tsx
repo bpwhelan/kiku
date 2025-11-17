@@ -1,6 +1,7 @@
 import { For, onMount, Show } from "solid-js";
 import { Portal } from "solid-js/web";
-import { useAnkiField, useCardStore } from "../shared/Context";
+import { useCardStore } from "#/components/shared/CardContext";
+import { useAnkiField } from "../shared/Context";
 import { PlayIcon } from "./Icons";
 
 function AudioTag(props: { text: string }) {

@@ -1,5 +1,5 @@
 import { createEffect, createSignal, onMount } from "solid-js";
-import { useCardStore } from "./shared/Context";
+import { useCardStore } from "#/components/shared/CardContext";
 
 export default function UseAnkiWeb() {
   const [card] = useCardStore();

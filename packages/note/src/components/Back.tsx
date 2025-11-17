@@ -1,6 +1,10 @@
 import { lazy, Match, onMount, Suspense, Switch } from "solid-js";
 import { unwrap } from "solid-js/store";
 import { isServer } from "solid-js/web";
+import {
+  CardStoreContextProvider,
+  useCardStore,
+} from "#/components/shared/CardContext";
 import { type AnkiFields, ankiFieldsSkeleton } from "#/types";
 import type { DatasetProp } from "#/util/config";
 import { env, extractKanji } from "#/util/general";
@@ -9,9 +13,7 @@ import { WorkerClient } from "#/worker/client";
 import { Layout } from "./Layout";
 import {
   AnkiFieldContextProvider,
-  CardStoreContextProvider,
   useAnkiField,
-  useCardStore,
   useConfig,
 } from "./shared/Context";
 import { useFieldGroup } from "./shared/FieldGroupContext";

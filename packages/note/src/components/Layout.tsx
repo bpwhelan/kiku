@@ -1,5 +1,5 @@
 import type { JSX } from "solid-js";
-import { useCardStore } from "./shared/Context";
+import { useCardStore } from "#/components/shared/CardContext";
 import UseAnkiWeb from "./UseAnkiWeb";
 
 export function Layout(props: { children: JSX.Element }) {

@@ -1,4 +1,5 @@
-import { useAnkiField, useCardStore } from "../shared/Context";
+import { useCardStore } from "#/components/shared/CardContext";
+import { useAnkiField } from "../shared/Context";
 import { useFieldGroup } from "../shared/FieldGroupContext";
 
 export function SentenceBack() {

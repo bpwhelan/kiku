@@ -1,10 +1,11 @@
 import { createEffect, lazy, onMount } from "solid-js";
 import { createStore } from "solid-js/store";
 import { isServer } from "solid-js/web";
+import { useCardStore } from "#/components/shared/CardContext";
 import type { DatasetProp } from "#/util/config";
 import { usePictureField, useSentenceField } from "#/util/hooks";
 import { Layout } from "./Layout";
-import { useAnkiField, useCardStore } from "./shared/Context";
+import { useAnkiField } from "./shared/Context";
 
 // biome-ignore format: this looks nicer
 const Lazy = {
