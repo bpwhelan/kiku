@@ -174,7 +174,7 @@ function GeneralSettings() {
   return (
     <div class="flex flex-col gap-4 animate-fade-in">
       <div class="text-2xl font-bold">General</div>
-      <div class="grid grid-cols-[repeat(auto-fit,minmax(10rem,1fr))] rounded-box gap-4 p-2">
+      <div class="grid grid-cols-[repeat(auto-fit,minmax(20rem,1fr))] rounded-box gap-4 p-2">
         <fieldset class="fieldset">
           <legend class="fieldset-legend">Volume</legend>
 
@@ -200,6 +200,24 @@ function GeneralSettings() {
               class="toggle"
               on:change={(e) => {
                 setConfig("showTheme", e.target.checked);
+              }}
+            />
+          </label>
+        </fieldset>
+        <fieldset class="fieldset py-0">
+          <legend class="fieldset-legend">
+            Swap Sentence and Definition on Mobile
+          </legend>
+          <label class="label">
+            <input
+              type="checkbox"
+              checked={config.swapSentenceAndDefinitionOnMobile}
+              class="toggle"
+              on:change={(e) => {
+                setConfig(
+                  "swapSentenceAndDefinitionOnMobile",
+                  e.target.checked,
+                );
               }}
             />
           </label>
