@@ -1,7 +1,7 @@
 import { createEffect, For, Show } from "solid-js";
 import { Portal } from "solid-js/web";
 import { useCardStore } from "#/components/shared/CardContext";
-import { useAnkiField, useConfig } from "../shared/Context";
+import { useAnkiField, useBreakpoint, useConfig } from "../shared/Context";
 import { useFieldGroup } from "../shared/FieldGroupContext";
 import { PlayIcon } from "./Icons";
 
@@ -46,6 +46,7 @@ export default function AudioButtons(props: { position: 1 | 2 }) {
   const [card, setCard] = useCardStore();
   const { group } = useFieldGroup();
   const [config] = useConfig();
+  const bp = useBreakpoint();
   const hiddenStyle = {
     width: "0",
     height: "0",
@@ -78,10 +79,10 @@ export default function AudioButtons(props: { position: 1 | 2 }) {
   createEffect(() => {
     group.sentenceAudioField;
     card.expressionAudioRef?.querySelectorAll("audio").forEach((el) => {
-      el.volume = config.volume / 100;
+      el.volume = bp.isAtLeast("sm") ? config.volume / 100 : 1;
     });
     card.sentenceAudioRef?.querySelectorAll("audio").forEach((el) => {
-      el.volume = config.volume / 100;
+      el.volume = bp.isAtLeast("sm") ? config.volume / 100 : 1;
     });
 
     if (card.nested && autoPlay) {

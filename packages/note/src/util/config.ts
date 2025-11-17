@@ -44,7 +44,7 @@ export const defaultConfig: KikuConfig = {
   ankiConnectPort: 8765,
   ankiDroidEnableIntegration: true,
   ankiDroidReverseSwipeDirection: false,
-  volume: 50,
+  volume: 100,
   swapSentenceAndDefinitionOnMobile: true,
   fontSizeBaseExpression: "5xl",
   fontSizeBasePitch: "xl",
