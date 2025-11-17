@@ -1,51 +1,37 @@
-import { createEffect, createSignal, onMount } from "solid-js";
+import { createEffect, onMount } from "solid-js";
+import { createStore } from "solid-js/store";
 import {
   useAnkiField,
   useBreakpoint,
   useCardStore,
   useConfig,
 } from "#/components/shared/Context";
+import type { AnkiFields } from "#/types";
 import type { DaisyUITheme } from "./theme";
 
 export function useSentenceField() {
   const [card] = useCardStore();
-  const [sentences, setSentences] = createSignal<HTMLSpanElement[]>([]);
-
-  onMount(() => {
-    if (card.sentenceFieldRef) {
-      const ruby = card.sentenceFieldRef.querySelectorAll("ruby");
-      ruby.forEach((el) => {
-        el.classList.add(..."[&_rt]:invisible hover:[&_rt]:visible".split(" "));
-      });
+  const { ankiFields } = useAnkiField();
+  const sentenceField = () => {
+    if (card.side === "front") {
+      return ankiFields["kanji:Sentence"];
     }
+    if (card.nested) return ankiFields.Sentence;
+    return ankiFields["furigana:SentenceFurigana"]
+      ? ankiFields["furigana:SentenceFurigana"]
+      : ankiFields["kanji:Sentence"];
+  };
 
-    // if (card.sentenceFieldRef) {
-    //   const spans = Array.from(
-    //     card.sentenceFieldRef.querySelectorAll("span"),
-    //   ).filter((el) => el.parentNode === card.sentenceFieldRef);
-    //   spans.forEach((span, index) => {
-    //     span.dataset.index = index.toString();
-    //   });
-    //   KIKU_STATE.logger.info(
-    //     "Number of detected spans on sentence:",
-    //     spans.length,
-    //   );
-    //   setSentences(spans);
-    // }
-  });
-
-  // createEffect(() => {
-  //   const sentencesIndex =
-  //     card.pictures.length > 1 ? card.pictureIndex : undefined;
-  //   if (typeof sentencesIndex === "number") {
-  //     sentences().forEach((span) => {
-  //       span.style.display =
-  //         span.dataset.index === sentencesIndex.toString() ? "block" : "none";
+  // onMount(() => {
+  //   if (card.sentenceFieldRef) {
+  //     const ruby = card.sentenceFieldRef.querySelectorAll("ruby");
+  //     ruby.forEach((el) => {
+  //       el.classList.add(..."[&_rt]:invisible hover:[&_rt]:visible".split(" "));
   //     });
   //   }
   // });
 
-  return [sentences, setSentences] as const;
+  return sentenceField;
 }
 
 export function usePictureField() {

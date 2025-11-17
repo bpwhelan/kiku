@@ -17,6 +17,7 @@ import {
 } from "./util/config.ts";
 import { env } from "./util/general.ts";
 import "./styles/tailwind.css";
+import { FieldGroupContextProvider } from "./components/shared/FieldGroupContext.tsx";
 import { Logger } from "./util/logger.ts";
 
 const logger = new Logger();
@@ -144,7 +145,9 @@ export async function init({
           <CardStoreContextProvider side="front">
             <BreakpointContextProvider>
               <ConfigContextProvider value={[config, setConfig]}>
-                <Front />
+                <FieldGroupContextProvider>
+                  <Front />
+                </FieldGroupContextProvider>
               </ConfigContextProvider>
             </BreakpointContextProvider>
           </CardStoreContextProvider>
@@ -158,7 +161,9 @@ export async function init({
           <CardStoreContextProvider side="back">
             <BreakpointContextProvider>
               <ConfigContextProvider value={[config, setConfig]}>
-                <Back />
+                <FieldGroupContextProvider>
+                  <Back />
+                </FieldGroupContextProvider>
               </ConfigContextProvider>
             </BreakpointContextProvider>
           </CardStoreContextProvider>

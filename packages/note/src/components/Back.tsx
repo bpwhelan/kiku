@@ -14,6 +14,7 @@ import {
   useCardStore,
   useConfig,
 } from "./shared/Context";
+import { useFieldGroup } from "./shared/FieldGroupContext";
 
 // biome-ignore format: this looks nicer
 const Lazy = {
@@ -34,6 +35,7 @@ export function Back(props: { onExitNested?: () => void }) {
   const [card, setCard] = useCardStore();
   const [config] = useConfig();
   const { ankiFields } = useAnkiField<"back">();
+  const { group } = useFieldGroup();
   usePictureField();
 
   const tags = ankiFields.Tags.split(" ");
@@ -237,16 +239,16 @@ export function Back(props: { onExitNested?: () => void }) {
               <div class="bg-base-200 rounded-lg relative overflow-hidden">
                 <div
                   class="picture-field-background"
-                  innerHTML={isServer ? undefined : ankiFields.Picture}
+                  innerHTML={isServer ? undefined : group.pictureField}
                 >
                   {isServer ? "{{Picture}}" : undefined}
                 </div>
                 <div
                   ref={(ref) => setCard("pictureFieldRef", ref)}
                   class="picture-field"
-                  on:click={() => setCard("imageModal", ankiFields.Picture)}
+                  on:click={() => setCard("imageModal", group.pictureField)}
                   {...pictureFieldDataset()}
-                  innerHTML={isServer ? undefined : ankiFields.Picture}
+                  innerHTML={isServer ? undefined : group.pictureField}
                 >
                   {isServer ? "{{Picture}}" : undefined}
                 </div>

@@ -1,10 +1,10 @@
-import { useSentenceField } from "#/util/hooks";
 import { useAnkiField, useCardStore } from "../shared/Context";
+import { useFieldGroup } from "../shared/FieldGroupContext";
 
 export function SentenceBack() {
   const { ankiFields } = useAnkiField<"back">();
   const [card, setCard] = useCardStore();
-  useSentenceField();
+  const { group } = useFieldGroup();
 
   const innerHTML = () => {
     if (card.nested) return ankiFields.Sentence;
@@ -17,7 +17,7 @@ export function SentenceBack() {
     <div
       class={`[&_b]:text-base-content-primary sentence font-secondary flex-1`}
       ref={(ref) => setCard("sentenceFieldRef", ref)}
-      innerHTML={innerHTML()}
+      innerHTML={group.sentenceField}
     ></div>
   );
 }
