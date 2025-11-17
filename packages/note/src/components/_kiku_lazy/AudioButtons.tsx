@@ -7,14 +7,14 @@ import { PlayIcon } from "./Icons";
 
 function AudioTag(props: { text: string }) {
   // Find all `[sound:filename.mp3]` occurrences
-  const matches = [...props.text.matchAll(/\[sound:([^\]]+)\]/g)];
-  const sounds = matches.map((m) => m[1]);
+  const matches = () => [...props.text.matchAll(/\[sound:([^\]]+)\]/g)];
+  const sounds = () => matches().map((m) => m[1]);
   KIKU_STATE.logger.info("Using sounds:", sounds);
 
   return (
-    <Show when={sounds.length > 0}>
+    <Show when={sounds().length > 0}>
       <div class="flex flex-wrap gap-2">
-        <For each={sounds}>
+        <For each={sounds()}>
           {(src) => {
             return <audio src={src} preload="none" />;
           }}
