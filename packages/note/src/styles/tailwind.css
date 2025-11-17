@@ -23,7 +23,6 @@
   --animate-slide-to-right: slide-to-right 300ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
   --animate-slide-from-left: slide-from-left 300ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
   --animate-slide-from-right: slide-from-right 300ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  --animate-unclip: unclip 600ms cubic-bezier(0.65, 0, 0.35, 1) forwards;
   @keyframes slide-to-left {
     from { transform: translateX(0); }
     to   { transform: translateX(-100%); }
@@ -40,10 +39,23 @@
     from { transform: translateX(100%); }
     to   { transform: translateX(0); }
   }
+
+  --animate-unclip: unclip 600ms cubic-bezier(0.65, 0, 0.35, 1) forwards;
   @keyframes unclip {
     0% {
       clip-path: polygon(100% 100%, 100% 100%, 100% 100%);
     }
+  }
+
+  --animate-modal-in: modal-in 300ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  --animate-modal-out: modal-out 300ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  @keyframes modal-in {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes modal-out {
+    from { opacity: 1; transform: translateY(0); }
+    to { opacity: 0; transform: translateY(4px); }
   }
 }
 
@@ -54,6 +66,11 @@
 }
 
 @layer components {
+  /* biome-ignore lint: root */
+  :root::view-transition-group(root) {
+    animation: none;
+  }
+
   :root[data-transition-direction="forward"]::view-transition-old(slide-root) {
     animation: var(--animate-slide-to-left);
   }
@@ -80,6 +97,16 @@
   }
   :root[data-theme-transition="true"] ::part(root-part) {
     view-transition-name: angled-swipe;
+  }
+
+  :root::view-transition-old(modal-fade) {
+    animation: var(--animate-modal-out);
+  }
+  :root::view-transition-new(modal-fade) {
+    animation: var(--animate-modal-in);
+  }
+  :root ::part(picture-modal) {
+    view-transition-name: modal-fade;
   }
 }
 
@@ -129,17 +156,6 @@
 
   .picture-field:hover {
     @apply [&_img]:filter-none;
-  }
-
-  .picture-modal {
-    @apply absolute z-20 top-0 left-0 w-full h-full p-4 sm:p-8 bg-black/75 flex justify-center items-center [&_*:not(img)]:contents transition-opacity;
-    &[data-modal-hidden="true"] {
-      @apply hidden;
-    }
-    &[data-modal-transparent="true"] {
-      @apply opacity-0;
-    }
-    @apply [&_:not(:first-child)]:hidden;
   }
 
   .flex-if-x-card {

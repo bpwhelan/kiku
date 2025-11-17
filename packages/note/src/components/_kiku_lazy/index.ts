@@ -2,8 +2,8 @@ import AudioButtons from "./AudioButtons";
 import BackBody from "./BackBody";
 import BackFooter from "./BackFooter";
 import Header from "./Header";
-import ImageModal from "./ImageModal";
 import KanjiList from "./KanjiList";
+import PictureModal from "./PictureModal";
 import PicturePagination from "./PicturePagination";
 import Pitches from "./Pitches";
 import Settings from "./Settings";
@@ -14,7 +14,7 @@ export {
   BackFooter,
   AudioButtons,
   Settings,
-  ImageModal,
+  PictureModal,
   BackBody,
   Pitches,
   PicturePagination,

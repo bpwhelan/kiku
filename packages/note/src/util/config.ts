@@ -167,8 +167,6 @@ export type Dataset = {
   "data-tags": string;
   "data-nsfw": "true" | "false";
   "data-is-even": "true" | "false";
-  "data-modal-hidden": "true" | "false";
-  "data-modal-transparent": "true" | "false";
   "data-has-pitch": string
   "data-has-hint": string
 };

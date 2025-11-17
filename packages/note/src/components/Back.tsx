@@ -21,7 +21,7 @@ const Lazy = {
   Header: lazy(async () => ({ default: (await import("./_kiku_lazy")).Header, })),
   BackFooter: lazy(async () => ({ default: (await import("./_kiku_lazy")).BackFooter, })),
   AudioButtons: lazy(async () => ({ default: (await import("./_kiku_lazy")).AudioButtons, })),
-  ImageModal: lazy(async () => ({ default: (await import("./_kiku_lazy")).ImageModal, })),
+  PictureModal: lazy(async () => ({ default: (await import("./_kiku_lazy")).PictureModal, })),
   BackBody: lazy(async () => ({ default: (await import("./_kiku_lazy")).BackBody, })),
   Pitches: lazy(async () => ({ default: (await import("./_kiku_lazy")).Pitches, })),
   PicturePagination: lazy(async () => ({ default: (await import("./_kiku_lazy")).PicturePagination, })),
@@ -283,7 +283,7 @@ export function Back(props: { onExitNested?: () => void }) {
         </Match>
       </Switch>
       {card.ready && (
-        <Lazy.ImageModal
+        <Lazy.PictureModal
           img={card.imageModal}
           on:click={() => setCard("imageModal", undefined)}
         />
