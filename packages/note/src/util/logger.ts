@@ -26,6 +26,33 @@ export class Logger {
     this.onUpdate = options.onUpdate;
   }
 
+  attachToGlobalErrors() {
+    // 1 Catch runtime errors (syntax, thrown errors, etc.)
+    window.addEventListener("error", (event) => {
+      this.error("GlobalError:", event.message, {
+        file: event.filename,
+        line: event.lineno,
+        col: event.colno,
+        error: event.error?.stack ?? String(event.error),
+      });
+    });
+
+    // 2 Catch unhandled Promise rejections
+    window.addEventListener("unhandledrejection", (event) => {
+      this.error("UnhandledRejection:", {
+        reason:
+          event.reason instanceof Error ? event.reason.stack : event.reason,
+      });
+    });
+
+    // 3 Optional: Catch console.error calls
+    const originalConsoleError = console.error;
+    console.error = (...args: unknown[]) => {
+      this.error("ConsoleError:", ...args);
+      originalConsoleError.apply(console, args);
+    };
+  }
+
   private format(level: LogLevel, args: unknown[]): string {
     const time = new Date().toISOString().split("T")[1].replace("Z", "");
     const msg = args

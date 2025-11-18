@@ -21,6 +21,7 @@ import { FieldGroupContextProvider } from "./components/shared/FieldGroupContext
 import { Logger } from "./util/logger.ts";
 
 const logger = new Logger();
+logger.attachToGlobalErrors();
 
 declare global {
   var KIKU_STATE: {
@@ -38,34 +39,6 @@ globalThis.KIKU_STATE = {
   assetsPath: window.location.origin,
   logger,
 };
-
-export function attachGlobalErrorHandlers(logger: Logger) {
-  // 1 Catch runtime errors (syntax, thrown errors, etc.)
-  window.addEventListener("error", (event) => {
-    logger.error("GlobalError:", event.message, {
-      file: event.filename,
-      line: event.lineno,
-      col: event.colno,
-      error: event.error?.stack ?? String(event.error),
-    });
-  });
-
-  // 2 Catch unhandled Promise rejections
-  window.addEventListener("unhandledrejection", (event) => {
-    logger.error("UnhandledRejection:", {
-      reason: event.reason instanceof Error ? event.reason.stack : event.reason,
-    });
-  });
-
-  // 3 Optional: Catch console.error calls
-  const originalConsoleError = console.error;
-  console.error = (...args: unknown[]) => {
-    logger.error("ConsoleError:", ...args);
-    originalConsoleError.apply(console, args);
-  };
-}
-
-attachGlobalErrorHandlers(logger);
 
 export async function init({
   side,
@@ -115,7 +88,7 @@ export async function init({
     try {
       const cache = sessionStorage.getItem(env.KIKU_CONFIG_SESSION_STORAGE_KEY);
       if (cache) {
-        logger.info("config cache hit");
+        logger.info("config cache hit:", cache);
         config$ = JSON.parse(cache);
       } else {
         logger.info("config cache miss");
