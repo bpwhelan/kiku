@@ -41,24 +41,6 @@ export default function BackBody(props: {
     const tempDiv = document.createElement("div");
     tempDiv.innerHTML = ankiFields.DefinitionPicture;
     setDefinitionPicture(tempDiv.querySelector("img")?.outerHTML ?? "");
-
-    if (definitionEl) {
-      const spans = Array.from(definitionEl.querySelectorAll("span")).filter(
-        (el) => {
-          return getComputedStyle(el).backgroundColor === "rgb(86, 86, 86)";
-        },
-      );
-      spans.forEach((el) => {
-        el.dataset.jitendexTag = "true";
-      });
-
-      const i = Array.from(definitionEl.querySelectorAll("i")).filter((el) => {
-        return el.innerHTML.includes("Jitendex.org");
-      });
-      i.forEach((el) => {
-        el.dataset.jitendexI = "true";
-      });
-    }
   });
 
   createEffect(() => {

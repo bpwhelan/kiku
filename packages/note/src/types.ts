@@ -106,11 +106,8 @@ export type AnkiNote = {
 };
 
 export type KikuNotesChunk = {
-  /** Path or filename of the chunk, e.g. "_kiku_notes_0.json.gz" */
   file: string;
-  /** Number of notes contained in this chunk */
   count: number;
-  /** [minNoteId, maxNoteId] range covered by this chunk */
   range: [number, number];
 };
 

@@ -163,7 +163,6 @@ export type Dataset = {
   "data-theme": string;
   //
   "data-field": string;
-  "data-font-scope": "local";
   "data-transition": "true" | "false";
   "data-tags": string;
   "data-nsfw": "true" | "false";

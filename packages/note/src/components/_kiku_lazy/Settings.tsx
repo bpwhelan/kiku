@@ -569,47 +569,6 @@ function FontSizeSettingsFieldset(props: {
         </fieldset>
       </div>
     );
-
-  //NOTE: dead code, keep for a while
-  // return (
-  //   <fieldset
-  //     class="fieldset"
-  //     on:change={(e) => {
-  //       const target = e.target as HTMLSelectElement;
-  //       const value = target.value as TailwindFontSizeLabel;
-  //       const tailwindFontSize = getTailwindFontSize(value, breakpoint);
-  //       setConfig(props.configKey, tailwindFontSize);
-  //     }}
-  //   >
-  //     <legend class="fieldset-legend">
-  //       {props.label}{" "}
-  //       <UndoIcon
-  //         class="h-4 w-4 cursor-pointer"
-  //         classList={{
-  //           hidden: config[props.configKey] === defaultConfig[props.configKey],
-  //         }}
-  //         on:click={() => {
-  //           setConfig(props.configKey, defaultConfig[props.configKey]);
-  //         }}
-  //       />
-  //     </legend>
-  //     <select class="select w-full">
-  //       {tailwindFontSizeLabel.map((label) => {
-  //         return (
-  //           <option
-  //             value={label}
-  //             selected={
-  //               config[props.configKey] ===
-  //               getTailwindFontSize(label, breakpoint)
-  //             }
-  //           >
-  //             {label}
-  //           </option>
-  //         );
-  //       })}
-  //     </select>
-  //   </fieldset>
-  // );
 }
 
 function AnkiDroidSettings() {
