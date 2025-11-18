@@ -13,7 +13,13 @@ export default defineConfig({
     sidebar: [
       {
         text: "Getting Started",
-        items: [{ text: "Installation", link: "/installation" }],
+        items: [
+          { text: "Installation", link: "/installation" },
+          {
+            text: "Switching from Lapis",
+            link: "/migration",
+          },
+        ],
       },
     ],
 

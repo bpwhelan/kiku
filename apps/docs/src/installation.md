@@ -42,3 +42,5 @@ Open your Yomitan settings, go to `Anki` > `Configure Anki flashcard`, select `K
 | Frequency             | `{frequencies}`                                                                                                                                            |
 | FreqSort              | `{frequency-harmonic-rank}`                                                                                                                                |
 | MiscInfo              | `{document-title}` If you want your cards to include the title of the tab they were mined from, such as for light novels (LNs), please use this feature.   |
+
+Credit to [Lapis](https://github.com/donkuri/lapis) for the table
