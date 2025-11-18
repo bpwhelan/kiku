@@ -36,12 +36,16 @@ def export_notes_background(col: Collection) -> tuple[str, bool]:
     last_progress = 0
     processed = 0
 
+    allowed_models = {"Kiku", "Lapis"}
+
     for nid in note_ids:
         note = col.get_note(nid)
         model = note.note_type()
         if not model:
             continue
         model_name = model["name"]
+        if model_name not in allowed_models:
+            continue
 
         card_ids = db.list("SELECT id FROM cards WHERE nid=?", nid)
 
