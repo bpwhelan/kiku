@@ -24,7 +24,13 @@ export default defineConfig({
 
       {
         text: "Learn More",
-        items: [{ text: "Features", link: "/features" }],
+        items: [
+          { text: "Features", link: "/features" },
+          {
+            text: "How things works",
+            link: "/how-things-works",
+          },
+        ],
       },
     ],
 
