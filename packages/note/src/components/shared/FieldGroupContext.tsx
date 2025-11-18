@@ -62,6 +62,10 @@ export function FieldGroupContextProvider(props: { children: JSX.Element }) {
         return node.textContent ?? "";
       })
       .join("");
+    KIKU_STATE.logger.info(
+      "[Groups] sentenceFieldWithoutGroupHtml:",
+      sentenceFieldWithoutGroupHtml,
+    );
 
     const tempDivPictureField = document.createElement("div");
     tempDivPictureField.innerHTML = pictureField;
@@ -85,7 +89,6 @@ export function FieldGroupContextProvider(props: { children: JSX.Element }) {
       const id = (el as HTMLSpanElement).dataset.groupId;
       if (id) groupIds.add(id);
     });
-
     const sentenceAudioFieldWithoutGroup = Array.from(
       tempDivSentenceAudioField.childNodes,
     ).filter((el) => !(el as HTMLSpanElement).dataset?.groupId);
@@ -97,6 +100,11 @@ export function FieldGroupContextProvider(props: { children: JSX.Element }) {
         return node.textContent ?? "";
       })
       .join("");
+
+    KIKU_STATE.logger.info(
+      "[Groups] sentenceAudioFieldWithoutGroupHtml:",
+      sentenceAudioFieldWithoutGroupHtml,
+    );
 
     let dummyImg: HTMLImageElement | undefined;
     if (
@@ -111,6 +119,13 @@ export function FieldGroupContextProvider(props: { children: JSX.Element }) {
       dummyImg = img;
       groupIds.add("0");
     }
+
+    KIKU_STATE.logger.info("[Groups] DummyImg:", dummyImg);
+
+    KIKU_STATE.logger.info(
+      "[Groups] ids:",
+      Array.from(groupIds).map((id) => id.toString()),
+    );
 
     if (groupIds.size > 0) {
       const sorted = Array.from(groupIds)
@@ -143,6 +158,13 @@ export function FieldGroupContextProvider(props: { children: JSX.Element }) {
       setGroupStore("sentenceField", sentenceField ?? "");
       setGroupStore("pictureField", pictureField ?? "");
       setGroupStore("sentenceAudioField", sentenceAudioField ?? "");
+
+      KIKU_STATE.logger.info("[Groups] sentenceField:", sentenceField);
+      KIKU_STATE.logger.info("[Groups] pictureField:", pictureField);
+      KIKU_STATE.logger.info(
+        "[Groups] sentenceAudioField:",
+        sentenceAudioField,
+      );
     }
   });
 

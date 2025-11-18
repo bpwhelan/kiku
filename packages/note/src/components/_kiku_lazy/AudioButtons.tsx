@@ -59,19 +59,21 @@ export default function AudioButtons(props: { position: 1 | 2 }) {
     const anchors = card.sentenceAudioRef?.querySelectorAll("a");
     if (anchors?.length) {
       setCard("sentenceAudios", Array.from(anchors));
-      KIKU_STATE.logger.info(
-        "Number of detected anchor in sentence audios",
-        anchors.length,
-      );
+      let anchorsHtml = "";
+      anchors.forEach((a) => {
+        anchorsHtml += a.outerHTML;
+      });
+      KIKU_STATE.logger.info("Anchors in sentence audios:", anchorsHtml);
     }
 
     const audios = card.sentenceAudioRef?.querySelectorAll("audio");
     if (audios?.length) {
       setCard("sentenceAudios", Array.from(audios));
-      KIKU_STATE.logger.info(
-        "Number of detected audio in sentence audios",
-        audios?.length,
-      );
+      let audiosHtml = "";
+      audios.forEach((a) => {
+        audiosHtml += a.outerHTML;
+      });
+      KIKU_STATE.logger.info("Audios in sentence audios:", audiosHtml);
     }
   });
 
