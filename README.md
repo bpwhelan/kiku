@@ -1,0 +1,12 @@
+# Kiku
+
+Kiku is a modern, fully interactive Anki note type.
+
+<https://github.com/user-attachments/assets/3e653e2e-55bc-492f-ac25-1fba8bceed42>
+
+## Get Started
+Read the documentation [here](https://kiku.youyoumu.my.id).
+
+## Credit
+[Lapis](https://github.com/donkuri/lapis),  [JPMN](https://github.com/Aquafina-water-bottle/jp-mining-note), and [Seiren](https://github.com/BrenoAqua/Senren) for inspiration.
+
