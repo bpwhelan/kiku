@@ -27,6 +27,10 @@ export default defineConfig({
         items: [
           { text: "Features", link: "/features" },
           {
+            text: "Field grouping",
+            link: "/field-grouping",
+          },
+          {
             text: "How things works",
             link: "/how-things-works",
           },

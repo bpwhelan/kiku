@@ -10,5 +10,5 @@ To get started, read the documentation [here](https://kiku-docs.vercel.app/).
 
 ## Credit
 
-- [Lapis](https://github.com/donkuri/lapis), [JPMN](https://github.com/Aquafina-water-bottle/jp-mining-note), and [Seiren](https://github.com/BrenoAqua/Senren) for inspiration.
+- [Lapis](https://github.com/donkuri/lapis), [JPMN](https://github.com/Aquafina-water-bottle/jp-mining-note), and [Senren](https://github.com/BrenoAqua/Senren) for inspiration.
 - [Wanikani Userscript](https://github.com/mwil/wanikani-userscripts) for the excellent database.
