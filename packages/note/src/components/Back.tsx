@@ -9,6 +9,7 @@ import { type AnkiFields, ankiFieldsSkeleton } from "#/types";
 import type { DatasetProp } from "#/util/config";
 import { env, extractKanji } from "#/util/general";
 import { useNavigationTransition } from "#/util/hooks";
+import { getPlugin } from "#/util/plugin";
 import { WorkerClient } from "#/worker/client";
 import { Layout } from "./Layout";
 import {
@@ -39,7 +40,8 @@ export function Back(props: { onExitNested?: () => void }) {
   const navigate = useNavigationTransition();
   const [card, setCard] = useCardStore();
   const [config] = useConfig();
-  const { ankiFields } = useAnkiField<"back">();
+  const { ankiFields, plugin$ } = useAnkiField<"back">();
+  const [plugin, setPlugin] = plugin$;
 
   const tags = ankiFields.Tags.split(" ");
 
@@ -47,6 +49,9 @@ export function Back(props: { onExitNested?: () => void }) {
     setTimeout(() => {
       setCard("ready", true);
       KIKU_STATE.relax = true;
+      getPlugin().then((plugin) => {
+        setPlugin(plugin);
+      });
 
       async function setKanji() {
         try {

@@ -257,7 +257,6 @@ declare global {
     isAnkiWeb?: boolean;
     assetsPath: string;
     logger: Logger;
-    plugin?: Plugin;
     ankiDroidAPI?: AnkiDroidAPI;
   };
   var pycmd: () => void;

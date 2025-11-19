@@ -1,4 +1,10 @@
-import { createEffect, createSignal, onMount } from "solid-js";
+import {
+  createEffect,
+  createSignal,
+  ErrorBoundary,
+  onMount,
+  Show,
+} from "solid-js";
 import h from "solid-js/h";
 import { useAnkiField, useConfig } from "../shared/Context";
 import Sentence from "./Sentence";
@@ -118,29 +124,28 @@ export default function BackBody(props: {
 }
 
 function ExternalLinks() {
-  const { ankiFields } = useAnkiField<"back">();
+  const { ankiFields, plugin$ } = useAnkiField<"back">();
+  const [plugin] = plugin$;
 
-  try {
-    const ExternalLinks = KIKU_STATE.plugin?.ExternalLinks;
-    if (ExternalLinks) {
-      return (
-        <ExternalLinks
-          ctx={{
-            h,
-            ankiFields,
-            ankiDroidAPI: () => KIKU_STATE.ankiDroidAPI,
-          }}
-          DefaultExternalLinks={DefaultExternalLinks}
-        />
-      );
-    }
-  } catch (e) {
-    KIKU_STATE.logger.error(
-      "Failed to render external links from plugin:",
-      e instanceof Error ? e.message : e,
-    );
-  }
-  return <DefaultExternalLinks />;
+  return (
+    <ErrorBoundary fallback={<DefaultExternalLinks />}>
+      <Show when={plugin()?.ExternalLinks} fallback={<DefaultExternalLinks />}>
+        {(get) => {
+          const ExternalLinks = get();
+          return (
+            <ExternalLinks
+              ctx={{
+                h,
+                ankiFields,
+                ankiDroidAPI: () => KIKU_STATE.ankiDroidAPI,
+              }}
+              DefaultExternalLinks={DefaultExternalLinks}
+            />
+          );
+        }}
+      </Show>
+    </ErrorBoundary>
+  );
 }
 
 function DefaultExternalLinks() {

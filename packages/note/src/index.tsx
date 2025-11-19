@@ -19,7 +19,6 @@ import "./styles/tailwind.css";
 import { CardStoreContextProvider } from "./components/shared/CardContext.tsx";
 import { FieldGroupContextProvider } from "./components/shared/FieldGroupContext.tsx";
 import { Logger } from "./util/logger.ts";
-import { getPlugin } from "./util/plugin.ts";
 
 const logger = new Logger();
 logger.attachToGlobalErrors();
@@ -46,12 +45,11 @@ export async function init({
       kikuCss?.remove();
     }
 
-    KIKU_STATE.plugin = await getPlugin();
-
     const root =
       document.getElementById("root") ??
       document.querySelector("[data-kiku-root]");
     if (!root) throw new Error("root not found");
+    root.part.add("root-part");
     KIKU_STATE.root = root;
     logger.debug("rootDataset", root.dataset);
 
@@ -59,12 +57,8 @@ export async function init({
     const shadowParent = document.createElement("div");
     qa?.appendChild(shadowParent);
     const shadow = shadowParent.attachShadow({ mode: "open" });
-    shadow?.appendChild(root);
     const style = qa?.querySelector("style");
-    if (style) {
-      shadow?.appendChild(style.cloneNode(true));
-    }
-    root.part.add("root-part");
+    if (style) shadow?.appendChild(style.cloneNode(true));
     const tailwind = document.querySelector(
       "[data-vite-dev-id='/home/yym/repos/kiku/packages/note/src/styles/tailwind.css']",
     );
@@ -76,6 +70,7 @@ export async function init({
       link.href = "./_kiku.css";
       shadow?.prepend(link);
     }
+    shadow?.appendChild(root);
 
     let config$: KikuConfig;
     try {
