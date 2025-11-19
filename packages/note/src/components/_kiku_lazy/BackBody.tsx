@@ -128,6 +128,7 @@ function ExternalLinks() {
           ctx={{
             h,
             ankiFields,
+            ankiDroidAPI: () => KIKU_STATE.ankiDroidAPI,
           }}
           DefaultExternalLinks={DefaultExternalLinks}
         />

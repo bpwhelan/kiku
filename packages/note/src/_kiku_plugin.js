@@ -1,5 +1,5 @@
 /**
- * @typedef {import("./_kiku_plugin.d.ts").Plugin} Plugin
+ * @import {Plugin} from "#/types";
  */
 
 /**
@@ -8,6 +8,8 @@
 export const plugin = {
   ExternalLinks: (props) => {
     const h = props.ctx.h;
+
+    // create arbitary link
     const NadeshikoLink = h(
       "a",
       {
@@ -23,6 +25,27 @@ export const plugin = {
         src: "https://nadeshiko.co/favicon.ico",
       }),
     );
-    return [props.DefaultExternalLinks(), NadeshikoLink()];
+
+    // create arbitary button with custom on:click event
+    const AnkiDroidBrowseButton = h(
+      "button",
+      {
+        class: "text-sm btn btn-sm",
+        "on:click": () => {
+          props.ctx
+            .ankiDroidAPI()
+            ?.ankiSearchCard(
+              `("note:Kiku" OR "note:Lapis") AND "Expression:*${props.ctx.ankiFields.Expression}*"`,
+            );
+        },
+      },
+      "Browse",
+    );
+
+    return [
+      props.DefaultExternalLinks(),
+      NadeshikoLink(),
+      AnkiDroidBrowseButton(),
+    ];
   },
 };

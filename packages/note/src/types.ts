@@ -1,4 +1,3 @@
-import type { Plugin } from "./_kiku_plugin";
 import type { Logger } from "./util/logger";
 
 export type AnkiFields = {
@@ -169,7 +168,7 @@ type AnkiResponse<T = unknown> = {
   error?: string;
 };
 
-type AnkiDroidAPI = {
+export type AnkiDroidAPI = {
   ankiGetNewCardCount(): Promise<AnkiResponse>;
   ankiGetLrnCardCount(): Promise<AnkiResponse>;
   ankiGetRevCardCount(): Promise<AnkiResponse>;
@@ -211,7 +210,7 @@ type AnkiDroidAPI = {
   ankiResetProgress(): Promise<AnkiResponse>;
   ankiMarkCard(): Promise<AnkiResponse>;
   ankiToggleFlag(): Promise<AnkiResponse>;
-  ankiSearchCard(): Promise<AnkiResponse>;
+  ankiSearchCard(query: string): Promise<AnkiResponse>;
   ankiSearchCardWithCallback(): Promise<AnkiResponse>;
   ankiTtsSpeak(): Promise<AnkiResponse>;
   ankiTtsSetLanguage(): Promise<AnkiResponse>;
@@ -236,6 +235,20 @@ type AnkiDroidAPI = {
   ankiGetNoteTags(): Promise<AnkiResponse>;
 };
 
+import type { JSX } from "solid-js";
+import type { HyperScript } from "solid-js/h/types/hyperscript.d.ts";
+
+export type Plugin = {
+  ExternalLinks?: (props: {
+    DefaultExternalLinks: () => JSX.Element;
+    ctx: {
+      ankiFields: AnkiFields;
+      h: HyperScript;
+      ankiDroidAPI: () => AnkiDroidAPI | undefined;
+    };
+  }) => JSX.Element | JSX.Element[];
+};
+
 declare global {
   var KIKU_STATE: {
     relax?: boolean;
@@ -245,6 +258,7 @@ declare global {
     assetsPath: string;
     logger: Logger;
     plugin?: Plugin;
+    ankiDroidAPI?: AnkiDroidAPI;
   };
   var pycmd: () => void;
   var AnkiDroidJS: {

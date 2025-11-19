@@ -1,4 +1,4 @@
-import type { Plugin } from "#/_kiku_plugin";
+import type { Plugin } from "#/types";
 import { env } from "./general";
 
 export async function getPlugin() {

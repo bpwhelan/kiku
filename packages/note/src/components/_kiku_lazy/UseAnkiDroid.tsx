@@ -27,6 +27,7 @@ export default function UseAnkiDroid() {
     typeof AnkiDroidJS === "undefined"
       ? undefined
       : new AnkiDroidJS({ version: "0.0.3", developer: "youyoumu" });
+  KIKU_STATE.ankiDroidAPI = ankiDroidAPI;
 
   let rightIconRef: SVGSVGElement | undefined;
   let leftIconRef: SVGSVGElement | undefined;
