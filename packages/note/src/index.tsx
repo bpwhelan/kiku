@@ -64,8 +64,9 @@ export async function init({
     logger.debug("rootDataset", root.dataset);
 
     const qa = document.querySelector("#qa");
-    if (qa?.shadowRoot) qa.shadowRoot.innerHTML = "";
-    const shadow = qa?.shadowRoot ?? qa?.attachShadow({ mode: "open" });
+    const shadowParent = document.createElement("div");
+    qa?.appendChild(shadowParent);
+    const shadow = shadowParent.attachShadow({ mode: "open" });
     shadow?.appendChild(root);
     const style = qa?.querySelector("style");
     if (style) {
