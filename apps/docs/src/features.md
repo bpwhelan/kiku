@@ -27,7 +27,7 @@ Learn about how to use this feature [here](./field-grouping).
 
 ### Themes
 
-35 built-in themes.
+35 built-in themes, powered by [daisyUI](https://daisyui.com/).
 
 <video controls>
   <source src="/media/feature-theme.mp4" type="video/mp4" />
@@ -51,3 +51,11 @@ Swipe to right to answer with `Good`, swipe to left to answer with `Again`. The 
 <video controls style="height: 720px;">
   <source src="/media/feature-ankidroid.mp4" type="video/mp4"  />
 </video>
+
+:::info AnkiWeb
+AnkiWeb is supported, but it hasn't been tested heavily. Please open an issue if you encounter any problems.
+:::
+
+:::info AnkiMobile
+AnkiMobile either works out of the box or works after some adjustments. Unfortunately, I don't have any iOS device to test it.
+:::
