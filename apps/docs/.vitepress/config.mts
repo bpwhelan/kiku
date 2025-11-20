@@ -16,7 +16,7 @@ export default defineConfig({
         items: [
           { text: "Installation", link: "/installation" },
           {
-            text: "Switching from Lapis",
+            text: "Switching From Lapis",
             link: "/migration",
           },
         ],
@@ -27,9 +27,28 @@ export default defineConfig({
         items: [
           { text: "Features", link: "/features" },
           {
-            text: "How things works",
-            link: "/how-things-works",
+            text: "Field Grouping",
+            link: "/field-grouping",
           },
+          {
+            text: "Plugin",
+            link: "/plugin",
+          },
+          {
+            text: "Updating Kiku",
+            link: "/updating",
+          },
+          {
+            text: "How Things Work",
+            link: "/how-things-work",
+          },
+        ],
+      },
+
+      {
+        text: "Recipes",
+        items: [
+          { text: "Add More External Links", link: "/add-more-external-links" },
         ],
       },
     ],

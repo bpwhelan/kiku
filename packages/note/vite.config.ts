@@ -10,7 +10,10 @@ function serveAnkiCollectionMediaPlugin(): PluginOption {
   return {
     name: "serve-anki-media-root",
     configureServer: async (server) => {
-      const BASE_DIR = process.platform === "win32" ? process.env.APPDATA : process.env.HOME + "/.local/share";
+      const BASE_DIR =
+        process.platform === "win32"
+          ? process.env.APPDATA
+          : join(process.env.HOME ?? "", ".local/share");
       const USER = "yym";
       // const USER = "User 1";
       const ANKI_MEDIA_DIR = join(
@@ -18,7 +21,9 @@ function serveAnkiCollectionMediaPlugin(): PluginOption {
         `Anki2/${USER}/collection.media`,
       );
       await stat(ANKI_MEDIA_DIR);
-      server.middlewares.use(express.static(ANKI_MEDIA_DIR) as any);
+
+      //@ts-expect-error idk but it works
+      server.middlewares.use(express.static(ANKI_MEDIA_DIR));
     },
   };
 }

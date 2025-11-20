@@ -18,22 +18,12 @@ import { env } from "./util/general.ts";
 import "./styles/tailwind.css";
 import { CardStoreContextProvider } from "./components/shared/CardContext.tsx";
 import { FieldGroupContextProvider } from "./components/shared/FieldGroupContext.tsx";
+import { PluginContextProvider } from "./components/shared/PluginContextProvider.tsx";
 import { Logger } from "./util/logger.ts";
 
 const logger = new Logger();
 logger.attachToGlobalErrors();
 
-declare global {
-  var KIKU_STATE: {
-    relax?: boolean;
-    startupTime?: number;
-    root?: HTMLElement;
-    isAnkiWeb?: boolean;
-    assetsPath: string;
-    logger: Logger;
-  };
-  var pycmd: () => void;
-}
 globalThis.KIKU_STATE = {
   isAnkiWeb: window.location.origin.includes("ankiuser.net"),
   assetsPath: window.location.origin,
@@ -60,18 +50,16 @@ export async function init({
       document.getElementById("root") ??
       document.querySelector("[data-kiku-root]");
     if (!root) throw new Error("root not found");
+    root.part.add("root-part");
     KIKU_STATE.root = root;
     logger.debug("rootDataset", root.dataset);
 
     const qa = document.querySelector("#qa");
-    if (qa?.shadowRoot) qa.shadowRoot.innerHTML = "";
-    const shadow = qa?.shadowRoot ?? qa?.attachShadow({ mode: "open" });
-    shadow?.appendChild(root);
+    const shadowParent = document.createElement("div");
+    qa?.appendChild(shadowParent);
+    const shadow = shadowParent.attachShadow({ mode: "open" });
     const style = qa?.querySelector("style");
-    if (style) {
-      shadow?.appendChild(style.cloneNode(true));
-    }
-    root.part.add("root-part");
+    if (style) shadow?.appendChild(style.cloneNode(true));
     const tailwind = document.querySelector(
       "[data-vite-dev-id='/home/yym/repos/kiku/packages/note/src/styles/tailwind.css']",
     );
@@ -83,6 +71,7 @@ export async function init({
       link.href = "./_kiku.css";
       shadow?.prepend(link);
     }
+    shadow?.appendChild(root);
 
     let config$: KikuConfig;
     try {
@@ -114,33 +103,37 @@ export async function init({
 
     if (side === "front") {
       const App = () => (
-        <AnkiFieldContextProvider>
-          <CardStoreContextProvider side="front">
-            <BreakpointContextProvider>
-              <ConfigContextProvider value={[config, setConfig]}>
-                <FieldGroupContextProvider>
-                  <Front />
-                </FieldGroupContextProvider>
-              </ConfigContextProvider>
-            </BreakpointContextProvider>
-          </CardStoreContextProvider>
-        </AnkiFieldContextProvider>
+        <PluginContextProvider>
+          <AnkiFieldContextProvider>
+            <CardStoreContextProvider side="front">
+              <BreakpointContextProvider>
+                <ConfigContextProvider value={[config, setConfig]}>
+                  <FieldGroupContextProvider>
+                    <Front />
+                  </FieldGroupContextProvider>
+                </ConfigContextProvider>
+              </BreakpointContextProvider>
+            </CardStoreContextProvider>
+          </AnkiFieldContextProvider>
+        </PluginContextProvider>
       );
       if (ssr) return hydrate(App, root);
       render(App, root);
     } else if (side === "back") {
       const App = () => (
-        <AnkiFieldContextProvider>
-          <CardStoreContextProvider side="back">
-            <BreakpointContextProvider>
-              <ConfigContextProvider value={[config, setConfig]}>
-                <FieldGroupContextProvider>
-                  <Back />
-                </FieldGroupContextProvider>
-              </ConfigContextProvider>
-            </BreakpointContextProvider>
-          </CardStoreContextProvider>
-        </AnkiFieldContextProvider>
+        <PluginContextProvider>
+          <AnkiFieldContextProvider>
+            <CardStoreContextProvider side="back">
+              <BreakpointContextProvider>
+                <ConfigContextProvider value={[config, setConfig]}>
+                  <FieldGroupContextProvider>
+                    <Back />
+                  </FieldGroupContextProvider>
+                </ConfigContextProvider>
+              </BreakpointContextProvider>
+            </CardStoreContextProvider>
+          </AnkiFieldContextProvider>
+        </PluginContextProvider>
       );
       if (ssr) return hydrate(App, root);
       render(App, root);

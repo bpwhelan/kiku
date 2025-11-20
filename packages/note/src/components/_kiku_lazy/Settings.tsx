@@ -19,6 +19,7 @@ import {
   tailwindSize,
 } from "#/util/config";
 import { type WebFont, webFonts } from "#/util/fonts";
+import { env } from "#/util/general";
 import { useThemeTransition } from "#/util/hooks";
 import { daisyUIThemes } from "#/util/theme";
 import { useAnkiField, useBreakpoint, useConfig } from "../shared/Context";
@@ -106,14 +107,16 @@ export default function Settings(props: {
         <div class="flex flex-row gap-2 items-center">
           {card.ankiConnectAvailable && (
             <>
-              <div class="text-sm">AnkiConnect is available</div>
+              <div class="text-sm text-base-content-calm">
+                AnkiConnect is available
+              </div>
               <div class="status status-success"></div>
             </>
           )}
           {!card.ankiConnectAvailable && (
             <>
               <RefreshCwIcon
-                class="size-5 cursor-pointer text-base-content-soft"
+                class="size-4 cursor-pointer text-base-content-soft"
                 on:click={async () => {
                   try {
                     await checkAnkiConnect();
@@ -122,7 +125,9 @@ export default function Settings(props: {
                   }
                 }}
               />
-              <div class="text-sm">AnkiConnect is not available</div>
+              <div class="text-sm text-base-content-calm">
+                AnkiConnect is not available
+              </div>
               <div class="status status-error animate-ping"></div>
             </>
           )}
@@ -172,8 +177,15 @@ function GeneralSettings() {
   const [config, setConfig] = useConfig();
 
   return (
-    <div class="flex flex-col gap-4 animate-fade-in">
-      <div class="text-2xl font-bold">General</div>
+    <div class="flex flex-col gap-4 animate-fade-in relative">
+      <div class="flex flex-col items-center text-base-content-faint justify-center">
+        <div class="text-base-content-subtle-200 text-6xl">菊</div>
+        <div class="text-sm">Kiku Note v{env.KIKU_VERSION}</div>
+      </div>
+
+      <div class="flex gap-2 items-center justify-between">
+        <div class="text-2xl font-bold">General</div>
+      </div>
       <div class="grid grid-cols-[repeat(auto-fit,minmax(20rem,1fr))] rounded-box gap-4 p-2">
         <fieldset class="fieldset">
           <legend class="fieldset-legend">Volume</legend>
@@ -617,11 +629,16 @@ function DebugSettings() {
   const [card] = useCardStore();
   const { ankiFields } = useAnkiField<"back">();
   const [kikuFiles, setKikuFiles] = createSignal<string>();
+  const [missingFiles, setMissingFiles] = createSignal<string>();
 
   createEffect(async () => {
     if (card.ankiConnectAvailable) {
       const files = await AnkiConnect.getKikuFiles();
       setKikuFiles(JSON.stringify(files, null, 2));
+      const missing = env.KIKU_IMPORTANT_FILES.filter((file) => {
+        return !files.includes(file);
+      });
+      setMissingFiles(missing.join(", "));
     }
   });
 
@@ -795,6 +812,16 @@ function DebugSettings() {
                   }}
                 />
               </div>
+
+              <Show when={missingFiles()}>
+                <div role="alert" class="alert alert-warning">
+                  <span>
+                    Some files are missing, things may not work as expected.
+                    <br />
+                    <span class="text-xs ">{missingFiles()}</span>
+                  </span>
+                </div>
+              </Show>
               <pre class="text-xs bg-base-200 p-4 rounded-lg overflow-auto">
                 {kikuFiles()}
               </pre>

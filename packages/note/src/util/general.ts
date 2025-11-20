@@ -1,11 +1,6 @@
 import { isServer } from "solid-js/web";
 import { type AnkiFields, ankiFieldsSkeleton } from "#/types";
-import {
-  exampleFields5,
-  exampleFields6,
-  exampleFields8,
-  exampleFields9,
-} from "./examples";
+import { exampleFields7 } from "./examples";
 
 // biome-ignore format: this looks nicer
 export const env = {
@@ -24,6 +19,33 @@ export const env = {
   KIKU_DB_SIMILAR_KANJI_STROKE_EDIT_DIST: "_kiku_db_similar_kanji_stroke_edit_dist.json.gz",
   KIKU_DB_SIMILAR_KANJI_WK_NIAI_NOTO: "_kiku_db_similar_kanji_wk_niai_noto.json.gz",
   KIKU_DB_SIMILAR_KANJI_YL_RADICAL: "_kiku_db_similar_kanji_yl_radical.json.gz",
+  KIKU_PLUGIN_MODULE: "_kiku_plugin.js",
+  KIKU_VERSION: "1.1.1",
+  KIKU_IMPORTANT_FILES: [
+    "_kiku.js",
+    "_kiku_libs.js",
+    "_kiku_shared.js",
+    "_kiku_lazy.js",
+    "_kiku_worker.js",
+    "_kiku_plugin.js",
+
+    "_kiku_front.html",
+    "_kiku_back.html",
+    "_kiku_style.css",
+    "_kiku.css",
+
+    "_kiku_font_hina-mincho.woff2",
+    "_kiku_font_ibm-plex-sans-jp.woff2",
+    "_kiku_font_klee-one.woff2",
+
+    "_kiku_db_similar_kanji_from_keisei.json.gz",
+    "_kiku_db_similar_kanji_lookup.json.gz",
+    "_kiku_db_similar_kanji_manual.json.gz",
+    "_kiku_db_similar_kanji_old_script.json.gz",
+    "_kiku_db_similar_kanji_stroke_edit_dist.json.gz",
+    "_kiku_db_similar_kanji_wk_niai_noto.json.gz",
+    "_kiku_db_similar_kanji_yl_radical.json.gz",
+  ]
 };
 
 export type Env = typeof env;
@@ -39,7 +61,7 @@ export function getAnkiFields() {
     ? undefined
     : document.querySelectorAll("#anki-fields > div");
   if (import.meta.env.DEV && !isServer) {
-    divs = Object.entries(exampleFields5).map(([key, value]) => {
+    divs = Object.entries(exampleFields7).map(([key, value]) => {
       const div = document.createElement("div");
       div.dataset.field = key;
       div.innerHTML = value;

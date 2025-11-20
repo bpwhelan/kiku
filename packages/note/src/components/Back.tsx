@@ -9,6 +9,7 @@ import { type AnkiFields, ankiFieldsSkeleton } from "#/types";
 import type { DatasetProp } from "#/util/config";
 import { env, extractKanji } from "#/util/general";
 import { useNavigationTransition } from "#/util/hooks";
+import { getPlugin } from "#/util/plugin";
 import { WorkerClient } from "#/worker/client";
 import { Layout } from "./Layout";
 import {
@@ -20,6 +21,7 @@ import {
   FieldGroupContextProvider,
   useFieldGroup,
 } from "./shared/FieldGroupContext";
+import { usePlugin } from "./shared/PluginContextProvider";
 
 // biome-ignore format: this looks nicer
 const Lazy = {
@@ -40,6 +42,7 @@ export function Back(props: { onExitNested?: () => void }) {
   const [card, setCard] = useCardStore();
   const [config] = useConfig();
   const { ankiFields } = useAnkiField<"back">();
+  const [plugin, setPlugin] = usePlugin();
 
   const tags = ankiFields.Tags.split(" ");
 
@@ -47,6 +50,9 @@ export function Back(props: { onExitNested?: () => void }) {
     setTimeout(() => {
       setCard("ready", true);
       KIKU_STATE.relax = true;
+      getPlugin().then((plugin) => {
+        setPlugin(plugin);
+      });
 
       async function setKanji() {
         try {

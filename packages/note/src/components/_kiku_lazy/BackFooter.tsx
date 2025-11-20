@@ -10,7 +10,9 @@ export default function BackFooter(props: { tags: string[] }) {
         <div
           class={`flex gap-2 items-center justify-center bg-base-200 p-2 rounded-lg animate-fade-in misc-info`}
         >
-          <InfoIcon class="h-5 w-5 text-base-content-calm" />
+          <div class="min-w-4">
+            <InfoIcon class="size-4 text-base-content-calm" />
+          </div>
           <div
             class="text-base-content-calm"
             innerHTML={ankiFields.MiscInfo}

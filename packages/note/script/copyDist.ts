@@ -3,13 +3,13 @@ import { join } from "node:path";
 
 // folders
 
-const BASE_DIR = process.platform === "win32" ? process.env.APPDATA : process.env.HOME + "/.local/share";
+const BASE_DIR =
+  process.platform === "win32"
+    ? process.env.APPDATA
+    : join(process.env.HOME ?? "", ".local/share");
 const USER = "yym";
 // const USER = "User 1";
-const ANKI_MEDIA_DIR = join(
-  BASE_DIR || "",
-  `Anki2/${USER}/collection.media`,
-);
+const ANKI_MEDIA_DIR = join(BASE_DIR ?? "", `Anki2/${USER}/collection.media`);
 await stat(ANKI_MEDIA_DIR);
 
 // files to copy
@@ -23,6 +23,7 @@ const FILES = [
   "_kiku_libs.js",
   "_kiku_shared.js",
   "_kiku_worker.js",
+  "_kiku_plugin.js",
 ];
 
 for (const file of FILES) {
