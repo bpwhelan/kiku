@@ -12,6 +12,7 @@ export function Layout(props: { children: JSX.Element }) {
       class="max-w-4xl mx-auto overflow-y-auto overflow-x-hidden gutter-stable h-svh font-primary transition-colors relative"
     >
       <UseAnkiWeb />
+
       <div
         class="flex flex-col gap-6 p-2 sm:p-4 bg-base-100 min-h-full"
         ref={(ref) => setCard("contentRef", ref)}

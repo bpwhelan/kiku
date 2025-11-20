@@ -19,6 +19,7 @@ import {
   tailwindSize,
 } from "#/util/config";
 import { type WebFont, webFonts } from "#/util/fonts";
+import { env } from "#/util/general";
 import { useThemeTransition } from "#/util/hooks";
 import { daisyUIThemes } from "#/util/theme";
 import { useAnkiField, useBreakpoint, useConfig } from "../shared/Context";
@@ -106,7 +107,9 @@ export default function Settings(props: {
         <div class="flex flex-row gap-2 items-center">
           {card.ankiConnectAvailable && (
             <>
-              <div class="text-sm">AnkiConnect is available</div>
+              <div class="text-sm text-base-content-calm">
+                AnkiConnect is available
+              </div>
               <div class="status status-success"></div>
             </>
           )}
@@ -122,7 +125,9 @@ export default function Settings(props: {
                   }
                 }}
               />
-              <div class="text-sm">AnkiConnect is not available</div>
+              <div class="text-sm text-base-content-calm">
+                AnkiConnect is not available
+              </div>
               <div class="status status-error animate-ping"></div>
             </>
           )}
@@ -172,8 +177,15 @@ function GeneralSettings() {
   const [config, setConfig] = useConfig();
 
   return (
-    <div class="flex flex-col gap-4 animate-fade-in">
-      <div class="text-2xl font-bold">General</div>
+    <div class="flex flex-col gap-4 animate-fade-in relative">
+      <div class="flex flex-col items-center text-base-content-faint justify-center">
+        <div class="text-base-content-subtle-200 text-6xl">菊</div>
+        <div class="text-sm">Kiku Note v{env.KIKU_VERSION}</div>
+      </div>
+
+      <div class="flex gap-2 items-center justify-between">
+        <div class="text-2xl font-bold">General</div>
+      </div>
       <div class="grid grid-cols-[repeat(auto-fit,minmax(20rem,1fr))] rounded-box gap-4 p-2">
         <fieldset class="fieldset">
           <legend class="fieldset-legend">Volume</legend>

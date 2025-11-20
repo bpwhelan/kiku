@@ -1,8 +1,37 @@
 import { readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
+import { env } from "../src/util/general";
 import { getSsrTemplate } from "./ssr.js";
 
+export async function validateVersion() {
+  const projectRoot = join(import.meta.dirname, "..");
+  const pkgJsonPath = join(projectRoot, "package.json");
+  const pkg = JSON.parse(await readFile(pkgJsonPath, "utf8"));
+
+  const declared = env.KIKU_VERSION;
+  const actual = pkg.version;
+
+  if (!actual) {
+    console.error("❌ package.json has no version field.");
+    process.exit(1);
+  }
+
+  if (declared !== actual) {
+    console.error(
+      `❌ Version mismatch:
+  env.KIKU_VERSION = ${declared}
+  package.json version = ${actual}`,
+    );
+    process.exit(1);
+  }
+
+  console.log(`✅ Version OK: ${declared}`);
+  return actual;
+}
+
 async function main() {
+  const version = `v${await validateVersion()}`;
+
   const frontSrcPath = join(import.meta.dirname, "../src/front.html");
   const frontDestPath = join(import.meta.dirname, "../dist/_kiku_front.html");
   const backSrcPath = join(import.meta.dirname, "../src/back.html");
@@ -24,12 +53,14 @@ async function main() {
     getSsrTemplate();
 
   const frontTemplate = frontSrc
+    .replace("__VERSION__", version)
     .replace("<!-- SSR_TEMPLATE -->", frontSsrTemplate)
     .replace("<!-- HYDRATION_SCRIPT -->", hydrationScript);
   const backTemplate = backSrc
+    .replace("__VERSION__", version)
     .replace("<!-- SSR_TEMPLATE -->", backSsrTemplate)
     .replace("<!-- HYDRATION_SCRIPT -->", hydrationScript);
-  const styleTemplate = styleSrc;
+  const styleTemplate = styleSrc.replace("__VERSION__", version);
   const cssTemplate = cssSrc;
 
   await Promise.all([
