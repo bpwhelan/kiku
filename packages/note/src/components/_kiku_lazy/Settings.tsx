@@ -116,7 +116,7 @@ export default function Settings(props: {
           {!card.ankiConnectAvailable && (
             <>
               <RefreshCwIcon
-                class="size-5 cursor-pointer text-base-content-soft"
+                class="size-4 cursor-pointer text-base-content-soft"
                 on:click={async () => {
                   try {
                     await checkAnkiConnect();
