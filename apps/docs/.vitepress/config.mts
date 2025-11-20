@@ -31,6 +31,10 @@ export default defineConfig({
             link: "/field-grouping",
           },
           {
+            text: "Plugin",
+            link: "/plugin",
+          },
+          {
             text: "How Things Work",
             link: "/how-things-work",
           },

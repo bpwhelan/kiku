@@ -19,7 +19,7 @@ If the notes cache is not available, it will uses [AnkiConnect](https://ankiweb.
 ### Group Multiple Picture/Sentence/SentenceAudio together
 
 You can add multiple pictures, sentences, and sentence audios to a single note, and Kiku will group them together.
-Learn about how to use this feature [here]().
+Learn about how to use this feature [here](./field-grouping).
 
 <video controls>
   <source src="/media/feature-group-field.mp4" type="video/mp4" />

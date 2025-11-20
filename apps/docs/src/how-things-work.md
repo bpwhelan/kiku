@@ -38,6 +38,7 @@ Kiku stores certain files in your Anki `collection.media` directory. All of thes
   "_kiku_front.html",
   "_kiku_lazy.js",
   "_kiku_libs.js",
+  "_kiku_plugin.js",
   "_kiku_shared.js",
   "_kiku_worker.js",
   "_kiku.js",
