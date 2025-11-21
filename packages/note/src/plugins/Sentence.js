@@ -9,18 +9,20 @@ export const plugin = {
   Sentence: (props) => {
     const h = props.ctx.h;
 
-    const SentenceTranslation = h(
-      "div",
-      {
-        class: "text-lg",
-      },
-      "This is the translation",
-    );
+    function SentenceTranslation() {
+      const translation = document.getElementById(
+        "SentenceTranslation",
+      )?.innerText;
+      if (!translation) return null;
+      return h(
+        "div",
+        {
+          class: "text-lg text-base-content-calm",
+        },
+        translation,
+      )();
+    }
 
-    return [
-      // includes the default Sentence
-      props.DefaultSentence(),
-      SentenceTranslation(),
-    ];
+    return [props.DefaultSentence(), SentenceTranslation()];
   },
 };
