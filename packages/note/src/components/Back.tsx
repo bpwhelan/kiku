@@ -209,14 +209,14 @@ export function Back(props: { onExitNested?: () => void }) {
           </div>
           <div class="flex flex-col gap-4">
             <div
-              class="flex rounded-lg gap-4 sm:h-56 flex-col sm:flex-row"
+              class="flex rounded-lg gap-4 flex-col sm:flex-row"
               classList={{
                 "animate-fade-in": KIKU_STATE.relax,
               }}
             >
-              <div class="flex-1 bg-base-200 p-4 rounded-lg flex flex-col items-center justify-center">
+              <div class="flex-1 bg-base-200 p-4 rounded-lg flex flex-col items-center justify-center sm:min-h-56">
                 <div
-                  class="expression font-secondary"
+                  class="expression font-secondary text-center"
                   innerHTML={expressionInnerHtml()}
                 >
                   {isServer
@@ -287,8 +287,7 @@ function PictureSection() {
   });
 
   return (
-    <div class="bg-base-200 rounded-lg relative overflow-hidden">
-      {" "}
+    <div class="sm:max-w-1/2 bg-base-200 flex sm:items-center rounded-lg relative overflow-hidden justify-center">
       <div
         class="picture-field-background"
         innerHTML={isServer ? undefined : group.pictureField}

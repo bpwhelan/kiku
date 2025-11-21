@@ -296,3 +296,36 @@ export const exampleFields9: AnkiFields = {
   "furigana:SentenceFurigana": "",
   "kana:SentenceFurigana": ""
 }
+
+// biome-ignore format: this looks nicer
+export const exampleFields10: AnkiFields = {
+  "Expression": "こっそり",
+  "ExpressionFurigana": "こっそり[ ]",
+  "ExpressionReading": "",
+  "ExpressionAudio": "<a class=\"replay-button soundLink\" href=\"#\" onclick=\"pycmd('play:a:0'); return false;\">\n    <svg class=\"playImage\" viewBox=\"0 0 64 64\" version=\"1.1\">\n        <circle cx=\"32\" cy=\"32\" r=\"29\"></circle>\n        <path d=\"M56.502,32.301l-37.502,20.101l0.329,-40.804l37.173,20.703Z\"></path>\n    </svg>\n</a>",
+  "SelectionText": "【JMdict (English)】<br>• stealthily<br>• secretly<br>• in secret",
+  "MainDefinition": "",
+  "DefinitionPicture": "",
+  "Sentence": "どうしてもって言うから台所からコッソリもってきたけど．．．",
+  "SentenceFurigana": "",
+  "SentenceAudio": "",
+  "Picture": "<img src=\"jidoujisho-20230507t224813_8120658124872840093.webp\">",
+  "Glossary": "",
+  "Hint": "",
+  "IsWordAndSentenceCard": "",
+  "IsClickCard": "",
+  "IsSentenceCard": "",
+  "IsAudioCard": "",
+  "PitchPosition": "",
+  "PitchCategories": "",
+  "Frequency": "",
+  "FreqSort": "",
+  "MiscInfo": "",
+  "Tags": "Yuuna",
+  "furigana:ExpressionFurigana": "<ruby><rb>こっそり</rb><rt> </rt></ruby>",
+  "kana:ExpressionFurigana": "",
+  "furigana:Sentence": "どうしてもって言うから台所からコッソリもってきたけど．．．",
+  "kanji:Sentence": "どうしてもって言うから台所からコッソリもってきたけど．．．",
+  "furigana:SentenceFurigana": "",
+  "kana:SentenceFurigana": ""
+}

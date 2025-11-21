@@ -132,16 +132,14 @@
 
   .picture-field-background {
     @apply [&_*:not(img)]:contents;
-    @apply [&_img]:absolute [&_img]:size-full [&_img]:object-cover [&_img]:object-center;
-    @apply [&_img]:scale-110 [&_img]:filter [&_img]:brightness-50 [&_img]:blur-[16px];
     @apply [&_:not(:first-child)]:hidden;
+    @apply absolute size-full [&_img]:size-full [&_img]:object-cover [&_img]:scale-110 [&_img]:filter [&_img]:brightness-50 [&_img]:blur-[16px];
   }
 
   .picture-field {
     @apply [&_*:not(img)]:contents;
-    @apply relative h-full cursor-pointer;
-    @apply [&_img]:h-48 sm:[&_img]:h-full [&_img]:object-contain [&_img]:mx-auto;
-    @apply [&_img]:hover:filter-none;
+    @apply [&_:not(:first-child)]:hidden;
+    @apply relative h-48 sm:h-56 cursor-pointer [&_img]:h-full [&_img]:object-contain [&_img]:hover:filter-none;
     &[data-nsfw="true"],
     &[data-tags~="nsfw"],
     &[data-tags~="NSFW"],
@@ -151,7 +149,6 @@
     &[data-transition="true"] {
       @apply [&_img]:transition-[filter];
     }
-    @apply [&_:not(:first-child)]:hidden;
   }
 
   .picture-field:hover {
