@@ -201,8 +201,15 @@
   font-size: 16px;
 }
 
+*,
+:after,
+:before,
+::backdrop {
+  box-sizing: border-box;
+}
+
 body {
-  margin: 0rem;
+  margin: 0;
   background: var(--color-base-100);
 }
 
@@ -220,7 +227,8 @@ body {
 
 @media (min-width: 40rem) {
   *::-webkit-scrollbar {
-    width: 10px;
+    width: 10px !important;
+    border-radius: 0 !important;
   }
 }
 
