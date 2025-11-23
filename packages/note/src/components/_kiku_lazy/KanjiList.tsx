@@ -1,5 +1,5 @@
 import { createSignal, For, onMount, Show } from "solid-js";
-import { useCardStore } from "#/components/shared/CardContext";
+import { useCardContext } from "#/components/shared/CardContext";
 import type { Kanji } from "#/types";
 import { useNavigationTransition } from "#/util/hooks";
 import { ArrowLeftIcon } from "./Icons";
@@ -8,7 +8,7 @@ export default function KanjiList(props: {
   onBackClick?: () => void;
   onNextClick?: (noteId: number) => void;
 }) {
-  const [card, setCard] = useCardStore();
+  const [$card, $setCard] = useCardContext();
   const navigate = useNavigationTransition();
 
   return (
@@ -22,39 +22,39 @@ export default function KanjiList(props: {
         </div>
         <div class="flex flex-row gap-2 items-center"></div>
       </div>
-      <Show when={card.selectedSimilarKanji}>
+      <Show when={$card.selectedSimilarKanji}>
         <div class="flex flex-col items-center gap-2">
           <div class="text-lg text-base-content-calm">Similar Kanji</div>
           <div class="flex justify-center text-7xl font-secondary ">
-            {card.selectedSimilarKanji}
+            {$card.selectedSimilarKanji}
           </div>
         </div>
       </Show>
       <div class="flex flex-col gap-2 sm:gap-4 ">
         <For
           each={
-            card.selectedSimilarKanji
-              ? Object.entries(card.kanji[card.selectedSimilarKanji].similar)
-              : Object.entries(card.kanji)
+            $card.selectedSimilarKanji
+              ? Object.entries($card.kanji[$card.selectedSimilarKanji].similar)
+              : Object.entries($card.kanji)
           }
         >
           {([kanji, data]) => {
             return (
               <div class="collapse bg-base-200 border border-base-300 animate-fade-in">
-                <input type="checkbox" checked={!card.selectedSimilarKanji} />
+                <input type="checkbox" checked={!$card.selectedSimilarKanji} />
                 <div class="collapse-title justify-between flex items-center ps-2 sm:ps-4 pe-2 sm:pe-4 py-2 sm:py-4">
                   <KanjiText kanji={kanji} />
                   <Show
                     when={
-                      !card.selectedSimilarKanji &&
-                      Object.keys(card.kanji[kanji].similar).length > 0
+                      !$card.selectedSimilarKanji &&
+                      Object.keys($card.kanji[kanji].similar).length > 0
                     }
                   >
                     <div
                       class="flex gap-2 items-center btn btn-sm sm:btn-md z-10"
                       on:click={() => {
                         navigate(
-                          () => setCard("selectedSimilarKanji", kanji),
+                          () => $setCard("selectedSimilarKanji", kanji),
                           "forward",
                         );
                       }}
@@ -131,10 +131,10 @@ export default function KanjiList(props: {
         </For>
       </div>
       <div class="flex justify-center items-center">
-        <Show when={card.manifest}>
+        <Show when={$card.manifest}>
           <div class="text-base-content-faint text-sm">
             Updated at{" "}
-            {new Date(card.manifest?.generatedAt ?? 0).toLocaleDateString()}
+            {new Date($card.manifest?.generatedAt ?? 0).toLocaleDateString()}
           </div>
         </Show>
       </div>
@@ -143,11 +143,11 @@ export default function KanjiList(props: {
 }
 
 function KanjiText(props: { kanji: string }) {
-  const [card] = useCardStore();
+  const [$card] = useCardContext();
   const [kanji, setKanji] = createSignal<Kanji>();
 
   onMount(async () => {
-    const nex = await card.worker?.nex;
+    const nex = await $card.worker?.nex;
     if (nex) {
       const lookup = await nex.lookup(props.kanji);
       setKanji(lookup);

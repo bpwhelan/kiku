@@ -7,7 +7,7 @@ import {
   Show,
 } from "solid-js";
 import { Portal } from "solid-js/web";
-import { useCardStore } from "#/components/shared/CardContext";
+import { useCardContext } from "#/components/shared/CardContext";
 import {
   defaultConfig,
   getCssVar,
@@ -67,7 +67,7 @@ export default function Settings(props: {
 }) {
   const bp = useBreakpoint();
   const [config] = useConfig();
-  const [card, setCard] = useCardStore();
+  const [$card, $setCard] = useCardContext();
 
   onMount(async () => {
     //NOTE: move this to somewhere higher
@@ -81,7 +81,7 @@ export default function Settings(props: {
     const version = await AnkiConnect.getVersion();
     if (version) {
       KIKU_STATE.logger.info("AnkiConnect version:", version);
-      setCard("ankiConnectAvailable", true);
+      $setCard("ankiConnectAvailable", true);
     }
   }
 
@@ -89,9 +89,9 @@ export default function Settings(props: {
     try {
       KIKU_STATE.logger.debug("Saving config:", config);
       await AnkiConnect.saveConfig(config);
-      card.toast.success("Saved! Restart Anki to apply changes.");
+      $card.toast.success("Saved! Restart Anki to apply changes.");
     } catch (e) {
-      card.toast.error(
+      $card.toast.error(
         `Failed to save config: ${e instanceof Error ? e.message : ""}`,
       );
     }
@@ -107,7 +107,7 @@ export default function Settings(props: {
           ></ArrowLeftIcon>
         </div>
         <div class="flex flex-row gap-2 items-center">
-          {card.ankiConnectAvailable && (
+          {$card.ankiConnectAvailable && (
             <>
               <div class="text-sm text-base-content-calm">
                 AnkiConnect is available
@@ -115,7 +115,7 @@ export default function Settings(props: {
               <div class="status status-success"></div>
             </>
           )}
-          {!card.ankiConnectAvailable && (
+          {!$card.ankiConnectAvailable && (
             <>
               <RefreshCwIcon
                 class="size-4 cursor-pointer text-base-content-soft"
@@ -123,7 +123,7 @@ export default function Settings(props: {
                   try {
                     await checkAnkiConnect();
                   } catch {
-                    card.toast.error("AnkiConnect is not available");
+                    $card.toast.error("AnkiConnect is not available");
                   }
                 }}
               />
@@ -158,11 +158,11 @@ export default function Settings(props: {
               <button
                 class="btn"
                 classList={{
-                  "btn-primary": card.ankiConnectAvailable,
+                  "btn-primary": $card.ankiConnectAvailable,
                   "btn-disabled bg-base-300 text-base-content-faint":
-                    !card.ankiConnectAvailable,
+                    !$card.ankiConnectAvailable,
                 }}
-                disabled={!card.ankiConnectAvailable}
+                disabled={!$card.ankiConnectAvailable}
                 on:click={saveConfig}
               >
                 Save
@@ -635,13 +635,13 @@ function AnkiDroidSettings() {
 
 function DebugSettings() {
   const [config, setConfig] = useConfig();
-  const [card] = useCardStore();
+  const [$card] = useCardContext();
   const { ankiFields } = useAnkiField<"back">();
   const [kikuFiles, setKikuFiles] = createSignal<string>();
   const [missingFiles, setMissingFiles] = createSignal<string>();
 
   createEffect(async () => {
-    if (card.ankiConnectAvailable) {
+    if ($card.ankiConnectAvailable) {
       const files = await AnkiConnect.getKikuFiles();
       setKikuFiles(JSON.stringify(files, null, 2));
       const missing = env.KIKU_IMPORTANT_FILES.filter((file) => {
@@ -666,10 +666,10 @@ function DebugSettings() {
     navigator.clipboard
       .writeText(text)
       .then(() => {
-        card.toast.success("Copied to clipboard!");
+        $card.toast.success("Copied to clipboard!");
       })
       .catch(() => {
-        card.toast.error(
+        $card.toast.error(
           "Copy to clipboard is not supported, you can select and CTRL+C manually.",
         );
       });

@@ -1,5 +1,5 @@
 import { createSignal, Match, onMount, Show, Switch } from "solid-js";
-import { useCardStore } from "#/components/shared/CardContext";
+import { useCardContext } from "#/components/shared/CardContext";
 import { useThemeTransition } from "#/util/hooks";
 import { nextTheme } from "#/util/theme";
 import { useConfig } from "../shared/ConfigContext";
@@ -19,7 +19,7 @@ export default function Header(props: {
   onBackClick?: () => void;
   side: "back" | "front";
 }) {
-  const [card] = useCardStore();
+  const [$card] = useCardContext();
   const [config, setConfig] = useConfig();
   const [generalStore] = useGeneralContext();
   const [startupTime, setStartupTime] = createSignal<number | null>(null);
@@ -39,7 +39,7 @@ export default function Header(props: {
             on:click={props.onBackClick}
           ></ArrowLeftIcon>
         </Show>
-        <Show when={!card.nested}>
+        <Show when={!$card.nested}>
           <div class="relative">
             <BoltIcon
               class="size-5"
@@ -79,8 +79,8 @@ export default function Header(props: {
         <Switch>
           <Match
             when={
-              !card.nested &&
-              card.kanjiStatus === "loading" &&
+              !$card.nested &&
+              $card.kanjiStatus === "loading" &&
               props.side === "back"
             }
           >
@@ -88,14 +88,14 @@ export default function Header(props: {
           </Match>
           <Match
             when={
-              !card.nested &&
-              card.kanjiStatus === "error" &&
+              !$card.nested &&
+              $card.kanjiStatus === "error" &&
               props.side === "back"
             }
           >
             <div class="status status-error animate-ping"></div>
           </Match>
-          <Match when={!card.nested && props.onKanjiClick}>
+          <Match when={!$card.nested && props.onKanjiClick}>
             <div
               class="text-base-content-soft cursor-pointer animate-fade-in-sm"
               on:click={props.onKanjiClick}

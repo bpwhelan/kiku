@@ -1,7 +1,7 @@
 import { createContext, createEffect, useContext } from "solid-js";
 import type { JSX } from "solid-js/jsx-runtime";
 import { createStore } from "solid-js/store";
-import { useCardStore } from "./CardContext";
+import { useCardContext } from "./CardContext";
 import { useAnkiField } from "./Context";
 
 export type GroupStore = {
@@ -20,13 +20,13 @@ const FieldGroupContext = createContext<{
 }>();
 export function FieldGroupContextProvider(props: { children: JSX.Element }) {
   const { ankiFields } = useAnkiField();
-  const [card] = useCardStore();
+  const [$card] = useCardContext();
 
   const sentenceField = () => {
-    if (card.side === "front") {
+    if ($card.side === "front") {
       return ankiFields["kanji:Sentence"];
     }
-    if (card.nested) return ankiFields.Sentence;
+    if ($card.nested) return ankiFields.Sentence;
     return ankiFields["furigana:SentenceFurigana"]
       ? ankiFields["furigana:SentenceFurigana"]
       : ankiFields["kanji:Sentence"];

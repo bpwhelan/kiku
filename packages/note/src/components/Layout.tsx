@@ -1,34 +1,34 @@
 import type { JSX } from "solid-js";
-import { useCardStore } from "#/components/shared/CardContext";
+import { useCardContext } from "#/components/shared/CardContext";
 import UseAnkiWeb from "./UseAnkiWeb";
 
 export function Layout(props: { children: JSX.Element }) {
-  const [card, setCard] = useCardStore();
-  if (card.nested) return props.children;
+  const [$card, $setCard] = useCardContext();
+  if ($card.nested) return props.children;
 
   return (
     <div
-      ref={(ref) => setCard("layoutRef", ref)}
+      ref={(ref) => $setCard("layoutRef", ref)}
       class="overflow-y-auto overflow-x-hidden gutter-stable h-svh font-primary transition-colors relative"
     >
       <UseAnkiWeb />
 
       <div
         class="flex flex-col gap-6 p-2 sm:p-4 bg-base-100 min-h-full max-w-4xl mx-auto"
-        ref={(ref) => setCard("contentRef", ref)}
+        ref={(ref) => $setCard("contentRef", ref)}
       >
         {props.children}
       </div>
-      {card.toastMessage && (
+      {$card.toastMessage && (
         <div class="toast toast-top toast-center">
           <div
             class="alert"
             classList={{
-              "alert-error": card.toastType === "error",
-              "alert-success": card.toastType === "success",
+              "alert-error": $card.toastType === "error",
+              "alert-success": $card.toastType === "success",
             }}
           >
-            <span>{card.toastMessage}</span>
+            <span>{$card.toastMessage}</span>
           </div>
         </div>
       )}

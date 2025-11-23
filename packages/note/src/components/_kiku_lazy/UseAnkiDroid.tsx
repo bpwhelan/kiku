@@ -1,6 +1,6 @@
 import { createEffect, createSignal, Match, onCleanup, Switch } from "solid-js";
 import { isServer, Portal } from "solid-js/web";
-import { useCardStore } from "#/components/shared/CardContext";
+import { useCardContext } from "#/components/shared/CardContext";
 import { useConfig } from "../shared/ConfigContext";
 import { CheckIcon, XIcon } from "./Icons";
 
@@ -32,8 +32,8 @@ export default function UseAnkiDroid() {
   let rightIconRef: SVGSVGElement | undefined;
   let leftIconRef: SVGSVGElement | undefined;
 
-  const [card] = useCardStore();
-  const el$ = () => card.contentRef;
+  const [$card] = useCardContext();
+  const el$ = () => $card.contentRef;
   const reverse = config.ankiDroidReverseSwipeDirection;
 
   const THRESHOLD = 60;
@@ -74,7 +74,7 @@ export default function UseAnkiDroid() {
     if (Math.abs(diffY) > DEADZONE || Math.abs(diffX) > DEADZONE) {
       isSwiping = true;
     }
-    if (card.side === "front") return;
+    if ($card.side === "front") return;
 
     // Detect vertical scroll intent
     if (
@@ -115,10 +115,10 @@ export default function UseAnkiDroid() {
 
   function handleTouchEnd() {
     isTouching = false;
-    if (card.side === "front") {
+    if ($card.side === "front") {
       if (isSwiping) return;
       ankiDroidAPI?.ankiShowAnswer();
-    } else if (card.side === "back") {
+    } else if ($card.side === "back") {
       setRightIconOffset(0);
       setLeftIconOffset(0);
 
@@ -141,7 +141,7 @@ export default function UseAnkiDroid() {
   createEffect(() => {
     const el = el$();
     if (el === undefined) return;
-    if (card.page !== "main" || card.nested) return;
+    if ($card.page !== "main" || $card.nested) return;
     el.addEventListener("touchstart", handleTouchStart, { passive: true });
     el.addEventListener("touchmove", handleTouchMove, { passive: false });
     el.addEventListener("touchend", handleTouchEnd, { passive: true });
@@ -155,7 +155,7 @@ export default function UseAnkiDroid() {
     });
   });
 
-  if (card.side === "front") return null;
+  if ($card.side === "front") return null;
 
   return (
     <Portal mount={KIKU_STATE.root}>

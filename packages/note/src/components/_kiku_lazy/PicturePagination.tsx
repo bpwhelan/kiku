@@ -1,10 +1,10 @@
-import { useCardStore } from "../shared/CardContext";
+import { useCardContext } from "../shared/CardContext";
 import { useFieldGroup } from "../shared/FieldGroupContext";
 import { ArrowLeftIcon } from "./Icons";
 
 export default function PicturePagination() {
   const { group, nextGroup, prevGroup, groupIds } = useFieldGroup();
-  const [card, setCard] = useCardStore();
+  const [$card, $setCard] = useCardContext();
 
   return (
     groupIds.size > 1 && (
@@ -13,7 +13,7 @@ export default function PicturePagination() {
           class="cursor-pointer size-5 sm:size-8 hover:scale-110 transition-transform"
           on:click={() => {
             prevGroup();
-            const el = card.sentenceAudios?.[0];
+            const el = $card.sentenceAudios?.[0];
             if (el) {
               el.click();
               if (el instanceof HTMLAudioElement) el.play();
@@ -25,7 +25,7 @@ export default function PicturePagination() {
           class="cursor-pointer size-5 sm:size-8 rotate-180 hover:scale-110 transition-transform"
           on:click={() => {
             nextGroup();
-            const el = card.sentenceAudios?.[0];
+            const el = $card.sentenceAudios?.[0];
             if (el) {
               el.click();
               if (el instanceof HTMLAudioElement) el.play();

@@ -52,7 +52,7 @@ export function CardStoreContextProvider(props: {
   side: "front" | "back";
 }) {
   let timeout: number;
-  const [card, setCard] = createStore<CardStore>({
+  const [$card, $setCard] = createStore<CardStore>({
     side: props.side,
     layoutRef: undefined,
     contentRef: undefined,
@@ -65,18 +65,18 @@ export function CardStoreContextProvider(props: {
     toast: {
       success: (message: string) => {
         if (timeout) clearTimeout(timeout);
-        setCard("toastType", "success");
-        setCard("toastMessage", message);
+        $setCard("toastType", "success");
+        $setCard("toastMessage", message);
         timeout = setTimeout(() => {
-          setCard("toastMessage", undefined);
+          $setCard("toastMessage", undefined);
         }, 3000);
       },
       error: (message: string) => {
         if (timeout) clearTimeout(timeout);
-        setCard("toastType", "error");
-        setCard("toastMessage", message);
+        $setCard("toastType", "error");
+        $setCard("toastMessage", message);
         timeout = setTimeout(() => {
-          setCard("toastMessage", undefined);
+          $setCard("toastMessage", undefined);
         }, 3000);
       },
     },
@@ -95,13 +95,13 @@ export function CardStoreContextProvider(props: {
   });
 
   return (
-    <CardStoreContext.Provider value={[card, setCard]}>
+    <CardStoreContext.Provider value={[$card, $setCard]}>
       {props.children}
     </CardStoreContext.Provider>
   );
 }
 
-export function useCardStore() {
+export function useCardContext() {
   const cardStore = useContext(CardStoreContext);
   if (!cardStore) throw new Error("Missing CardStoreContext");
   return cardStore;

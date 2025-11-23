@@ -1,4 +1,4 @@
-import { useCardStore } from "#/components/shared/CardContext";
+import { useCardContext } from "#/components/shared/CardContext";
 import { useConfig } from "#/components/shared/ConfigContext";
 import { useBreakpoint } from "#/components/shared/Context";
 
@@ -24,7 +24,7 @@ export function useViewTransition() {
 }
 
 export function useNavigationTransition() {
-  const [card, setCard] = useCardStore();
+  const [$card, $setCard] = useCardContext();
   const bp = useBreakpoint();
   const startViewTransition = useViewTransition();
 
@@ -36,7 +36,7 @@ export function useNavigationTransition() {
       if (typeof destination === "function") {
         destination();
       } else {
-        setCard("page", destination);
+        $setCard("page", destination);
       }
     };
 
@@ -59,10 +59,10 @@ export function useNavigationTransition() {
 export function useThemeTransition() {
   const [config, setConfig] = useConfig();
   const startViewTransition = useViewTransition();
-  const [card, setCard] = useCardStore();
+  const [$card, $setCard] = useCardContext();
 
   function changeTheme(theme: DaisyUITheme) {
-    if (card.kanjiStatus === "loading") {
+    if ($card.kanjiStatus === "loading") {
       setConfig("theme", theme);
     } else {
       startViewTransition(() => setConfig("theme", theme), {

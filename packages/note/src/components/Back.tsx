@@ -3,7 +3,7 @@ import { unwrap } from "solid-js/store";
 import { isServer } from "solid-js/web";
 import {
   CardStoreContextProvider,
-  useCardStore,
+  useCardContext,
 } from "#/components/shared/CardContext";
 import { type AnkiFields, ankiFieldsSkeleton } from "#/types";
 import type { DatasetProp } from "#/util/config";
@@ -36,7 +36,7 @@ const Lazy = {
 
 export function Back(props: { onExitNested?: () => void }) {
   const navigate = useNavigationTransition();
-  const [card, setCard] = useCardStore();
+  const [$card, $setCard] = useCardContext();
   const [config] = useConfig();
   const { ankiFields } = useAnkiField<"back">();
   const [generalStore, setGeneralStore] = useGeneralContext();
@@ -45,7 +45,7 @@ export function Back(props: { onExitNested?: () => void }) {
 
   onMount(() => {
     setTimeout(() => {
-      setCard("ready", true);
+      $setCard("ready", true);
       KIKU_STATE.relax = true;
       getPlugin().then((plugin) => {
         setGeneralStore("plugin", plugin);
@@ -66,18 +66,18 @@ export function Back(props: { onExitNested?: () => void }) {
           const nex = await worker.nex;
           const kanji = await nex.querySharedAndSimilar(kanjiList);
 
-          setCard("kanji", kanji);
-          setCard("kanjiStatus", "success");
-          setCard("worker", worker);
+          $setCard("kanji", kanji);
+          $setCard("kanjiStatus", "success");
+          $setCard("worker", worker);
 
           nex
             .manifest()
-            .then((manifest) => setCard("manifest", manifest))
+            .then((manifest) => $setCard("manifest", manifest))
             .catch(() => {
               KIKU_STATE.logger.warn("Failed to load manifest");
             });
         } catch (e) {
-          setCard("kanjiStatus", "error");
+          $setCard("kanjiStatus", "error");
           KIKU_STATE.logger.error(
             "Failed to load kanji information:",
             e instanceof Error ? e.message : "",
@@ -85,13 +85,13 @@ export function Back(props: { onExitNested?: () => void }) {
         }
       }
 
-      if (!card.nested) {
+      if (!$card.nested) {
         setKanji();
       }
     }, 100);
 
     const tags = ankiFields.Tags.split(" ");
-    setCard("isNsfw", tags.map((tag) => tag.toLowerCase()).includes("nsfw"));
+    $setCard("isNsfw", tags.map((tag) => tag.toLowerCase()).includes("nsfw"));
   });
 
   const pitchFieldDataset: () => DatasetProp = () => ({
@@ -103,7 +103,7 @@ export function Back(props: { onExitNested?: () => void }) {
   });
 
   const expressionInnerHtml = () => {
-    if (card.nested) {
+    if ($card.nested) {
       if (ankiFields.Expression && ankiFields.ExpressionReading) {
         return `<ruby>${ankiFields.Expression}<rt>${ankiFields.ExpressionReading}</rt></ruby>`;
       }
@@ -119,9 +119,9 @@ export function Back(props: { onExitNested?: () => void }) {
 
   return (
     <Layout>
-      {card.ready && !card.nested && <Lazy.UseAnkiDroid />}
+      {$card.ready && !$card.nested && <Lazy.UseAnkiDroid />}
       <Switch>
-        <Match when={card.page === "settings" && !card.nested && card.ready}>
+        <Match when={$card.page === "settings" && !$card.nested && $card.ready}>
           <Lazy.Settings
             onBackClick={() => {
               navigate("main", "back");
@@ -131,12 +131,12 @@ export function Back(props: { onExitNested?: () => void }) {
             }}
           />
         </Match>
-        <Match when={card.page === "kanji" && !card.nested && card.ready}>
+        <Match when={$card.page === "kanji" && !$card.nested && $card.ready}>
           <Lazy.KanjiList
             onBackClick={() => {
-              if (card.selectedSimilarKanji) {
+              if ($card.selectedSimilarKanji) {
                 navigate(
-                  () => setCard("selectedSimilarKanji", undefined),
+                  () => $setCard("selectedSimilarKanji", undefined),
                   "back",
                 );
               } else {
@@ -144,10 +144,10 @@ export function Back(props: { onExitNested?: () => void }) {
               }
             }}
             onNextClick={(noteId) => {
-              const shared = Object.values(card.kanji).flatMap(
+              const shared = Object.values($card.kanji).flatMap(
                 (data) => data.shared,
               );
-              const similar = Object.values(card.kanji).flatMap((data) =>
+              const similar = Object.values($card.kanji).flatMap((data) =>
                 Object.values(data.similar).flat(),
               );
               const notes = [...shared, ...similar];
@@ -163,13 +163,13 @@ export function Back(props: { onExitNested?: () => void }) {
                 Tags: note.tags.join(" "),
               };
 
-              setCard("nestedAnkiFields", ankiFields);
+              $setCard("nestedAnkiFields", ankiFields);
               navigate("nested", "forward");
             }}
           />
         </Match>
-        <Match when={card.page === "nested" && !card.nested && card.ready}>
-          <AnkiFieldContextProvider ankiFields={card.nestedAnkiFields}>
+        <Match when={$card.page === "nested" && !$card.nested && $card.ready}>
+          <AnkiFieldContextProvider ankiFields={$card.nestedAnkiFields}>
             <CardStoreContextProvider nested side="back">
               <FieldGroupContextProvider>
                 <Back
@@ -181,9 +181,9 @@ export function Back(props: { onExitNested?: () => void }) {
             </CardStoreContextProvider>
           </AnkiFieldContextProvider>
         </Match>
-        <Match when={card.page === "main"}>
+        <Match when={$card.page === "main"}>
           <div class="flex justify-between flex-row h-5 min-h-5">
-            {card.ready && (
+            {$card.ready && (
               <Lazy.Header
                 side="back"
                 onSettingsClick={() => {
@@ -191,8 +191,8 @@ export function Back(props: { onExitNested?: () => void }) {
                 }}
                 onBackClick={props.onExitNested}
                 onKanjiClick={
-                  Object.keys(card.kanji).length > 0 &&
-                  Object.values(card.kanji).flatMap((data) => [
+                  Object.keys($card.kanji).length > 0 &&
+                  Object.values($card.kanji).flatMap((data) => [
                     ...data.shared,
                     ...Object.values(data.similar),
                   ]).length > 0
@@ -224,7 +224,7 @@ export function Back(props: { onExitNested?: () => void }) {
                   class={`mt-6 flex gap-4 pitch pitch-field`}
                   {...pitchFieldDataset()}
                 >
-                  {ankiFields.PitchPosition && card.ready ? (
+                  {ankiFields.PitchPosition && $card.ready ? (
                     <Suspense fallback={<span>&nbsp;</span>}>
                       <Lazy.Pitches />
                     </Suspense>
@@ -235,7 +235,7 @@ export function Back(props: { onExitNested?: () => void }) {
                   )}
                 </div>
                 <div class="hidden sm:block sm:h-8 sm:mt-2">
-                  {card.ready && (
+                  {$card.ready && (
                     <div class="animate-fade-in-sm flex gap-2">
                       <Lazy.AudioButtons position={1} />
                     </div>
@@ -245,17 +245,17 @@ export function Back(props: { onExitNested?: () => void }) {
               <PictureSection />
             </div>
             <div class="flex justify-between text-base-content-soft items-center gap-2 animate-fade-in h-5 sm:h-8">
-              {card.ready && <Lazy.PicturePagination />}
+              {$card.ready && <Lazy.PicturePagination />}
             </div>
           </div>
-          {card.ready && (
+          {$card.ready && (
             <Lazy.BackBody
               onDefinitionPictureClick={(picture) => {
-                setCard("imageModal", picture);
+                $setCard("imageModal", picture);
               }}
             />
           )}
-          {card.ready && (
+          {$card.ready && (
             <>
               <Lazy.BackFooter tags={tags} />
               <Lazy.AudioButtons position={2} />
@@ -263,10 +263,10 @@ export function Back(props: { onExitNested?: () => void }) {
           )}
         </Match>
       </Switch>
-      {card.ready && (
+      {$card.ready && (
         <Lazy.PictureModal
-          img={card.imageModal}
-          on:click={() => setCard("imageModal", undefined)}
+          img={$card.imageModal}
+          on:click={() => $setCard("imageModal", undefined)}
         />
       )}
     </Layout>
@@ -274,13 +274,13 @@ export function Back(props: { onExitNested?: () => void }) {
 }
 
 function PictureSection() {
-  const [card, setCard] = useCardStore();
+  const [$card, $setCard] = useCardContext();
   const { group } = useFieldGroup();
 
   const pictureFieldDataset: () => DatasetProp = () => ({
-    "data-transition": card.ready ? "true" : undefined,
+    "data-transition": $card.ready ? "true" : undefined,
     "data-tags": "{{Tags}}",
-    "data-nsfw": card.isNsfw ? "true" : "false",
+    "data-nsfw": $card.isNsfw ? "true" : "false",
   });
 
   return (
@@ -294,7 +294,7 @@ function PictureSection() {
       <div
         class="picture-field"
         on:click={() => {
-          setCard("imageModal", group.pictureField);
+          $setCard("imageModal", group.pictureField);
         }}
         {...pictureFieldDataset()}
         innerHTML={isServer ? undefined : group.pictureField}
