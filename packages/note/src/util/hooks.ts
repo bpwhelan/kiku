@@ -1,7 +1,13 @@
+import { createEffect, onMount } from "solid-js";
+import { unwrap } from "solid-js/store";
+import { useAnkiFieldContext } from "#/components/shared/AnkiFieldsContext";
 import { useBreakpointContext } from "#/components/shared/BreakpointContext";
 import { useCardContext } from "#/components/shared/CardContext";
 import { useConfigContext } from "#/components/shared/ConfigContext";
-
+import { useGeneralContext } from "#/components/shared/GeneralContext";
+import { WorkerClient } from "#/worker/client";
+import { env, extractKanji } from "./general";
+import { getPlugin } from "./plugin";
 import type { DaisyUITheme } from "./theme";
 
 export function useViewTransition() {
@@ -75,4 +81,59 @@ export function useThemeTransition() {
     }
   }
   return changeTheme;
+}
+
+export function useKanji() {
+  const [$config] = useConfigContext();
+  const [$card, $setCard] = useCardContext();
+  const { ankiFields } = useAnkiFieldContext<"back">();
+
+  let set = false;
+  async function setKanji() {
+    set = true;
+    try {
+      const kanjiList = extractKanji(
+        ankiFields.ExpressionFurigana
+          ? ankiFields["furigana:ExpressionFurigana"]
+          : ankiFields.Expression,
+      );
+      const readingList = ankiFields.ExpressionReading
+        ? [ankiFields.ExpressionReading]
+        : [];
+      const worker = new WorkerClient({
+        env: env,
+        config: unwrap($config),
+        assetsPath: import.meta.env.DEV ? "" : KIKU_STATE.assetsPath,
+      });
+      const nex = await worker.nex;
+      const { kanjiResult, readingResult } = await nex.querySharedAndSimilar({
+        kanjiList,
+        readingList,
+      });
+
+      $setCard("kanji", kanjiResult);
+      $setCard("sameReadingNote", readingResult[ankiFields.ExpressionReading]);
+      $setCard("kanjiStatus", "success");
+      $setCard("worker", worker);
+
+      nex
+        .manifest()
+        .then((manifest) => $setCard("manifest", manifest))
+        .catch(() => {
+          KIKU_STATE.logger.warn("Failed to load manifest");
+        });
+    } catch (e) {
+      $setCard("kanjiStatus", "error");
+      KIKU_STATE.logger.error(
+        "Failed to load kanji information:",
+        e instanceof Error ? e.message : "",
+      );
+    }
+  }
+
+  createEffect(() => {
+    if (!set && !$card.nested && $card.ready) {
+      setKanji();
+    }
+  });
 }

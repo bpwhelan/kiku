@@ -8,7 +8,7 @@ import {
 import { type AnkiFields, ankiFieldsSkeleton } from "#/types";
 import type { DatasetProp } from "#/util/config";
 import { env, extractKanji } from "#/util/general";
-import { useNavigationTransition } from "#/util/hooks";
+import { useKanji, useNavigationTransition } from "#/util/hooks";
 import { getPlugin } from "#/util/plugin";
 import { WorkerClient } from "#/worker/client";
 import { Layout } from "./Layout";
@@ -40,12 +40,12 @@ const Lazy = {
 export function Back(props: { onExitNested?: () => void }) {
   const navigate = useNavigationTransition();
   const [$card, $setCard] = useCardContext();
-  const [$config] = useConfigContext();
   const { ankiFields } = useAnkiFieldContext<"back">();
   const [$general, $setGeneral] = useGeneralContext();
 
   const tags = ankiFields.Tags.split(" ");
 
+  useKanji();
   onMount(() => {
     setTimeout(() => {
       $setCard("ready", true);
@@ -53,55 +53,6 @@ export function Back(props: { onExitNested?: () => void }) {
       getPlugin().then((plugin) => {
         $setGeneral("plugin", plugin);
       });
-
-      async function setKanji() {
-        try {
-          const kanjiList = extractKanji(
-            ankiFields.ExpressionFurigana
-              ? ankiFields["furigana:ExpressionFurigana"]
-              : ankiFields.Expression,
-          );
-          const readingList = ankiFields.ExpressionReading
-            ? [ankiFields.ExpressionReading]
-            : [];
-          const worker = new WorkerClient({
-            env: env,
-            config: unwrap($config),
-            assetsPath: import.meta.env.DEV ? "" : KIKU_STATE.assetsPath,
-          });
-          const nex = await worker.nex;
-          const { kanjiResult, readingResult } =
-            await nex.querySharedAndSimilar({
-              kanjiList,
-              readingList,
-            });
-
-          $setCard("kanji", kanjiResult);
-          $setCard(
-            "sameReadingNote",
-            readingResult[ankiFields.ExpressionReading],
-          );
-          $setCard("kanjiStatus", "success");
-          $setCard("worker", worker);
-
-          nex
-            .manifest()
-            .then((manifest) => $setCard("manifest", manifest))
-            .catch(() => {
-              KIKU_STATE.logger.warn("Failed to load manifest");
-            });
-        } catch (e) {
-          $setCard("kanjiStatus", "error");
-          KIKU_STATE.logger.error(
-            "Failed to load kanji information:",
-            e instanceof Error ? e.message : "",
-          );
-        }
-      }
-
-      if (!$card.nested) {
-        setKanji();
-      }
     }, 100);
 
     const tags = ankiFields.Tags.split(" ");
