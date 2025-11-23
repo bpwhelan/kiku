@@ -111,7 +111,8 @@ export function Back(props: { onExitNested?: () => void }) {
               const similar = Object.values($card.kanji).flatMap((data) =>
                 Object.values(data.similar).flat(),
               );
-              const notes = [...shared, ...similar];
+              const sameReading = $card.sameReadingNote ?? [];
+              const notes = [...shared, ...similar, ...sameReading];
               const note = notes.find((note) => note.noteId === noteId);
               if (!note) throw new Error("Note not found");
               const ankiFields: AnkiFields = {
