@@ -100,13 +100,51 @@ export default function Header(props: {
               class="text-base-content-soft cursor-pointer animate-fade-in-sm"
               on:click={props.onKanjiClick}
             >
-              漢字
+              <KanjiPageIndicator />
             </div>
           </Match>
         </Switch>
         {props.side === "back" && <Frequency />}
       </div>
     </>
+  );
+}
+
+function KanjiPageIndicator() {
+  const [$card] = useCardContext();
+
+  function KanjiIndicator() {
+    return Object.entries($card.kanji).map(([kanji, data]) => {
+      return (
+        <div class="flex gap-0.5 items-start">
+          <span>{kanji}</span>
+          <span class="bg-base-200 p-0.5 leading-none text-sm rounded-sm">
+            {data.shared.length}
+          </span>
+        </div>
+      );
+    });
+  }
+
+  function SameReadingIndicator() {
+    return (
+      <div class="flex gap-0.5 items-start">
+        <span>読</span>
+        <span class="bg-base-200 p-0.5 leading-none text-sm rounded-sm">
+          {$card.sameReadingNote?.length ?? 0}
+        </span>
+      </div>
+    );
+  }
+
+  return (
+    <div class="flex gap-2 items-center">
+      <KanjiIndicator />
+      <Show when={$card.sameReadingNote?.length}>
+        <span>•</span>
+        <SameReadingIndicator />
+      </Show>
+    </div>
   );
 }
 
