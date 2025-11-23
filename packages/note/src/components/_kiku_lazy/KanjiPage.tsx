@@ -132,8 +132,6 @@ function KanjiCollapsible(props: {
     return Array.isArray(data$) ? data$ : data$.shared;
   };
 
-  if (theData().length === 0) return null;
-
   return (
     <div class="collapse bg-base-200 border border-base-300 animate-fade-in">
       <input type="checkbox" checked={!$card.selectedSimilarKanji} />
