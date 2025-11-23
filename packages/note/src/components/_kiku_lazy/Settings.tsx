@@ -192,7 +192,15 @@ function GeneralSettings() {
       </div>
       <div class="grid grid-cols-[repeat(auto-fit,minmax(20rem,1fr))] rounded-box gap-4 p-2">
         <fieldset class="fieldset">
-          <legend class="fieldset-legend">Volume</legend>
+          <legend class="fieldset-legend">
+            Volume
+            <div
+              class="tooltip"
+              data-tip="Controls the volume of audio played in the webview (Desktop only)."
+            >
+              <InfoIcon class="size-4 text-base-content-calm" />
+            </div>
+          </legend>
 
           <input
             on:change={(e) => {
@@ -243,7 +251,7 @@ function GeneralSettings() {
             Prefer AnkiConnect
             <div
               class="tooltip"
-              data-tip="Query notes via AnkiConnect instead of the notes cache. Desktop only."
+              data-tip="Query notes via AnkiConnect instead of the notes cache (Desktop only)."
             >
               <InfoIcon class="size-4 text-base-content-calm" />
             </div>
