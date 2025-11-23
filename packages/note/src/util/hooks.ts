@@ -109,6 +109,7 @@ export function useKanji() {
       const { kanjiResult, readingResult } = await nex.querySharedAndSimilar({
         kanjiList,
         readingList,
+        ankiFields,
       });
 
       $setCard("kanji", kanjiResult);

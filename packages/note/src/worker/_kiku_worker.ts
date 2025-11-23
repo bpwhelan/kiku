@@ -1,4 +1,4 @@
-import type { AnkiNote, Kanji, KikuNotesManifest } from "#/types";
+import type { AnkiFields, AnkiNote, Kanji, KikuNotesManifest } from "#/types";
 import type { KikuConfig } from "#/util/config";
 import type { Env } from "#/util/general";
 
@@ -196,9 +196,11 @@ export class Nex {
   async querySharedAndSimilar({
     kanjiList,
     readingList,
+    ankiFields,
   }: {
     kanjiList: string[];
     readingList: string[];
+    ankiFields: AnkiFields;
   }) {
     const similarKanji: Record<string, string[]> = Object.fromEntries(
       await Promise.all(
@@ -219,18 +221,36 @@ export class Nex {
       { shared: AnkiNote[]; similar: Record<string, AnkiNote[]> }
     > = {};
 
+    const filterSameNote = (note: AnkiNote) => {
+      if (
+        note.fields.Expression.value === ankiFields.Expression &&
+        note.fields.Picture.value === ankiFields.Picture &&
+        note.fields.Sentence.value === ankiFields.Sentence &&
+        note.fields.MainDefinition.value === ankiFields.MainDefinition &&
+        note.fields.Glossary.value === ankiFields.Glossary &&
+        note.fields.SelectionText.value === ankiFields.SelectionText
+      )
+        return false;
+      return true;
+    };
+
     for (const kanji of kanjiList) {
       const similars = similarKanji[kanji] ?? [];
 
       kanjiResult[kanji] = {
-        shared: kanjiListResult[kanji] ?? [],
+        shared: kanjiListResult[kanji]?.filter(filterSameNote) ?? [],
         similar: Object.fromEntries(
           similars
             .filter((k) => kanjiListResult[k])
-            .map((k) => [k, kanjiListResult[k]]),
+            .map((k) => [k, kanjiListResult[k]?.filter(filterSameNote)]),
         ),
       };
     }
+
+    readingList.forEach((reading) => {
+      readingListResult[reading] =
+        readingListResult[reading]?.filter(filterSameNote) ?? [];
+    });
 
     return { kanjiResult, readingResult: readingListResult };
   }
