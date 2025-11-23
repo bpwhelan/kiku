@@ -32,7 +32,7 @@ export default function Header(props: {
 
   return (
     <>
-      <div class="flex gap-2 items-center animate-fade-in-sm">
+      <div class="flex gap-1 sm:gap-2 items-center animate-fade-in-sm">
         <Show when={props.onBackClick}>
           <ArrowLeftIcon
             class="size-5 cursor-pointer text-base-content-soft"
@@ -55,7 +55,7 @@ export default function Header(props: {
           </div>
           <Show when={$config.showTheme}>
             <div
-              class="flex gap-2 items-center cursor-pointer"
+              class="flex gap-1 sm:gap-2 items-center cursor-pointer"
               on:click={() => {
                 changeTheme(nextTheme());
               }}
@@ -75,7 +75,7 @@ export default function Header(props: {
           </Show>
         </Show>
       </div>
-      <div class="flex gap-2 items-center">
+      <div class="flex gap-1 sm:gap-2 items-center">
         <Switch>
           <Match
             when={
@@ -113,7 +113,9 @@ export default function Header(props: {
 function KanjiPageIndicator() {
   const [$card] = useCardContext();
 
-  const length = () => Object.entries($card.kanji).length;
+  const length = () =>
+    Object.entries($card.kanji).length +
+    ($card.sameReadingNote?.length ? 1 : 0);
 
   function KanjiIndicator() {
     return Object.entries($card.kanji).map(([kanji, data]) => {
@@ -123,8 +125,8 @@ function KanjiPageIndicator() {
           <span
             class="bg-base-200 leading-none text-xs sm:text-sm rounded-sm"
             classList={{
-              "p-0.5": length() <= 3,
-              "p-0": length() > 3,
+              "p-0.5": length() <= 4,
+              "p-0": length() > 4,
             }}
           >
             {data.shared.length}
@@ -141,8 +143,8 @@ function KanjiPageIndicator() {
         <span
           class="bg-base-200 leading-none text-xs sm:text-sm rounded-sm"
           classList={{
-            "p-0.5": length() <= 3,
-            "p-0": length() > 3,
+            "p-0.5": length() <= 4,
+            "p-0": length() > 4,
           }}
         >
           {$card.sameReadingNote?.length ?? 0}
@@ -155,8 +157,8 @@ function KanjiPageIndicator() {
     <div
       class="flex sm:gap-2 items-center flex-wrap"
       classList={{
-        "gap-1": length() <= 3,
-        "gap-0": length() > 3,
+        "gap-1": length() <= 4,
+        "gap-0": length() > 4,
       }}
     >
       <KanjiIndicator />
@@ -171,7 +173,7 @@ function KanjiPageIndicator() {
 function Frequency() {
   const { ankiFields } = useAnkiFieldContext<"back">();
   return (
-    <div class="flex gap-2 items-center animate-fade-in-sm relative hover:[&_#frequency]:block z-10">
+    <div class="flex gap-1 sm:gap-2 items-center animate-fade-in-sm relative hover:[&_#frequency]:block z-10">
       <div
         class="text-base-content-soft text-sm sm:text-base"
         innerHTML={ankiFields.FreqSort}
