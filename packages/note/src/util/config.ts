@@ -2,7 +2,6 @@ import { type WebFont, webFonts } from "./fonts";
 import { type DaisyUITheme, daisyUIThemes } from "./theme";
 
 export type KikuConfig = {
-  kikuRoot: "true";
   theme: DaisyUITheme;
   webFontPrimary: WebFont;
   systemFontPrimary: string;
@@ -31,7 +30,6 @@ export type KikuConfig = {
 
 // biome-ignore format: this looks nicer
 export const defaultConfig: KikuConfig = {
-  kikuRoot: "true",
   theme: "light",
   webFontPrimary: "Klee One",
   systemFontPrimary: "'Inter', 'SF Pro Display', 'Liberation Sans', 'Segoe UI', 'Hiragino Kaku Gothic ProN', 'Noto Sans CJK JP', 'Noto Sans JP', 'Meiryo', HanaMinA, HanaMinB, sans-serif",
@@ -78,7 +76,7 @@ export const tailwindFontSizeVar = {
   "9xl": { fontSize: "var(--text-9xl)", lineHeight: "var(--text-9xl--line-height)", },
 } as const;
 
-const rootDatasetArray = ["kikuRoot", "theme"] as const;
+const rootDatasetArray = ["theme"] as const;
 export type RootDatasetKey = (typeof rootDatasetArray)[number];
 export type RootDataset = Partial<Record<RootDatasetKey, string>>;
 export const rootDatasetConfigWhitelist = new Set<RootDatasetKey>(
@@ -97,7 +95,6 @@ export function validateConfig(config: KikuConfig): KikuConfig {
 
     // biome-ignore format: this looks nicer
     const valid: KikuConfig = {
-      kikuRoot: "true",
       theme: daisyUIThemes.includes(config.theme) ? config.theme : defaultConfig.theme,
       webFontPrimary: webFonts.includes(config.webFontPrimary) ? config.webFontPrimary : defaultConfig.webFontPrimary,
       systemFontPrimary: typeof config.systemFontPrimary === "string" ? config.systemFontPrimary : defaultConfig.systemFontPrimary,
@@ -159,7 +156,6 @@ export type CssVar = {
 
 // biome-ignore format: this looks nicer
 export type Dataset = {
-  "data-kiku-root": "true" | "false";
   "data-theme": string;
   //
   "data-field": string;

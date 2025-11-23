@@ -46,9 +46,7 @@ export async function init({
       kikuCss?.remove();
     }
 
-    const root =
-      document.getElementById("root") ??
-      document.querySelector("[data-kiku-root]");
+    const root = document.getElementById("kiku-root");
     if (!root) {
       const shadowParent = document.querySelector("#kiku-shadow-parent");
       if (shadowParent) return;

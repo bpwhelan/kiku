@@ -537,61 +537,58 @@ function FontSizeSettingsFieldset(props: {
   const [config, setConfig] = useConfig();
   const configValue = () => config[props.configKey] as TailwindSize;
 
-  if (config.kikuRoot)
-    return (
-      <div class="w-full">
-        <fieldset class="fieldset">
-          <legend class="fieldset-legend">
-            {props.label}{" "}
-            <UndoIcon
-              class="h-4 w-4 cursor-pointer"
-              classList={{
-                hidden:
-                  config[props.configKey] === defaultConfig[props.configKey],
-              }}
-              on:click={() => {
-                setConfig(props.configKey, defaultConfig[props.configKey]);
-              }}
-            />
-          </legend>
+  return (
+    <div class="w-full">
+      <fieldset class="fieldset">
+        <legend class="fieldset-legend">
+          {props.label}{" "}
+          <UndoIcon
+            class="h-4 w-4 cursor-pointer"
+            classList={{
+              hidden:
+                config[props.configKey] === defaultConfig[props.configKey],
+            }}
+            on:click={() => {
+              setConfig(props.configKey, defaultConfig[props.configKey]);
+            }}
+          />
+        </legend>
 
-          <div class="tooltip">
-            <div class="tooltip-content">
-              <div
-                class={`font-secondary`}
-                style={{
-                  "font-size": tailwindFontSizeVar[configValue()].fontSize,
-                  "line-height": tailwindFontSizeVar[configValue()].lineHeight,
-                }}
-              >
-                あ
-              </div>
-            </div>
-            <input
-              on:change={(e) => {
-                const target = e.target as HTMLInputElement;
-                const value = tailwindSize[
-                  Number(target.value)
-                ] as TailwindSize;
-                setConfig(props.configKey, value);
+        <div class="tooltip">
+          <div class="tooltip-content">
+            <div
+              class={`font-secondary`}
+              style={{
+                "font-size": tailwindFontSizeVar[configValue()].fontSize,
+                "line-height": tailwindFontSizeVar[configValue()].lineHeight,
               }}
-              type="range"
-              min="0"
-              max={(tailwindSize.length - 1).toString()}
-              value={tailwindSize.indexOf(configValue()).toString()}
-              class="range range-xs w-full "
-              step="1"
-            />
+            >
+              あ
+            </div>
           </div>
-          <div class="flex justify-between px-2 mt-1 text-xs">
-            <For each={tailwindSize}>{(_) => <span>|</span>}</For>
-          </div>
-          <div class="flex justify-between px-2 mt-1 text-xs">
-            <For each={tailwindSize}>{(label) => <span>{label}</span>}</For>
-          </div>
-        </fieldset>
-      </div>
-    );
+          <input
+            on:change={(e) => {
+              const target = e.target as HTMLInputElement;
+              const value = tailwindSize[Number(target.value)] as TailwindSize;
+              setConfig(props.configKey, value);
+            }}
+            type="range"
+            min="0"
+            max={(tailwindSize.length - 1).toString()}
+            value={tailwindSize.indexOf(configValue()).toString()}
+            class="range range-xs w-full "
+            step="1"
+          />
+        </div>
+        <div class="flex justify-between px-2 mt-1 text-xs">
+          <For each={tailwindSize}>{(_) => <span>|</span>}</For>
+        </div>
+        <div class="flex justify-between px-2 mt-1 text-xs">
+          <For each={tailwindSize}>{(label) => <span>{label}</span>}</For>
+        </div>
+      </fieldset>
+    </div>
+  );
 }
 
 function AnkiDroidSettings() {

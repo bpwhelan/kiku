@@ -229,7 +229,7 @@ body {
   }
 }
 
-[data-kiku-root] {
+#kiku-root {
   position: relative;
   overflow: hidden;
 }
