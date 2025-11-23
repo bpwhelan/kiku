@@ -12,6 +12,8 @@ import type { SetStoreFunction, Store } from "solid-js/store";
 import type { AnkiBackFields, AnkiFields, AnkiFrontFields } from "#/types";
 import { type KikuConfig, updateConfigState } from "#/util/config";
 import { env, getAnkiFields } from "#/util/general";
+import type { DaisyUITheme } from "#/util/theme";
+import { useGeneralContext } from "./GeneralContextProvider";
 
 const ConfigContext =
   createContext<[Store<KikuConfig>, SetStoreFunction<KikuConfig>]>();
@@ -21,6 +23,9 @@ export function ConfigContextProvider(props: {
   value: [Store<KikuConfig>, SetStoreFunction<KikuConfig>];
 }) {
   const [config] = props.value;
+  const [generalStore, setGeneralStore] = useGeneralContext();
+
+  let initialTheme: DaisyUITheme | undefined;
   createEffect(() => {
     ({ ...config });
     KIKU_STATE.logger.debug("Updating config:", config);
@@ -30,6 +35,15 @@ export function ConfigContextProvider(props: {
       env.KIKU_CONFIG_SESSION_STORAGE_KEY,
       JSON.stringify(config),
     );
+    if (!initialTheme) {
+      initialTheme = config.theme;
+    } else if (initialTheme && initialTheme !== config.theme) {
+      sessionStorage.setItem(
+        env.KIKU_IS_THEME_CHANGED_SESSION_STORAGE_KEY,
+        "true",
+      );
+      setGeneralStore("isThemeChanged", true);
+    }
   });
 
   return (

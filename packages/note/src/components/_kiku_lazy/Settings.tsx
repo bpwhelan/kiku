@@ -23,6 +23,7 @@ import { env } from "#/util/general";
 import { useThemeTransition } from "#/util/hooks";
 import { daisyUIThemes } from "#/util/theme";
 import { useAnkiField, useBreakpoint, useConfig } from "../shared/Context";
+import { useGeneralContext } from "../shared/GeneralContextProvider";
 import {
   ArrowLeftIcon,
   ClipboardCopyIcon,
@@ -240,13 +241,23 @@ function GeneralSettings() {
 }
 
 function ThemeSettings() {
+  const [generalStore] = useGeneralContext();
   const [config, setConfig] = useConfig();
   const changeTheme = useThemeTransition();
 
   return (
     <div class="flex flex-col gap-4 animate-fade-in">
       <div class="text-2xl font-bold">Theme</div>
-      <div class="grid grid-cols-[repeat(auto-fit,minmax(10rem,1fr))] rounded-box gap-4 p-2">
+
+      <Show when={generalStore.isThemeChanged}>
+        <div role="alert" class="alert alert-warning">
+          <span>
+            A quick flash of the wrong theme may occur until you click Save and
+            restart Anki.
+          </span>
+        </div>
+      </Show>
+      <div class="grid grid-cols-[repeat(auto-fit,minmax(9rem,1fr))] rounded-box gap-4">
         {daisyUIThemes.map((theme) => {
           return (
             <div
@@ -265,22 +276,22 @@ function ThemeSettings() {
                   <div class="bg-base-100 col-span-4 col-start-2 row-span-3 row-start-1 flex flex-col gap-1 p-2">
                     <div class="font-bold">{capitalize(theme)}</div>
                     <div class="flex flex-wrap gap-1">
-                      <div class="bg-primary flex aspect-square w-5 items-center justify-center rounded lg:w-6">
+                      <div class="bg-primary flex aspect-square w-5 items-center justify-center rounded">
                         <div class="text-primary-content text-sm font-bold">
                           A
                         </div>
                       </div>
-                      <div class="bg-secondary flex aspect-square w-5 items-center justify-center rounded lg:w-6">
+                      <div class="bg-secondary flex aspect-square w-5 items-center justify-center rounded">
                         <div class="text-secondary-content text-sm font-bold">
                           A
                         </div>
                       </div>
-                      <div class="bg-accent flex aspect-square w-5 items-center justify-center rounded lg:w-6">
+                      <div class="bg-accent flex aspect-square w-5 items-center justify-center rounded">
                         <div class="text-accent-content text-sm font-bold">
                           A
                         </div>
                       </div>
-                      <div class="bg-neutral flex aspect-square w-5 items-center justify-center rounded lg:w-6">
+                      <div class="bg-neutral flex aspect-square w-5 items-center justify-center rounded">
                         <div class="text-neutral-content text-sm font-bold">
                           A
                         </div>

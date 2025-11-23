@@ -3,6 +3,7 @@ import { useCardStore } from "#/components/shared/CardContext";
 import { useThemeTransition } from "#/util/hooks";
 import { nextTheme } from "#/util/theme";
 import { useAnkiField, useConfig } from "../shared/Context";
+import { useGeneralContext } from "../shared/GeneralContextProvider";
 import {
   ArrowLeftIcon,
   BoltIcon,
@@ -19,6 +20,7 @@ export default function Header(props: {
 }) {
   const [card] = useCardStore();
   const [config, setConfig] = useConfig();
+  const [generalStore] = useGeneralContext();
   const [startupTime, setStartupTime] = createSignal<number | null>(null);
   const changeTheme = useThemeTransition();
 
@@ -37,14 +39,19 @@ export default function Header(props: {
           ></ArrowLeftIcon>
         </Show>
         <Show when={!card.nested}>
-          <BoltIcon
-            class="size-5"
-            classList={{
-              "text-base-content-soft cursor-pointer": props.side === "back",
-              "text-base-content-subtle-100": props.side === "front",
-            }}
-            on:click={props.onSettingsClick}
-          ></BoltIcon>
+          <div class="relative">
+            <BoltIcon
+              class="size-5"
+              classList={{
+                "text-base-content-soft cursor-pointer": props.side === "back",
+                "text-base-content-subtle-100": props.side === "front",
+              }}
+              on:click={props.onSettingsClick}
+            ></BoltIcon>
+            <Show when={generalStore.isThemeChanged}>
+              <div class="status status-warning absolute top-0 right-0 translate-x-0.5 -translate-y-0.5"></div>
+            </Show>
+          </div>
           <Show when={config.showTheme}>
             <div
               class="flex gap-2 items-center cursor-pointer"

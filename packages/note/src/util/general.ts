@@ -18,6 +18,7 @@ export const env = {
   KIKU_CARD_TYPE: "Mining",
   KIKU_CONFIG_FILE: "_kiku_config.json",
   KIKU_CONFIG_SESSION_STORAGE_KEY: "kiku-config",
+  KIKU_IS_THEME_CHANGED_SESSION_STORAGE_KEY: "kiku-is-theme-changed",
   KIKU_FRONT_FILE: "_kiku_front.html",
   KIKU_BACK_FILE: "_kiku_back.html",
   KIKU_STYLE_FILE: "_kiku_style.css",
