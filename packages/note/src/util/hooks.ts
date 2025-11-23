@@ -1,13 +1,11 @@
-import { createEffect, onMount } from "solid-js";
+import { createEffect } from "solid-js";
 import { unwrap } from "solid-js/store";
 import { useAnkiFieldContext } from "#/components/shared/AnkiFieldsContext";
 import { useBreakpointContext } from "#/components/shared/BreakpointContext";
 import { useCardContext } from "#/components/shared/CardContext";
 import { useConfigContext } from "#/components/shared/ConfigContext";
-import { useGeneralContext } from "#/components/shared/GeneralContext";
 import { WorkerClient } from "#/worker/client";
 import { env, extractKanji } from "./general";
-import { getPlugin } from "./plugin";
 import type { DaisyUITheme } from "./theme";
 
 export function useViewTransition() {
@@ -104,6 +102,9 @@ export function useKanji() {
         env: env,
         config: unwrap($config),
         assetsPath: import.meta.env.DEV ? "" : KIKU_STATE.assetsPath,
+        // preferAnkiConnect: !!KIKU_STATE.isAnkiDesktop,
+        //  TODO: configurable
+        preferAnkiConnect: false,
       });
       const nex = await worker.nex;
       const { kanjiResult, readingResult } = await nex.querySharedAndSimilar({

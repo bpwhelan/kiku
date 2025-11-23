@@ -72,6 +72,7 @@ export class Nex {
   assetsPath: string;
   env: Env;
   config: KikuConfig;
+  preferAnkiConnect: boolean;
 
   similar_kanji_min_score = 0.5;
   //biome-ignore format: this looks nicer
@@ -93,10 +94,12 @@ export class Nex {
     assetsPath: string;
     env: Env;
     config: KikuConfig;
+    preferAnkiConnect: boolean;
   }) {
     this.assetsPath = payload.assetsPath;
     this.env = payload.env;
     this.config = payload.config;
+    this.preferAnkiConnect = payload.preferAnkiConnect;
     ankiConnectPort = Number(this.config.ankiConnectPort);
   }
   async getSimilarKanji(kanji: string) {
@@ -137,7 +140,7 @@ export class Nex {
     kanjiList: string[];
     readingList: string[];
   }) {
-    try {
+    const queryWithNotesCache = async () => {
       const kanjiListResult: Record<string, AnkiNote[]> = {};
       const readingListResult: Record<string, AnkiNote[]> = {};
 
@@ -184,8 +187,22 @@ export class Nex {
       }
 
       return { kanjiListResult, readingListResult };
+    };
+
+    if (this.preferAnkiConnect) {
+      try {
+        return await AnkiConnect.queryFieldContains({
+          kanjiList,
+          readingList,
+        });
+      } catch {
+        return await queryWithNotesCache();
+      }
+    }
+
+    try {
+      return await queryWithNotesCache();
     } catch {
-      // √ fallback to AnkiConnect
       return await AnkiConnect.queryFieldContains({
         kanjiList,
         readingList,

@@ -244,6 +244,7 @@ declare global {
     assetsPath: string;
     logger: Logger;
     ankiDroidAPI?: AnkiDroidAPI;
+    isAnkiDesktop?: boolean;
   };
   var pycmd: () => void;
   var AnkiDroidJS: {

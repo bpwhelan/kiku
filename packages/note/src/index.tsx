@@ -26,6 +26,7 @@ globalThis.KIKU_STATE = {
   isAnkiWeb: window.location.origin.includes("ankiuser.net"),
   assetsPath: window.location.origin,
   logger,
+  isAnkiDesktop: typeof pycmd !== "undefined",
 };
 
 export async function init({

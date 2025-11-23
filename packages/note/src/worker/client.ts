@@ -32,7 +32,12 @@ export function wrap<T>(worker: Worker) {
 export class WorkerClient {
   nex: Promise<NexApi>;
 
-  constructor(payload: { env: Env; assetsPath: string; config: KikuConfig }) {
+  constructor(payload: {
+    env: Env;
+    assetsPath: string;
+    config: KikuConfig;
+    preferAnkiConnect: boolean;
+  }) {
     let worker: Worker;
     if (KIKU_STATE.assetsPath !== window.location.origin) {
       worker = new Worker(`${KIKU_STATE.assetsPath}/_kiku_worker.js`, {
