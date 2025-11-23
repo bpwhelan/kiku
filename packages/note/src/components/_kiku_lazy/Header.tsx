@@ -113,12 +113,20 @@ export default function Header(props: {
 function KanjiPageIndicator() {
   const [$card] = useCardContext();
 
+  const length = () => Object.entries($card.kanji).length;
+
   function KanjiIndicator() {
     return Object.entries($card.kanji).map(([kanji, data]) => {
       return (
-        <div class="flex gap-0.5 items-start">
+        <div class="flex gap-px sm:gap-0.5 items-start">
           <span>{kanji}</span>
-          <span class="bg-base-200 p-0.5 leading-none text-sm rounded-sm">
+          <span
+            class="bg-base-200 leading-none text-xs sm:text-sm rounded-sm"
+            classList={{
+              "p-0.5": length() <= 3,
+              "p-0": length() > 3,
+            }}
+          >
             {data.shared.length}
           </span>
         </div>
@@ -128,9 +136,15 @@ function KanjiPageIndicator() {
 
   function SameReadingIndicator() {
     return (
-      <div class="flex gap-0.5 items-start">
+      <div class="flex gap-px sm:gap-0.5 items-start">
         <span>読</span>
-        <span class="bg-base-200 p-0.5 leading-none text-sm rounded-sm">
+        <span
+          class="bg-base-200 leading-none text-xs sm:text-sm rounded-sm"
+          classList={{
+            "p-0.5": length() <= 3,
+            "p-0": length() > 3,
+          }}
+        >
           {$card.sameReadingNote?.length ?? 0}
         </span>
       </div>
@@ -138,7 +152,13 @@ function KanjiPageIndicator() {
   }
 
   return (
-    <div class="flex gap-2 items-center">
+    <div
+      class="flex sm:gap-2 items-center flex-wrap"
+      classList={{
+        "gap-1": length() <= 3,
+        "gap-0": length() > 3,
+      }}
+    >
       <KanjiIndicator />
       <Show when={$card.sameReadingNote?.length}>
         <span>•</span>
@@ -152,7 +172,10 @@ function Frequency() {
   const { ankiFields } = useAnkiFieldContext<"back">();
   return (
     <div class="flex gap-2 items-center animate-fade-in-sm relative hover:[&_#frequency]:block z-10">
-      <div class="text-base-content-soft" innerHTML={ankiFields.FreqSort}></div>
+      <div
+        class="text-base-content-soft text-sm sm:text-base"
+        innerHTML={ankiFields.FreqSort}
+      ></div>
       {ankiFields.Frequency && (
         <>
           <CircleChevronDownIcon class="size-5 text-base-content-soft" />
