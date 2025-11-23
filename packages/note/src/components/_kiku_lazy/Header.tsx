@@ -2,8 +2,9 @@ import { createSignal, Match, onMount, Show, Switch } from "solid-js";
 import { useCardStore } from "#/components/shared/CardContext";
 import { useThemeTransition } from "#/util/hooks";
 import { nextTheme } from "#/util/theme";
-import { useAnkiField, useConfig } from "../shared/Context";
-import { useGeneralContext } from "../shared/GeneralContextProvider";
+import { useConfig } from "../shared/ConfigContext";
+import { useAnkiField } from "../shared/Context";
+import { useGeneralContext } from "../shared/GeneralContext";
 import {
   ArrowLeftIcon,
   BoltIcon,

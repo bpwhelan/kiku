@@ -12,16 +12,13 @@ import { useNavigationTransition } from "#/util/hooks";
 import { getPlugin } from "#/util/plugin";
 import { WorkerClient } from "#/worker/client";
 import { Layout } from "./Layout";
-import {
-  AnkiFieldContextProvider,
-  useAnkiField,
-  useConfig,
-} from "./shared/Context";
+import { useConfig } from "./shared/ConfigContext";
+import { AnkiFieldContextProvider, useAnkiField } from "./shared/Context";
 import {
   FieldGroupContextProvider,
   useFieldGroup,
 } from "./shared/FieldGroupContext";
-import { useGeneralContext } from "./shared/GeneralContextProvider";
+import { useGeneralContext } from "./shared/GeneralContext";
 
 // biome-ignore format: this looks nicer
 const Lazy = {

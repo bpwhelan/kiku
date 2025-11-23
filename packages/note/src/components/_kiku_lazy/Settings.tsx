@@ -22,8 +22,9 @@ import { type WebFont, webFonts } from "#/util/fonts";
 import { env } from "#/util/general";
 import { useThemeTransition } from "#/util/hooks";
 import { daisyUIThemes } from "#/util/theme";
-import { useAnkiField, useBreakpoint, useConfig } from "../shared/Context";
-import { useGeneralContext } from "../shared/GeneralContextProvider";
+import { useConfig } from "../shared/ConfigContext";
+import { useAnkiField, useBreakpoint } from "../shared/Context";
+import { useGeneralContext } from "../shared/GeneralContext";
 import {
   ArrowLeftIcon,
   ClipboardCopyIcon,

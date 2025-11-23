@@ -6,8 +6,9 @@ import {
   Show,
 } from "solid-js";
 import h from "solid-js/h";
-import { useAnkiField, useConfig } from "../shared/Context";
-import { useGeneralContext } from "../shared/GeneralContextProvider";
+import { useConfig } from "../shared/ConfigContext";
+import { useAnkiField } from "../shared/Context";
+import { useGeneralContext } from "../shared/GeneralContext";
 import Sentence from "./Sentence";
 
 export default function BackBody(props: {

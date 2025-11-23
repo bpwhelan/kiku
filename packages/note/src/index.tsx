@@ -6,7 +6,6 @@ import { Front } from "./components/Front.tsx";
 import {
   AnkiFieldContextProvider,
   BreakpointContextProvider,
-  ConfigContextProvider,
 } from "./components/shared/Context.tsx";
 import {
   defaultConfig,
@@ -17,8 +16,9 @@ import {
 import { env } from "./util/general.ts";
 import "./styles/tailwind.css";
 import { CardStoreContextProvider } from "./components/shared/CardContext.tsx";
+import { ConfigContextProvider } from "./components/shared/ConfigContext.tsx";
 import { FieldGroupContextProvider } from "./components/shared/FieldGroupContext.tsx";
-import { GeneralContextProvider } from "./components/shared/GeneralContextProvider.tsx";
+import { GeneralContextProvider } from "./components/shared/GeneralContext.tsx";
 import { Logger } from "./util/logger.ts";
 
 const logger = new Logger();

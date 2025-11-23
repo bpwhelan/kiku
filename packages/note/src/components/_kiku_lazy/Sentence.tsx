@@ -3,7 +3,7 @@ import h from "solid-js/h";
 import { useCardStore } from "#/components/shared/CardContext";
 import { useAnkiField } from "../shared/Context";
 import { useFieldGroup } from "../shared/FieldGroupContext";
-import { useGeneralContext } from "../shared/GeneralContextProvider";
+import { useGeneralContext } from "../shared/GeneralContext";
 
 export default function Sentence() {
   const [card, setCard] = useCardStore();

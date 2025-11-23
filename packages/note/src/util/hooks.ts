@@ -1,5 +1,6 @@
 import { useCardStore } from "#/components/shared/CardContext";
-import { useBreakpoint, useConfig } from "#/components/shared/Context";
+import { useConfig } from "#/components/shared/ConfigContext";
+import { useBreakpoint } from "#/components/shared/Context";
 
 import type { DaisyUITheme } from "./theme";
 

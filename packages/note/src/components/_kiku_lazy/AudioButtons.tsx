@@ -1,7 +1,8 @@
 import { createEffect, For, Show } from "solid-js";
 import { Portal } from "solid-js/web";
 import { useCardStore } from "#/components/shared/CardContext";
-import { useAnkiField, useBreakpoint, useConfig } from "../shared/Context";
+import { useConfig } from "../shared/ConfigContext";
+import { useAnkiField, useBreakpoint } from "../shared/Context";
 import { useFieldGroup } from "../shared/FieldGroupContext";
 import { PlayIcon } from "./Icons";
 
