@@ -49,13 +49,18 @@ export async function init({
     const root =
       document.getElementById("root") ??
       document.querySelector("[data-kiku-root]");
-    if (!root) throw new Error("root not found");
+    if (!root) {
+      const shadowParent = document.querySelector("#kiku-shadow-parent");
+      if (shadowParent) return;
+      throw new Error("root not found");
+    }
     root.part.add("root-part");
     KIKU_STATE.root = root;
     logger.debug("rootDataset", root.dataset);
 
     const qa = document.querySelector("#qa");
     const shadowParent = document.createElement("div");
+    shadowParent.setAttribute("id", "kiku-shadow-parent");
     qa?.appendChild(shadowParent);
     const shadow = shadowParent.attachShadow({ mode: "open" });
     const style = qa?.querySelector("style");
