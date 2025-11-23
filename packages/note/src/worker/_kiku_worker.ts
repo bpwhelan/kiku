@@ -10,7 +10,7 @@ type SimilarKanjiDBs = Record<string, SimilarKanjiDB>;
 
 let ankiConnectPort = 8765;
 
-export const AnkiConnect = {
+const AnkiConnect = {
   invoke: async (action: string, params: Record<string, unknown> = {}) => {
     const res = await fetch(`http://127.0.0.1:${ankiConnectPort}`, {
       method: "POST",
@@ -19,42 +19,52 @@ export const AnkiConnect = {
     });
 
     const result = await res.json();
-    if (result.error) {
-      throw new Error(result.error);
-    }
+    if (result.error) throw new Error(result.error);
     return result;
   },
-  query: async (query: string) => {
-    AnkiConnect.invoke("findNotes", {
-      query: query,
-    });
-  },
-  queryKanji: async (kanjiList: string[]) => {
-    const result: Record<string, AnkiNote[]> = {};
-    const kanjiSet = new Set(kanjiList);
 
-    for (const kanji of kanjiSet) {
-      // Query only notes whose Expression field contains this kanji
-      // and whose model is Kiku or Lapis
-      const query = `("note:Kiku" OR "note:Lapis") AND "Expression:*${kanji}*"`;
+  // Generalized search for Expression:*X* OR Reading:*Y*
+  queryFieldContains: async ({
+    kanjiList,
+    readingList,
+  }: {
+    kanjiList?: string[];
+    readingList?: string[];
+  }) => {
+    const kanjiListResult: Record<string, AnkiNote[]> = {};
+    const readingListResult: Record<string, AnkiNote[]> = {};
 
-      // 1. find note IDs
-      const idsRes = await AnkiConnect.invoke("findNotes", { query });
-      const noteIds: number[] = idsRes.result ?? [];
+    // --- search kanji ---
+    if (kanjiList) {
+      for (const kanji of kanjiList) {
+        const query = `("note:Kiku" OR "note:Lapis") AND "Expression:*${kanji}*"`;
 
-      if (noteIds.length === 0) continue;
+        const idsRes = await AnkiConnect.invoke("findNotes", { query });
+        const ids: number[] = idsRes.result ?? [];
 
-      // 2. fetch full note info
-      const notesRes = await AnkiConnect.invoke("notesInfo", {
-        notes: noteIds,
-      });
-      const notes: AnkiNote[] = notesRes.result ?? [];
+        if (ids.length === 0) continue;
 
-      // 3. assign to the result
-      result[kanji] = notes;
+        const notesRes = await AnkiConnect.invoke("notesInfo", { notes: ids });
+        kanjiListResult[kanji] = notesRes.result ?? [];
+      }
     }
 
-    return result;
+    // --- search reading ---
+    if (readingList) {
+      for (const reading of readingList) {
+        const query = `("note:Kiku" OR "note:Lapis") AND "ExpressionReading:${reading}"`;
+
+        const idsRes = await AnkiConnect.invoke("findNotes", { query });
+        const ids: number[] = idsRes.result ?? [];
+
+        if (ids.length === 0) continue;
+
+        const notesRes = await AnkiConnect.invoke("notesInfo", { notes: ids });
+        readingListResult[reading] = notesRes.result ?? [];
+      }
+    }
+
+    return { kanjiListResult, readingListResult };
   },
 };
 
@@ -120,11 +130,21 @@ export class Nex {
     return Object.keys(store);
   }
 
-  async query(kanjiList: string[]) {
+  async query({
+    kanjiList,
+    readingList,
+  }: {
+    kanjiList: string[];
+    readingList: string[];
+  }) {
     try {
-      const result: Record<string, AnkiNote[]> = {};
+      const kanjiListResult: Record<string, AnkiNote[]> = {};
+      const readingListResult: Record<string, AnkiNote[]> = {};
+
       const manifest = await this.manifest();
-      const kanjiSet = new Set(kanjiList);
+
+      const kanjiSet = kanjiList ? new Set(kanjiList) : null;
+      const readingSet = readingList ? new Set(readingList) : null;
 
       for (const chunk of manifest.chunks) {
         const res = await fetch(`${this.assetsPath}/${chunk.file}`);
@@ -136,28 +156,50 @@ export class Nex {
         const notes = JSON.parse(text) as AnkiNote[];
 
         for (const note of notes) {
-          // Skip irrelevant models early
           if (note.modelName !== "Kiku" && note.modelName !== "Lapis") continue;
 
           const expr = note.fields.Expression.value;
+          const reading = note.fields.ExpressionReading?.value ?? "";
 
-          // Only check relevant kanji that actually appear in the expression
-          for (const kanji of kanjiSet) {
-            if (expr.includes(kanji)) {
-              result[kanji] ??= [];
-              result[kanji].push(note);
+          // ------- Kanji Search -------
+          if (kanjiSet) {
+            for (const kanji of kanjiSet) {
+              if (expr.includes(kanji)) {
+                kanjiListResult[kanji] ??= [];
+                kanjiListResult[kanji].push(note);
+              }
+            }
+          }
+
+          // ------- Reading Search -------
+          if (readingSet) {
+            for (const readingStr of readingSet) {
+              if (reading === readingStr) {
+                readingListResult[readingStr] ??= [];
+                readingListResult[readingStr].push(note);
+              }
             }
           }
         }
       }
-      return result;
+
+      return { kanjiListResult, readingListResult };
     } catch {
-      const result = await AnkiConnect.queryKanji(kanjiList);
-      return result;
+      // √ fallback to AnkiConnect
+      return await AnkiConnect.queryFieldContains({
+        kanjiList,
+        readingList,
+      });
     }
   }
 
-  async querySharedAndSimilar(kanjiList: string[]) {
+  async querySharedAndSimilar({
+    kanjiList,
+    readingList,
+  }: {
+    kanjiList: string[];
+    readingList: string[];
+  }) {
     const similarKanji: Record<string, string[]> = Object.fromEntries(
       await Promise.all(
         kanjiList.map(async (k) => [k, await this.getSimilarKanji(k)]),
@@ -167,9 +209,12 @@ export class Nex {
     const allKanji = [
       ...new Set(kanjiList.flatMap((k) => [k, ...(similarKanji[k] ?? [])])),
     ];
-    const queryResult = await this.query(allKanji);
+    const { kanjiListResult, readingListResult } = await this.query({
+      kanjiList: allKanji,
+      readingList,
+    });
 
-    const result: Record<
+    const kanjiResult: Record<
       string,
       { shared: AnkiNote[]; similar: Record<string, AnkiNote[]> }
     > = {};
@@ -177,17 +222,17 @@ export class Nex {
     for (const kanji of kanjiList) {
       const similars = similarKanji[kanji] ?? [];
 
-      result[kanji] = {
-        shared: queryResult[kanji] ?? [],
+      kanjiResult[kanji] = {
+        shared: kanjiListResult[kanji] ?? [],
         similar: Object.fromEntries(
           similars
-            .filter((k) => queryResult[k])
-            .map((k) => [k, queryResult[k]]),
+            .filter((k) => kanjiListResult[k])
+            .map((k) => [k, kanjiListResult[k]]),
         ),
       };
     }
 
-    return result;
+    return { kanjiResult, readingResult: readingListResult };
   }
 
   async lookup(kanji: string): Promise<Kanji> {

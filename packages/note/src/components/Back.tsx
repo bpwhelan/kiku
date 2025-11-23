@@ -61,15 +61,26 @@ export function Back(props: { onExitNested?: () => void }) {
               ? ankiFields["furigana:ExpressionFurigana"]
               : ankiFields.Expression,
           );
+          const readingList = ankiFields.ExpressionReading
+            ? [ankiFields.ExpressionReading]
+            : [];
           const worker = new WorkerClient({
             env: env,
             config: unwrap($config),
             assetsPath: import.meta.env.DEV ? "" : KIKU_STATE.assetsPath,
           });
           const nex = await worker.nex;
-          const kanji = await nex.querySharedAndSimilar(kanjiList);
+          const { kanjiResult, readingResult } =
+            await nex.querySharedAndSimilar({
+              kanjiList,
+              readingList,
+            });
 
-          $setCard("kanji", kanji);
+          $setCard("kanji", kanjiResult);
+          $setCard(
+            "sameReadingNote",
+            readingResult[ankiFields.ExpressionReading],
+          );
           $setCard("kanjiStatus", "success");
           $setCard("worker", worker);
 
