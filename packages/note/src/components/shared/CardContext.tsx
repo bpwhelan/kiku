@@ -36,7 +36,6 @@ type CardStore = {
   kanjiStatus: "success" | "error" | "loading";
   selectedSimilarKanji: string | undefined;
   sameReadingNote: AnkiNote[] | undefined;
-  showSameReadingNote: boolean;
   nestedAnkiFields: AnkiFields;
   nested: boolean;
   manifest: KikuNotesManifest | undefined;
@@ -89,7 +88,6 @@ export function CardStoreContextProvider(props: {
     kanjiStatus: "loading",
     selectedSimilarKanji: undefined,
     sameReadingNote: undefined,
-    showSameReadingNote: false,
     nestedAnkiFields: ankiFieldsSkeleton,
     nested: props.nested ?? false,
     manifest: undefined,
