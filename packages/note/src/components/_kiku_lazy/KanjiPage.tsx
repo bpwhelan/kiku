@@ -1,10 +1,11 @@
-import { createSignal, For, onMount, Show } from "solid-js";
+import { createSignal, For, Match, onMount, Show, Switch } from "solid-js";
 import {
   type KanjiData,
   useCardContext,
 } from "#/components/shared/CardContext";
 import type { AnkiNote, Kanji } from "#/types";
 import { useNavigationTransition } from "#/util/hooks";
+import { useAnkiFieldContext } from "../shared/AnkiFieldsContext";
 import { ArrowLeftIcon } from "./Icons";
 
 export default function KanjiPage(props: {
@@ -12,6 +13,21 @@ export default function KanjiPage(props: {
   onNextClick?: (noteId: number) => void;
 }) {
   const [$card] = useCardContext();
+  const { ankiFields } = useAnkiFieldContext<"back">();
+
+  const ExpressionFurigana = () => {
+    if (ankiFields.Expression && ankiFields.ExpressionReading) {
+      return (
+        <ruby>
+          {ankiFields.Expression}
+          <rt>{ankiFields.ExpressionReading}</rt>
+        </ruby>
+      );
+    }
+    return ankiFields.ExpressionReading
+      ? ankiFields.ExpressionReading
+      : ankiFields.Expression;
+  };
 
   return (
     <>
@@ -24,14 +40,25 @@ export default function KanjiPage(props: {
         </div>
         <div class="flex flex-row gap-2 items-center"></div>
       </div>
-      <Show when={$card.selectedSimilarKanji}>
-        <div class="flex flex-col items-center gap-2">
-          <div class="text-lg text-base-content-calm">Similar Kanji</div>
-          <div class="flex justify-center text-7xl font-secondary ">
-            {$card.selectedSimilarKanji}
+      <Switch>
+        <Match when={$card.selectedSimilarKanji}>
+          <div class="flex flex-col items-center gap-2">
+            <div class="text-lg text-base-content-calm">Similar Kanji</div>
+            <div class="flex justify-center text-7xl font-secondary ">
+              {$card.selectedSimilarKanji}
+            </div>
           </div>
-        </div>
-      </Show>
+        </Match>
+        <Match when={!$card.selectedSimilarKanji}>
+          <button class="btn btn-lg sm:btn-xl text-base-content-calm">
+            <span>Same Reading</span>{" "}
+            <span class="font-normal">
+              (<ExpressionFurigana />)
+            </span>
+            <ArrowLeftIcon class="size-5 sm:size-8 text-base-content-soft rotate-180 cursor-pointer"></ArrowLeftIcon>
+          </button>
+        </Match>
+      </Switch>
       <div class="flex flex-col gap-2 sm:gap-4 ">
         <For
           each={
