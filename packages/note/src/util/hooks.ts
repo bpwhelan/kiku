@@ -1,5 +1,5 @@
 import { useCardContext } from "#/components/shared/CardContext";
-import { useConfig } from "#/components/shared/ConfigContext";
+import { useConfigContext } from "#/components/shared/ConfigContext";
 import { useBreakpoint } from "#/components/shared/Context";
 
 import type { DaisyUITheme } from "./theme";
@@ -57,15 +57,15 @@ export function useNavigationTransition() {
 }
 
 export function useThemeTransition() {
-  const [config, setConfig] = useConfig();
+  const [$config, $setConfig] = useConfigContext();
   const startViewTransition = useViewTransition();
   const [$card, $setCard] = useCardContext();
 
   function changeTheme(theme: DaisyUITheme) {
     if ($card.kanjiStatus === "loading") {
-      setConfig("theme", theme);
+      $setConfig("theme", theme);
     } else {
-      startViewTransition(() => setConfig("theme", theme), {
+      startViewTransition(() => $setConfig("theme", theme), {
         beforeCallback() {
           document.documentElement.dataset.themeTransition = "true";
         },

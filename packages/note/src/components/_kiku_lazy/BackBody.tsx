@@ -6,7 +6,7 @@ import {
   Show,
 } from "solid-js";
 import h from "solid-js/h";
-import { useConfig } from "../shared/ConfigContext";
+import { useConfigContext } from "../shared/ConfigContext";
 import { useAnkiField } from "../shared/Context";
 import { useGeneralContext } from "../shared/GeneralContext";
 import Sentence from "./Sentence";
@@ -16,7 +16,7 @@ export default function BackBody(props: {
 }) {
   let definitionEl: HTMLDivElement | undefined;
   const { ankiFields } = useAnkiField<"back">();
-  const [config] = useConfig();
+  const [$config] = useConfigContext();
   const [definitionPage, setDefinitionPage] = createSignal(
     ankiFields.SelectionText ? 0 : 1,
   );
@@ -77,8 +77,8 @@ export default function BackBody(props: {
     <div
       class="flex sm:flex-col gap-8 animate-fade-in"
       classList={{
-        "flex-col-reverse": config.swapSentenceAndDefinitionOnMobile,
-        "flex-col": !config.swapSentenceAndDefinitionOnMobile,
+        "flex-col-reverse": $config.swapSentenceAndDefinitionOnMobile,
+        "flex-col": !$config.swapSentenceAndDefinitionOnMobile,
       }}
     >
       <div class="flex flex-col justify-center gap-2 items-center text-center">

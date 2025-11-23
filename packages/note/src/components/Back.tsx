@@ -12,7 +12,7 @@ import { useNavigationTransition } from "#/util/hooks";
 import { getPlugin } from "#/util/plugin";
 import { WorkerClient } from "#/worker/client";
 import { Layout } from "./Layout";
-import { useConfig } from "./shared/ConfigContext";
+import { useConfigContext } from "./shared/ConfigContext";
 import { AnkiFieldContextProvider, useAnkiField } from "./shared/Context";
 import {
   FieldGroupContextProvider,
@@ -37,7 +37,7 @@ const Lazy = {
 export function Back(props: { onExitNested?: () => void }) {
   const navigate = useNavigationTransition();
   const [$card, $setCard] = useCardContext();
-  const [config] = useConfig();
+  const [$config] = useConfigContext();
   const { ankiFields } = useAnkiField<"back">();
   const [generalStore, setGeneralStore] = useGeneralContext();
 
@@ -60,7 +60,7 @@ export function Back(props: { onExitNested?: () => void }) {
           );
           const worker = new WorkerClient({
             env: env,
-            config: unwrap(config),
+            config: unwrap($config),
             assetsPath: import.meta.env.DEV ? "" : KIKU_STATE.assetsPath,
           });
           const nex = await worker.nex;

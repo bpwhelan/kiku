@@ -22,7 +22,7 @@ import { type WebFont, webFonts } from "#/util/fonts";
 import { env } from "#/util/general";
 import { useThemeTransition } from "#/util/hooks";
 import { daisyUIThemes } from "#/util/theme";
-import { useConfig } from "../shared/ConfigContext";
+import { useConfigContext } from "../shared/ConfigContext";
 import { useAnkiField, useBreakpoint } from "../shared/Context";
 import { useGeneralContext } from "../shared/GeneralContext";
 import {
@@ -66,12 +66,12 @@ export default function Settings(props: {
   onCancelClick?: () => void;
 }) {
   const bp = useBreakpoint();
-  const [config] = useConfig();
+  const [$config] = useConfigContext();
   const [$card, $setCard] = useCardContext();
 
   onMount(async () => {
     //NOTE: move this to somewhere higher
-    AnkiConnect.changePort(Number(config.ankiConnectPort));
+    AnkiConnect.changePort(Number($config.ankiConnectPort));
 
     if (!bp.isAtLeast("sm")) return;
     await checkAnkiConnect();
@@ -87,8 +87,8 @@ export default function Settings(props: {
 
   const saveConfig = async () => {
     try {
-      KIKU_STATE.logger.debug("Saving config:", config);
-      await AnkiConnect.saveConfig(config);
+      KIKU_STATE.logger.debug("Saving config:", $config);
+      await AnkiConnect.saveConfig($config);
       $card.toast.success("Saved! Restart Anki to apply changes.");
     } catch (e) {
       $card.toast.error(
@@ -176,7 +176,7 @@ export default function Settings(props: {
 }
 
 function GeneralSettings() {
-  const [config, setConfig] = useConfig();
+  const [$config, $setConfig] = useConfigContext();
 
   return (
     <div class="flex flex-col gap-4 animate-fade-in relative">
@@ -195,12 +195,12 @@ function GeneralSettings() {
           <input
             on:change={(e) => {
               const value = e.target.value;
-              setConfig("volume", Number(value));
+              $setConfig("volume", Number(value));
             }}
             type="range"
             min="0"
             max={"100"}
-            value={config.volume.toString()}
+            value={$config.volume.toString()}
             class="range w-full "
             step="1"
           />
@@ -210,10 +210,10 @@ function GeneralSettings() {
           <label class="label">
             <input
               type="checkbox"
-              checked={config.showTheme}
+              checked={$config.showTheme}
               class="toggle"
               on:change={(e) => {
-                setConfig("showTheme", e.target.checked);
+                $setConfig("showTheme", e.target.checked);
               }}
             />
           </label>
@@ -225,10 +225,10 @@ function GeneralSettings() {
           <label class="label">
             <input
               type="checkbox"
-              checked={config.swapSentenceAndDefinitionOnMobile}
+              checked={$config.swapSentenceAndDefinitionOnMobile}
               class="toggle"
               on:change={(e) => {
-                setConfig(
+                $setConfig(
                   "swapSentenceAndDefinitionOnMobile",
                   e.target.checked,
                 );
@@ -243,7 +243,7 @@ function GeneralSettings() {
 
 function ThemeSettings() {
   const [generalStore] = useGeneralContext();
-  const [config, setConfig] = useConfig();
+  const [$config, $setConfig] = useConfigContext();
   const changeTheme = useThemeTransition();
 
   return (
@@ -264,7 +264,7 @@ function ThemeSettings() {
             <div
               class="border-base-content/20 hover:border-base-content/40 overflow-hidden rounded-lg border outline-2 outline-offset-2"
               classList={{
-                "outline-2": theme === config.theme,
+                "outline-2": theme === $config.theme,
               }}
               on:click={() => {
                 changeTheme(theme);
@@ -310,7 +310,7 @@ function ThemeSettings() {
 }
 
 function FontSettings() {
-  const [config, setConfig] = useConfig();
+  const [$config, $setConfig] = useConfigContext();
 
   return (
     <div class="flex flex-col gap-4 animate-fade-in">
@@ -321,11 +321,11 @@ function FontSettings() {
           <fieldset
             class="fieldset"
             classList={{
-              hidden: config.useSystemFontPrimary,
+              hidden: $config.useSystemFontPrimary,
             }}
             on:change={(e) => {
               const target = e.target as HTMLSelectElement;
-              setConfig("webFontPrimary", target.value as WebFont);
+              $setConfig("webFontPrimary", target.value as WebFont);
             }}
           >
             <legend class="fieldset-legend">Web Font</legend>
@@ -334,7 +334,7 @@ function FontSettings() {
                 return (
                   <option
                     value={font}
-                    selected={config.webFontPrimary === font}
+                    selected={$config.webFontPrimary === font}
                   >
                     <span class="font-primary" style={{ "font-family": font }}>
                       {font}
@@ -347,7 +347,7 @@ function FontSettings() {
           <fieldset
             class="fieldset"
             classList={{
-              hidden: !config.useSystemFontPrimary,
+              hidden: !$config.useSystemFontPrimary,
             }}
           >
             <legend class="fieldset-legend">
@@ -356,11 +356,11 @@ function FontSettings() {
                 class="h-4 w-4 cursor-pointer"
                 classList={{
                   hidden:
-                    config.systemFontPrimary ===
+                    $config.systemFontPrimary ===
                     defaultConfig.systemFontPrimary,
                 }}
                 on:click={() => {
-                  setConfig(
+                  $setConfig(
                     "systemFontPrimary",
                     defaultConfig.systemFontPrimary,
                   );
@@ -373,9 +373,9 @@ function FontSettings() {
               placeholder={
                 "'Inter', 'SF Pro Display', 'Liberation Sans', 'Segoe UI', 'Hiragino Kaku Gothic ProN', 'Noto Sans CJK JP', 'Noto Sans JP', 'Meiryo', HanaMinA, HanaMinB, sans-serif"
               }
-              value={config.systemFontPrimary}
+              value={$config.systemFontPrimary}
               on:input={(e) => {
-                setConfig(
+                $setConfig(
                   "systemFontPrimary",
                   (e.target as HTMLInputElement).value,
                 );
@@ -388,13 +388,13 @@ function FontSettings() {
             <label class="label text-base-content-soft">
               <input
                 type="checkbox"
-                checked={config.useSystemFontPrimary}
+                checked={$config.useSystemFontPrimary}
                 class="toggle"
                 on:change={(e) => {
-                  setConfig("useSystemFontPrimary", e.target.checked);
+                  $setConfig("useSystemFontPrimary", e.target.checked);
                 }}
               />
-              {config.useSystemFontPrimary
+              {$config.useSystemFontPrimary
                 ? "Using System Font"
                 : "Using Web Font"}
             </label>
@@ -408,11 +408,11 @@ function FontSettings() {
           <fieldset
             class="fieldset"
             classList={{
-              hidden: config.useSystemFontSecondary,
+              hidden: $config.useSystemFontSecondary,
             }}
             on:change={(e) => {
               const target = e.target as HTMLSelectElement;
-              setConfig("webFontSecondary", target.value as WebFont);
+              $setConfig("webFontSecondary", target.value as WebFont);
             }}
           >
             <legend class="fieldset-legend">Web Font</legend>
@@ -421,7 +421,7 @@ function FontSettings() {
                 return (
                   <option
                     value={font}
-                    selected={config.webFontSecondary === font}
+                    selected={$config.webFontSecondary === font}
                   >
                     <span
                       class="font-secondary"
@@ -437,7 +437,7 @@ function FontSettings() {
           <fieldset
             class="fieldset"
             classList={{
-              hidden: !config.useSystemFontSecondary,
+              hidden: !$config.useSystemFontSecondary,
             }}
           >
             <legend class="fieldset-legend">
@@ -446,11 +446,11 @@ function FontSettings() {
                 class="h-4 w-4 cursor-pointer"
                 classList={{
                   hidden:
-                    config.systemFontSecondary ===
+                    $config.systemFontSecondary ===
                     defaultConfig.systemFontSecondary,
                 }}
                 on:click={() => {
-                  setConfig(
+                  $setConfig(
                     "systemFontSecondary",
                     defaultConfig.systemFontSecondary,
                   );
@@ -463,9 +463,9 @@ function FontSettings() {
               placeholder={
                 "'Hiragino Mincho ProN', 'Noto Serif CJK JP', 'Noto Serif JP', 'Yu Mincho', HanaMinA, HanaMinB, serif"
               }
-              value={config.systemFontSecondary}
+              value={$config.systemFontSecondary}
               on:input={(e) => {
-                setConfig(
+                $setConfig(
                   "systemFontSecondary",
                   (e.target as HTMLInputElement).value,
                 );
@@ -478,13 +478,13 @@ function FontSettings() {
             <label class="label text-base-content-soft">
               <input
                 type="checkbox"
-                checked={config.useSystemFontSecondary}
+                checked={$config.useSystemFontSecondary}
                 class="toggle"
                 on:change={(e) => {
-                  setConfig("useSystemFontSecondary", e.target.checked);
+                  $setConfig("useSystemFontSecondary", e.target.checked);
                 }}
               />
-              {config.useSystemFontSecondary
+              {$config.useSystemFontSecondary
                 ? "Using System Font"
                 : "Using Web Font"}
             </label>
@@ -535,8 +535,8 @@ function FontSizeSettingsFieldset(props: {
   configKey: keyof KikuConfig;
   label: string;
 }) {
-  const [config, setConfig] = useConfig();
-  const configValue = () => config[props.configKey] as TailwindSize;
+  const [$config, $setConfig] = useConfigContext();
+  const configValue = () => $config[props.configKey] as TailwindSize;
 
   return (
     <div class="w-full">
@@ -547,10 +547,10 @@ function FontSizeSettingsFieldset(props: {
             class="h-4 w-4 cursor-pointer"
             classList={{
               hidden:
-                config[props.configKey] === defaultConfig[props.configKey],
+                $config[props.configKey] === defaultConfig[props.configKey],
             }}
             on:click={() => {
-              setConfig(props.configKey, defaultConfig[props.configKey]);
+              $setConfig(props.configKey, defaultConfig[props.configKey]);
             }}
           />
         </legend>
@@ -571,7 +571,7 @@ function FontSizeSettingsFieldset(props: {
             on:change={(e) => {
               const target = e.target as HTMLInputElement;
               const value = tailwindSize[Number(target.value)] as TailwindSize;
-              setConfig(props.configKey, value);
+              $setConfig(props.configKey, value);
             }}
             type="range"
             min="0"
@@ -593,7 +593,7 @@ function FontSizeSettingsFieldset(props: {
 }
 
 function AnkiDroidSettings() {
-  const [config, setConfig] = useConfig();
+  const [$config, $setConfig] = useConfigContext();
 
   return (
     <div class="flex flex-col gap-2 animate-fade-in">
@@ -605,10 +605,10 @@ function AnkiDroidSettings() {
             <label class="label">
               <input
                 type="checkbox"
-                checked={config.ankiDroidEnableIntegration}
+                checked={$config.ankiDroidEnableIntegration}
                 class="toggle"
                 on:change={(e) => {
-                  setConfig("ankiDroidEnableIntegration", e.target.checked);
+                  $setConfig("ankiDroidEnableIntegration", e.target.checked);
                 }}
               />
             </label>
@@ -619,10 +619,13 @@ function AnkiDroidSettings() {
             <label class="label">
               <input
                 type="checkbox"
-                checked={config.ankiDroidReverseSwipeDirection}
+                checked={$config.ankiDroidReverseSwipeDirection}
                 class="toggle"
                 on:change={(e) => {
-                  setConfig("ankiDroidReverseSwipeDirection", e.target.checked);
+                  $setConfig(
+                    "ankiDroidReverseSwipeDirection",
+                    e.target.checked,
+                  );
                 }}
               />
             </label>
@@ -634,7 +637,7 @@ function AnkiDroidSettings() {
 }
 
 function DebugSettings() {
-  const [config, setConfig] = useConfig();
+  const [$config, $setConfig] = useConfigContext();
   const [$card] = useCardContext();
   const { ankiFields } = useAnkiField<"back">();
   const [kikuFiles, setKikuFiles] = createSignal<string>();
@@ -677,13 +680,13 @@ function DebugSettings() {
 
   const rootDataset = () => {
     return Object.fromEntries(
-      Object.entries(config).filter(([key]) => {
+      Object.entries($config).filter(([key]) => {
         return rootDatasetConfigWhitelist.has(key as RootDatasetKey);
       }),
     );
   };
 
-  const cssVar = () => getCssVar(config);
+  const cssVar = () => getCssVar($config);
 
   return (
     <div tabindex="0" class="collapse collapse-arrow">
@@ -698,10 +701,13 @@ function DebugSettings() {
                   class="h-4 w-4 cursor-pointer"
                   classList={{
                     hidden:
-                      config.ankiConnectPort === defaultConfig.ankiConnectPort,
+                      $config.ankiConnectPort === defaultConfig.ankiConnectPort,
                   }}
                   on:click={() => {
-                    setConfig("ankiConnectPort", defaultConfig.ankiConnectPort);
+                    $setConfig(
+                      "ankiConnectPort",
+                      defaultConfig.ankiConnectPort,
+                    );
                   }}
                 />
               </legend>
@@ -709,12 +715,12 @@ function DebugSettings() {
                 type="text"
                 class="input w-full"
                 placeholder={defaultConfig.ankiConnectPort.toString()}
-                value={config.ankiConnectPort}
+                value={$config.ankiConnectPort}
                 on:input={(e) => {
                   let value = (e.target as HTMLInputElement).value;
                   value = value.replaceAll(/[^0-9]/g, "");
                   (e.target as HTMLInputElement).value = value;
-                  setConfig("ankiConnectPort", Number(value));
+                  $setConfig("ankiConnectPort", Number(value));
                 }}
               />
             </fieldset>
@@ -723,10 +729,10 @@ function DebugSettings() {
               <label class="label">
                 <input
                   type="checkbox"
-                  checked={config.showStartupTime}
+                  checked={$config.showStartupTime}
                   class="toggle"
                   on:change={(e) => {
-                    setConfig("showStartupTime", e.target.checked);
+                    $setConfig("showStartupTime", e.target.checked);
                   }}
                 />
               </label>
@@ -781,12 +787,12 @@ function DebugSettings() {
                   hidden: typeof pycmd !== "undefined",
                 }}
                 on:click={() => {
-                  copyToClipboard(JSON.stringify({ ...config }, null, 2));
+                  copyToClipboard(JSON.stringify({ ...$config }, null, 2));
                 }}
               />
             </div>
             <pre class="text-xs bg-base-200 p-4 rounded-lg overflow-auto">
-              {JSON.stringify({ ...config }, null, 2)}
+              {JSON.stringify({ ...$config }, null, 2)}
             </pre>
           </div>
 

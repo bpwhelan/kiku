@@ -13,22 +13,22 @@ export function ConfigContextProvider(props: {
   children: JSX.Element;
   value: [Store<KikuConfig>, SetStoreFunction<KikuConfig>];
 }) {
-  const [config] = props.value;
+  const [$config] = props.value;
   const [generalStore, setGeneralStore] = useGeneralContext();
 
   let initialTheme: DaisyUITheme | undefined;
   createEffect(() => {
-    ({ ...config });
-    KIKU_STATE.logger.debug("Updating config:", config);
+    ({ ...$config });
+    KIKU_STATE.logger.debug("Updating config:", $config);
     if (!KIKU_STATE.root) throw new Error("Missing root");
-    updateConfigState(KIKU_STATE.root, config);
+    updateConfigState(KIKU_STATE.root, $config);
     sessionStorage.setItem(
       env.KIKU_CONFIG_SESSION_STORAGE_KEY,
-      JSON.stringify(config),
+      JSON.stringify($config),
     );
     if (!initialTheme) {
-      initialTheme = config.theme;
-    } else if (initialTheme && initialTheme !== config.theme) {
+      initialTheme = $config.theme;
+    } else if (initialTheme && initialTheme !== $config.theme) {
       sessionStorage.setItem(
         env.KIKU_IS_THEME_CHANGED_SESSION_STORAGE_KEY,
         "true",
@@ -44,7 +44,7 @@ export function ConfigContextProvider(props: {
   );
 }
 
-export function useConfig() {
+export function useConfigContext() {
   const config = useContext(ConfigContext);
   if (!config) throw new Error("Missing ConfigContext");
   return config;

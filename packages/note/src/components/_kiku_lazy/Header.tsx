@@ -2,7 +2,7 @@ import { createSignal, Match, onMount, Show, Switch } from "solid-js";
 import { useCardContext } from "#/components/shared/CardContext";
 import { useThemeTransition } from "#/util/hooks";
 import { nextTheme } from "#/util/theme";
-import { useConfig } from "../shared/ConfigContext";
+import { useConfigContext } from "../shared/ConfigContext";
 import { useAnkiField } from "../shared/Context";
 import { useGeneralContext } from "../shared/GeneralContext";
 import {
@@ -20,7 +20,7 @@ export default function Header(props: {
   side: "back" | "front";
 }) {
   const [$card] = useCardContext();
-  const [config, setConfig] = useConfig();
+  const [$config, $setConfig] = useConfigContext();
   const [generalStore] = useGeneralContext();
   const [startupTime, setStartupTime] = createSignal<number | null>(null);
   const changeTheme = useThemeTransition();
@@ -53,7 +53,7 @@ export default function Header(props: {
               <div class="status status-warning absolute top-0 right-0 translate-x-0.5 -translate-y-0.5"></div>
             </Show>
           </div>
-          <Show when={config.showTheme}>
+          <Show when={$config.showTheme}>
             <div
               class="flex gap-2 items-center cursor-pointer"
               on:click={() => {
@@ -63,11 +63,11 @@ export default function Header(props: {
             >
               <PaintbrushIcon class="size-5 cursor-pointer text-base-content-soft"></PaintbrushIcon>
               <div class="text-base-content-soft text-sm">
-                {capitalize(config.theme)}
+                {capitalize($config.theme)}
               </div>
             </div>
           </Show>
-          <Show when={config.showStartupTime}>
+          <Show when={$config.showStartupTime}>
             <div class="text-base-content-soft bg-warning/10 rounded-sm px-1 text-sm">
               {startupTime()}
               {startupTime() && "ms"}

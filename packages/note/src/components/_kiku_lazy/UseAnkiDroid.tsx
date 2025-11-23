@@ -1,7 +1,7 @@
 import { createEffect, createSignal, Match, onCleanup, Switch } from "solid-js";
 import { isServer, Portal } from "solid-js/web";
 import { useCardContext } from "#/components/shared/CardContext";
-import { useConfig } from "../shared/ConfigContext";
+import { useConfigContext } from "../shared/ConfigContext";
 import { CheckIcon, XIcon } from "./Icons";
 
 function reverseEase(ease: "ease1" | "ease3") {
@@ -19,8 +19,8 @@ export default function UseAnkiDroid() {
   if (isServer) return;
   if (window.innerWidth > 768) return;
   if (typeof AnkiDroidJS === "undefined" && !import.meta.env.DEV) return;
-  const [config] = useConfig();
-  if (!config.ankiDroidEnableIntegration) return;
+  const [$config] = useConfigContext();
+  if (!$config.ankiDroidEnableIntegration) return;
   KIKU_STATE.logger.info("Using AnkiDroid");
 
   const ankiDroidAPI =
@@ -34,7 +34,7 @@ export default function UseAnkiDroid() {
 
   const [$card] = useCardContext();
   const el$ = () => $card.contentRef;
-  const reverse = config.ankiDroidReverseSwipeDirection;
+  const reverse = $config.ankiDroidReverseSwipeDirection;
 
   const THRESHOLD = 60;
   const DEADZONE = 10;
