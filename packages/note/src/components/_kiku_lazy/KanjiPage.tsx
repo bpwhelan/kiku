@@ -1,4 +1,4 @@
-import { createSignal, For, Match, onMount, Show, Switch } from "solid-js";
+import { createSignal, For, onMount, Show } from "solid-js";
 import {
   type KanjiData,
   useCardContext,
@@ -127,6 +127,13 @@ function KanjiCollapsible(props: {
   const data = () => props.data;
   const navigate = useNavigationTransition();
 
+  const theData = () => {
+    const data$ = data();
+    return Array.isArray(data$) ? data$ : data$.shared;
+  };
+
+  if (theData().length === 0) return null;
+
   return (
     <div class="collapse bg-base-200 border border-base-300 animate-fade-in">
       <input type="checkbox" checked={!$card.selectedSimilarKanji} />
@@ -154,12 +161,7 @@ function KanjiCollapsible(props: {
       </div>
       <div class="collapse-content text-sm px-2 sm:px-4 pb-2 sm:pb-4">
         <ul class="list bg-base-100 rounded-box shadow-md">
-          <For
-            each={(() => {
-              const data$ = data();
-              return Array.isArray(data$) ? data$ : data$.shared;
-            })()}
-          >
+          <For each={theData()}>
             {(data) => {
               return (
                 <AnkiNoteItem
