@@ -290,7 +290,9 @@ export class Nex {
 
     readingList.forEach((reading) => {
       readingListResult[reading] =
-        readingListResult[reading]?.filter(filterSameNote) ?? [];
+        readingListResult[reading]?.filter(filterSameNote).filter((note) => {
+          return note.fields.Expression.value !== ankiFields.Expression;
+        }) ?? [];
     });
 
     return { kanjiResult, readingResult: readingListResult };
