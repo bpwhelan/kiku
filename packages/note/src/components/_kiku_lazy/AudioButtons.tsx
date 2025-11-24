@@ -11,7 +11,7 @@ function AudioTag(props: { text: string }) {
   // Find all `[sound:filename.mp3]` occurrences
   const matches = () => [...props.text.matchAll(/\[sound:([^\]]+)\]/g)];
   const sounds = () => matches().map((m) => m[1]);
-  KIKU_STATE.logger.info("Using sounds:", sounds);
+  KIKU_STATE.logger.info("Using sounds:", sounds().join(", "));
 
   return (
     <Show when={sounds().length > 0}>
