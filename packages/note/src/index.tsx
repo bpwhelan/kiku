@@ -3,11 +3,7 @@ import { createStore } from "solid-js/store";
 import { hydrate, render } from "solid-js/web";
 import { Back } from "./components/Back.tsx";
 import { Front } from "./components/Front.tsx";
-import {
-  AnkiFieldContextProvider,
-  BreakpointContextProvider,
-  ConfigContextProvider,
-} from "./components/shared/Context.tsx";
+import { BreakpointContextProvider } from "./components/shared/BreakpointContext.tsx";
 import {
   defaultConfig,
   type KikuConfig,
@@ -16,9 +12,11 @@ import {
 } from "./util/config.ts";
 import { env } from "./util/general.ts";
 import "./styles/tailwind.css";
+import { AnkiFieldContextProvider } from "./components/shared/AnkiFieldsContext.tsx";
 import { CardStoreContextProvider } from "./components/shared/CardContext.tsx";
+import { ConfigContextProvider } from "./components/shared/ConfigContext.tsx";
 import { FieldGroupContextProvider } from "./components/shared/FieldGroupContext.tsx";
-import { PluginContextProvider } from "./components/shared/PluginContextProvider.tsx";
+import { GeneralContextProvider } from "./components/shared/GeneralContext.tsx";
 import { Logger } from "./util/logger.ts";
 
 const logger = new Logger();
@@ -28,6 +26,8 @@ globalThis.KIKU_STATE = {
   isAnkiWeb: window.location.origin.includes("ankiuser.net"),
   assetsPath: window.location.origin,
   logger,
+  isAnkiDesktop: typeof pycmd !== "undefined",
+  worker: globalThis.KIKU_STATE?.worker,
 };
 
 export async function init({
@@ -38,6 +38,10 @@ export async function init({
   ssr?: boolean;
 }) {
   try {
+    window.addEventListener("unload", () => {
+      if (KIKU_STATE.isAnkiDesktop) sessionStorage.clear();
+    });
+
     if (KIKU_STATE.isAnkiWeb) {
       logger.info("AnkiWeb detected");
       document.documentElement.setAttribute("data-theme", "none");
@@ -46,16 +50,19 @@ export async function init({
       kikuCss?.remove();
     }
 
-    const root =
-      document.getElementById("root") ??
-      document.querySelector("[data-kiku-root]");
-    if (!root) throw new Error("root not found");
+    const root = document.getElementById("kiku-root");
+    if (!root) {
+      const shadowParent = document.querySelector("#kiku-shadow-parent");
+      if (shadowParent) return;
+      throw new Error("root not found");
+    }
     root.part.add("root-part");
     KIKU_STATE.root = root;
     logger.debug("rootDataset", root.dataset);
 
     const qa = document.querySelector("#qa");
     const shadowParent = document.createElement("div");
+    shadowParent.setAttribute("id", "kiku-shadow-parent");
     qa?.appendChild(shadowParent);
     const shadow = shadowParent.attachShadow({ mode: "open" });
     const style = qa?.querySelector("style");
@@ -78,7 +85,7 @@ export async function init({
       const cache = sessionStorage.getItem(env.KIKU_CONFIG_SESSION_STORAGE_KEY);
       if (cache) {
         logger.info("config cache hit:", cache);
-        config$ = JSON.parse(cache);
+        config$ = validateConfig(JSON.parse(cache));
       } else {
         logger.info("config cache miss");
         config$ = validateConfig(
@@ -103,7 +110,7 @@ export async function init({
 
     if (side === "front") {
       const App = () => (
-        <PluginContextProvider>
+        <GeneralContextProvider>
           <AnkiFieldContextProvider>
             <CardStoreContextProvider side="front">
               <BreakpointContextProvider>
@@ -115,13 +122,13 @@ export async function init({
               </BreakpointContextProvider>
             </CardStoreContextProvider>
           </AnkiFieldContextProvider>
-        </PluginContextProvider>
+        </GeneralContextProvider>
       );
       if (ssr) return hydrate(App, root);
       render(App, root);
     } else if (side === "back") {
       const App = () => (
-        <PluginContextProvider>
+        <GeneralContextProvider>
           <AnkiFieldContextProvider>
             <CardStoreContextProvider side="back">
               <BreakpointContextProvider>
@@ -133,12 +140,13 @@ export async function init({
               </BreakpointContextProvider>
             </CardStoreContextProvider>
           </AnkiFieldContextProvider>
-        </PluginContextProvider>
+        </GeneralContextProvider>
       );
       if (ssr) return hydrate(App, root);
       render(App, root);
     }
   } catch (e) {
+    sessionStorage.clear();
     Object.assign(document.body.style, {
       margin: 0,
       padding: 0,

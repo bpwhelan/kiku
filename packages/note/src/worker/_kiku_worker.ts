@@ -1,4 +1,4 @@
-import type { AnkiNote, Kanji, KikuNotesManifest } from "#/types";
+import type { AnkiFields, AnkiNote, Kanji, KikuNotesManifest } from "#/types";
 import type { KikuConfig } from "#/util/config";
 import type { Env } from "#/util/general";
 
@@ -10,7 +10,15 @@ type SimilarKanjiDBs = Record<string, SimilarKanjiDB>;
 
 let ankiConnectPort = 8765;
 
-export const AnkiConnect = {
+const logger = {
+  trace: (...args: unknown[]) => postMessage({ log: { level: "trace", args } }),
+  debug: (...args: unknown[]) => postMessage({ log: { level: "debug", args } }),
+  info: (...args: unknown[]) => postMessage({ log: { level: "info", args } }),
+  warn: (...args: unknown[]) => postMessage({ log: { level: "warn", args } }),
+  error: (...args: unknown[]) => postMessage({ log: { level: "error", args } }),
+};
+
+const AnkiConnect = {
   invoke: async (action: string, params: Record<string, unknown> = {}) => {
     const res = await fetch(`http://127.0.0.1:${ankiConnectPort}`, {
       method: "POST",
@@ -19,42 +27,52 @@ export const AnkiConnect = {
     });
 
     const result = await res.json();
-    if (result.error) {
-      throw new Error(result.error);
-    }
+    if (result.error) throw new Error(result.error);
     return result;
   },
-  query: async (query: string) => {
-    AnkiConnect.invoke("findNotes", {
-      query: query,
-    });
-  },
-  queryKanji: async (kanjiList: string[]) => {
-    const result: Record<string, AnkiNote[]> = {};
-    const kanjiSet = new Set(kanjiList);
 
-    for (const kanji of kanjiSet) {
-      // Query only notes whose Expression field contains this kanji
-      // and whose model is Kiku or Lapis
-      const query = `("note:Kiku" OR "note:Lapis") AND "Expression:*${kanji}*"`;
+  // Generalized search for Expression:*X* OR Reading:*Y*
+  queryFieldContains: async ({
+    kanjiList,
+    readingList,
+  }: {
+    kanjiList?: string[];
+    readingList?: string[];
+  }) => {
+    const kanjiListResult: Record<string, AnkiNote[]> = {};
+    const readingListResult: Record<string, AnkiNote[]> = {};
 
-      // 1. find note IDs
-      const idsRes = await AnkiConnect.invoke("findNotes", { query });
-      const noteIds: number[] = idsRes.result ?? [];
+    // --- search kanji ---
+    if (kanjiList) {
+      for (const kanji of kanjiList) {
+        const query = `("note:Kiku" OR "note:Lapis") AND "Expression:*${kanji}*"`;
 
-      if (noteIds.length === 0) continue;
+        const idsRes = await AnkiConnect.invoke("findNotes", { query });
+        const ids: number[] = idsRes.result ?? [];
 
-      // 2. fetch full note info
-      const notesRes = await AnkiConnect.invoke("notesInfo", {
-        notes: noteIds,
-      });
-      const notes: AnkiNote[] = notesRes.result ?? [];
+        if (ids.length === 0) continue;
 
-      // 3. assign to the result
-      result[kanji] = notes;
+        const notesRes = await AnkiConnect.invoke("notesInfo", { notes: ids });
+        kanjiListResult[kanji] = notesRes.result ?? [];
+      }
     }
 
-    return result;
+    // --- search reading ---
+    if (readingList) {
+      for (const reading of readingList) {
+        const query = `("note:Kiku" OR "note:Lapis") AND "ExpressionReading:${reading}"`;
+
+        const idsRes = await AnkiConnect.invoke("findNotes", { query });
+        const ids: number[] = idsRes.result ?? [];
+
+        if (ids.length === 0) continue;
+
+        const notesRes = await AnkiConnect.invoke("notesInfo", { notes: ids });
+        readingListResult[reading] = notesRes.result ?? [];
+      }
+    }
+
+    return { kanjiListResult, readingListResult };
   },
 };
 
@@ -62,6 +80,7 @@ export class Nex {
   assetsPath: string;
   env: Env;
   config: KikuConfig;
+  preferAnkiConnect: boolean;
 
   similar_kanji_min_score = 0.5;
   //biome-ignore format: this looks nicer
@@ -83,10 +102,14 @@ export class Nex {
     assetsPath: string;
     env: Env;
     config: KikuConfig;
+    preferAnkiConnect: boolean;
   }) {
+    logger.debug("init Worker", payload);
+
     this.assetsPath = payload.assetsPath;
     this.env = payload.env;
     this.config = payload.config;
+    this.preferAnkiConnect = payload.preferAnkiConnect;
     ankiConnectPort = Number(this.config.ankiConnectPort);
   }
   async getSimilarKanji(kanji: string) {
@@ -120,11 +143,21 @@ export class Nex {
     return Object.keys(store);
   }
 
-  async query(kanjiList: string[]) {
-    try {
-      const result: Record<string, AnkiNote[]> = {};
+  async query({
+    kanjiList,
+    readingList,
+  }: {
+    kanjiList: string[];
+    readingList: string[];
+  }) {
+    const queryWithNotesCache = async () => {
+      const kanjiListResult: Record<string, AnkiNote[]> = {};
+      const readingListResult: Record<string, AnkiNote[]> = {};
+
       const manifest = await this.manifest();
-      const kanjiSet = new Set(kanjiList);
+
+      const kanjiSet = kanjiList ? new Set(kanjiList) : null;
+      const readingSet = readingList ? new Set(readingList) : null;
 
       for (const chunk of manifest.chunks) {
         const res = await fetch(`${this.assetsPath}/${chunk.file}`);
@@ -136,28 +169,79 @@ export class Nex {
         const notes = JSON.parse(text) as AnkiNote[];
 
         for (const note of notes) {
-          // Skip irrelevant models early
           if (note.modelName !== "Kiku" && note.modelName !== "Lapis") continue;
 
           const expr = note.fields.Expression.value;
+          const reading = note.fields.ExpressionReading?.value ?? "";
 
-          // Only check relevant kanji that actually appear in the expression
-          for (const kanji of kanjiSet) {
-            if (expr.includes(kanji)) {
-              result[kanji] ??= [];
-              result[kanji].push(note);
+          // ------- Kanji Search -------
+          if (kanjiSet) {
+            for (const kanji of kanjiSet) {
+              if (expr.includes(kanji)) {
+                kanjiListResult[kanji] ??= [];
+                kanjiListResult[kanji].push(note);
+              }
+            }
+          }
+
+          // ------- Reading Search -------
+          if (readingSet) {
+            for (const readingStr of readingSet) {
+              if (reading === readingStr) {
+                readingListResult[readingStr] ??= [];
+                readingListResult[readingStr].push(note);
+              }
             }
           }
         }
       }
-      return result;
+
+      return { kanjiListResult, readingListResult };
+    };
+
+    if (this.preferAnkiConnect) {
+      try {
+        logger.info("Querying with AnkiConnect");
+        return await AnkiConnect.queryFieldContains({
+          kanjiList,
+          readingList,
+        });
+      } catch {
+        logger.warn(
+          "Failed to query with AnkiConnect, falling back to notes cache",
+        );
+        return await queryWithNotesCache();
+      }
+    }
+
+    try {
+      logger.info("Querying with notes cache");
+      return await queryWithNotesCache();
     } catch {
-      const result = await AnkiConnect.queryKanji(kanjiList);
-      return result;
+      logger.warn(
+        "Failed to query with notes cache, falling back to AnkiConnect",
+      );
+      return await AnkiConnect.queryFieldContains({
+        kanjiList,
+        readingList,
+      });
     }
   }
 
-  async querySharedAndSimilar(kanjiList: string[]) {
+  async querySharedAndSimilar({
+    kanjiList,
+    readingList,
+    ankiFields,
+  }: {
+    kanjiList: string[];
+    readingList: string[];
+    ankiFields: AnkiFields;
+  }) {
+    logger.debug("querySharedAndSimilar:", {
+      kanjiList,
+      readingList,
+      ankiFields,
+    });
     const similarKanji: Record<string, string[]> = Object.fromEntries(
       await Promise.all(
         kanjiList.map(async (k) => [k, await this.getSimilarKanji(k)]),
@@ -167,27 +251,51 @@ export class Nex {
     const allKanji = [
       ...new Set(kanjiList.flatMap((k) => [k, ...(similarKanji[k] ?? [])])),
     ];
-    const queryResult = await this.query(allKanji);
+    const { kanjiListResult, readingListResult } = await this.query({
+      kanjiList: allKanji,
+      readingList,
+    });
 
-    const result: Record<
+    const kanjiResult: Record<
       string,
       { shared: AnkiNote[]; similar: Record<string, AnkiNote[]> }
     > = {};
 
+    const filterSameNote = (note: AnkiNote) => {
+      // TODO: use CardID to filter same note
+      //https://github.com/ankitects/anki/pull/4046
+      //only available in Anki >25.9
+      if (
+        note.fields.Expression.value === ankiFields.Expression &&
+        note.fields.Sentence.value === ankiFields.Sentence &&
+        note.fields.Hint.value === ankiFields.Hint &&
+        note.fields.MiscInfo.value === ankiFields.MiscInfo
+      )
+        return false;
+      return true;
+    };
+
     for (const kanji of kanjiList) {
       const similars = similarKanji[kanji] ?? [];
 
-      result[kanji] = {
-        shared: queryResult[kanji] ?? [],
+      kanjiResult[kanji] = {
+        shared: kanjiListResult[kanji]?.filter(filterSameNote) ?? [],
         similar: Object.fromEntries(
           similars
-            .filter((k) => queryResult[k])
-            .map((k) => [k, queryResult[k]]),
+            .filter((k) => kanjiListResult[k])
+            .map((k) => [k, kanjiListResult[k]?.filter(filterSameNote)]),
         ),
       };
     }
 
-    return result;
+    readingList.forEach((reading) => {
+      readingListResult[reading] =
+        readingListResult[reading]?.filter(filterSameNote).filter((note) => {
+          return note.fields.Expression.value !== ankiFields.Expression;
+        }) ?? [];
+    });
+
+    return { kanjiResult, readingResult: readingListResult };
   }
 
   async lookup(kanji: string): Promise<Kanji> {
@@ -197,7 +305,10 @@ export class Nex {
       const res = await fetch(
         `${this.assetsPath}/${this.env.KIKU_DB_SIMILAR_KANJI_LOOKUP}`,
       );
-      if (!res.body) throw new Error(`Failed to lookup ${kanji}`);
+      if (!res.body) {
+        logger.error("Failed to lookup", kanji);
+        throw new Error(`Failed to lookup ${kanji}`);
+      }
       const ds = new DecompressionStream("gzip");
       const decompressed = res.body.pipeThrough(ds);
       const text = await new Response(decompressed).text();
@@ -214,7 +325,10 @@ export class Nex {
     const res = await fetch(
       `${this.assetsPath}/${this.env.KIKU_NOTES_MANIFEST}`,
     );
-    if (!res.ok) throw new Error(`Failed to load manifest`);
+    if (!res.ok) {
+      logger.error("Failed to load manifest");
+      throw new Error(`Failed to load manifest`);
+    }
     const manifest = await res.json();
     this.cache.set(key, manifest);
     return manifest;
@@ -231,7 +345,10 @@ export class Nex {
     for (const src of allSources) {
       if (!similarKanjiDbs[src.file]) {
         const res = await fetch(src.file);
-        if (!res.body) throw new Error(`Failed to load ${src.file}`);
+        if (!res.body) {
+          logger.error("Failed to load", src.file);
+          throw new Error(`Failed to load ${src.file}`);
+        }
         const ds = new DecompressionStream("gzip");
         const decompressed = res.body.pipeThrough(ds);
         const text = await new Response(decompressed).text();

@@ -7,7 +7,12 @@ export function wrap<T>(worker: Worker) {
   const pending = new Map();
 
   worker.onmessage = (e) => {
-    const { id, result, error } = e.data;
+    const { id, result, error, log } = e.data;
+    if (log) {
+      KIKU_STATE.logger.push(log.level, log.args);
+      return;
+    }
+
     const { resolve, reject } = pending.get(id);
     pending.delete(id);
     error ? reject(error) : resolve(result);
@@ -31,8 +36,14 @@ export function wrap<T>(worker: Worker) {
 
 export class WorkerClient {
   nex: Promise<NexApi>;
+  worker: Worker;
 
-  constructor(payload: { env: Env; assetsPath: string; config: KikuConfig }) {
+  constructor(payload: {
+    env: Env;
+    assetsPath: string;
+    config: KikuConfig;
+    preferAnkiConnect: boolean;
+  }) {
     let worker: Worker;
     if (KIKU_STATE.assetsPath !== window.location.origin) {
       worker = new Worker(`${KIKU_STATE.assetsPath}/_kiku_worker.js`, {
@@ -49,5 +60,6 @@ export class WorkerClient {
         resolve(Nex);
       });
     });
+    this.worker = worker;
   }
 }

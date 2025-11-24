@@ -1,16 +1,14 @@
 import { createStore } from "solid-js/store";
 import { generateHydrationScript, renderToString } from "solid-js/web";
 import { Front } from "#/components/Front";
+import { AnkiFieldContextProvider } from "#/components/shared/AnkiFieldsContext";
 import { CardStoreContextProvider } from "#/components/shared/CardContext";
+import { ConfigContextProvider } from "#/components/shared/ConfigContext";
 import { FieldGroupContextProvider } from "#/components/shared/FieldGroupContext";
-import { PluginContextProvider } from "#/components/shared/PluginContextProvider";
+import { GeneralContextProvider } from "#/components/shared/GeneralContext";
 import { Logger } from "#/util/logger";
 import { Back } from "../src/components/Back";
-import {
-  AnkiFieldContextProvider,
-  BreakpointContextProvider,
-  ConfigContextProvider,
-} from "../src/components/shared/Context";
+import { BreakpointContextProvider } from "../src/components/shared/BreakpointContext";
 import { defaultConfig } from "../src/util/config";
 
 const [config, setConfig] = createStore(defaultConfig);
@@ -24,7 +22,7 @@ globalThis.KIKU_STATE = {
 
 export function getSsrTemplate() {
   const frontSsrTemplate = renderToString(() => (
-    <PluginContextProvider>
+    <GeneralContextProvider>
       <AnkiFieldContextProvider>
         <CardStoreContextProvider side="front">
           <BreakpointContextProvider>
@@ -36,10 +34,10 @@ export function getSsrTemplate() {
           </BreakpointContextProvider>
         </CardStoreContextProvider>
       </AnkiFieldContextProvider>
-    </PluginContextProvider>
+    </GeneralContextProvider>
   ));
   const backSsrTemplate = renderToString(() => (
-    <PluginContextProvider>
+    <GeneralContextProvider>
       <AnkiFieldContextProvider>
         <CardStoreContextProvider side="back">
           <BreakpointContextProvider>
@@ -51,7 +49,7 @@ export function getSsrTemplate() {
           </BreakpointContextProvider>
         </CardStoreContextProvider>
       </AnkiFieldContextProvider>
-    </PluginContextProvider>
+    </GeneralContextProvider>
   ));
 
   const hydrationScript = generateHydrationScript();

@@ -1,6 +1,17 @@
 import { isServer } from "solid-js/web";
 import { type AnkiFields, ankiFieldsSkeleton } from "#/types";
-import { exampleFields7 } from "./examples";
+import {
+  exampleFields,
+  exampleFields2,
+  exampleFields3,
+  exampleFields4,
+  exampleFields5,
+  exampleFields6,
+  exampleFields7,
+  exampleFields8,
+  exampleFields10,
+  exampleFields11,
+} from "./examples";
 
 // biome-ignore format: this looks nicer
 export const env = {
@@ -8,6 +19,7 @@ export const env = {
   KIKU_CARD_TYPE: "Mining",
   KIKU_CONFIG_FILE: "_kiku_config.json",
   KIKU_CONFIG_SESSION_STORAGE_KEY: "kiku-config",
+  KIKU_IS_THEME_CHANGED_SESSION_STORAGE_KEY: "kiku-is-theme-changed",
   KIKU_FRONT_FILE: "_kiku_front.html",
   KIKU_BACK_FILE: "_kiku_back.html",
   KIKU_STYLE_FILE: "_kiku_style.css",
@@ -20,7 +32,7 @@ export const env = {
   KIKU_DB_SIMILAR_KANJI_WK_NIAI_NOTO: "_kiku_db_similar_kanji_wk_niai_noto.json.gz",
   KIKU_DB_SIMILAR_KANJI_YL_RADICAL: "_kiku_db_similar_kanji_yl_radical.json.gz",
   KIKU_PLUGIN_MODULE: "_kiku_plugin.js",
-  KIKU_VERSION: "1.1.1",
+  KIKU_VERSION: "1.2.0",
   KIKU_IMPORTANT_FILES: [
     "_kiku.js",
     "_kiku_libs.js",
@@ -61,7 +73,7 @@ export function getAnkiFields() {
     ? undefined
     : document.querySelectorAll("#anki-fields > div");
   if (import.meta.env.DEV && !isServer) {
-    divs = Object.entries(exampleFields7).map(([key, value]) => {
+    divs = Object.entries(exampleFields10).map(([key, value]) => {
       const div = document.createElement("div");
       div.dataset.field = key;
       div.innerHTML = value;

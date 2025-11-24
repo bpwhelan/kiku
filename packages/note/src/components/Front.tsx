@@ -1,10 +1,10 @@
 import { createEffect, createSignal, lazy, onMount } from "solid-js";
 import { isServer } from "solid-js/web";
-import { useCardStore } from "#/components/shared/CardContext";
+import { useCardContext } from "#/components/shared/CardContext";
 import type { DatasetProp } from "#/util/config";
 import { Layout } from "./Layout";
-import { useAnkiField } from "./shared/Context";
-import { useFieldGroup } from "./shared/FieldGroupContext";
+import { useAnkiFieldContext } from "./shared/AnkiFieldsContext";
+import { useFieldGroupContext } from "./shared/FieldGroupContext";
 
 // biome-ignore format: this looks nicer
 const Lazy = {
@@ -16,25 +16,25 @@ const Lazy = {
 };
 
 export function Front() {
-  const [card, setCard] = useCardStore();
-  const { ankiFields } = useAnkiField<"front">();
+  const [$card, $setCard] = useCardContext();
+  const { ankiFields } = useAnkiFieldContext<"front">();
   const [clicked, setClicked] = createSignal(false);
-  const { group } = useFieldGroup();
+  const { $group } = useFieldGroupContext();
 
   onMount(() => {
     setTimeout(() => {
-      setCard("ready", true);
+      $setCard("ready", true);
     }, 100);
   });
 
   createEffect(() => {
     if (
       ankiFields.IsAudioCard &&
-      card.sentenceFieldRef &&
-      group.sentenceField
+      $card.sentenceFieldRef &&
+      $group.sentenceField
     ) {
-      card.sentenceFieldRef.innerHTML =
-        card.sentenceFieldRef.innerHTML.replaceAll(
+      $card.sentenceFieldRef.innerHTML =
+        $card.sentenceFieldRef.innerHTML.replaceAll(
           ankiFields.Expression,
           "<span class='text-base-content-primary'>[...]<span>",
         );
@@ -66,9 +66,9 @@ export function Front() {
 
   return (
     <Layout>
-      {card.ready && !card.nested && <Lazy.UseAnkiDroid />}
+      {$card.ready && !$card.nested && <Lazy.UseAnkiDroid />}
       <div class="flex justify-between flex-row h-5 min-h-5">
-        {card.ready && <Lazy.Header side="front" />}
+        {$card.ready && <Lazy.Header side="front" />}
       </div>
       <div class="flex flex-col gap-4">
         <div
@@ -105,20 +105,20 @@ export function Front() {
             hidden: hidden(),
           }}
         >
-          {card.ready && <Lazy.PicturePagination />}
+          {$card.ready && <Lazy.PicturePagination />}
         </div>
       </div>
 
       <div
-        class="flex-col gap-4 items-center text-center"
+        class="flex flex-col gap-4 items-center text-center justify-center"
         classList={{
           hidden: hidden(),
         }}
       >
-        {card.ready && <Lazy.Sentence />}
+        {$card.ready && <Lazy.Sentence />}
       </div>
 
-      {card.ready && ankiFields.IsAudioCard && (
+      {$card.ready && ankiFields.IsAudioCard && (
         <div class="flex gap-2 justify-center animate-fade-in-sm">
           <Lazy.AudioButtons position={1} />
         </div>

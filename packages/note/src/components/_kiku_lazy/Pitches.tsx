@@ -1,11 +1,11 @@
 import { hatsuon } from "#/components/_kiku_lazy/util/hatsuon";
-import { useCardStore } from "#/components/shared/CardContext";
+import { useCardContext } from "#/components/shared/CardContext";
 import type { DatasetProp } from "#/util/config";
-import { useAnkiField } from "../shared/Context";
+import { useAnkiFieldContext } from "../shared/AnkiFieldsContext";
 
 export default function Pitches() {
-  const [card] = useCardStore();
-  const { ankiFields } = useAnkiField<"back">();
+  const [$card] = useCardContext();
+  const { ankiFields } = useAnkiFieldContext<"back">();
 
   const tempDiv = document.createElement("div");
   tempDiv.innerHTML = ankiFields.PitchPosition;
@@ -19,7 +19,7 @@ export default function Pitches() {
   KIKU_STATE.logger.info("Detected pitch number:", pitchNumber);
 
   const kana = () => {
-    if (card.nested) return ankiFields.ExpressionReading;
+    if ($card.nested) return ankiFields.ExpressionReading;
     return ankiFields.ExpressionFurigana
       ? ankiFields["kana:ExpressionFurigana"]
       : ankiFields.ExpressionReading;

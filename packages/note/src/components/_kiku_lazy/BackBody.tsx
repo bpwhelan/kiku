@@ -6,16 +6,17 @@ import {
   Show,
 } from "solid-js";
 import h from "solid-js/h";
-import { useAnkiField, useConfig } from "../shared/Context";
-import { usePlugin } from "../shared/PluginContextProvider";
+import { useAnkiFieldContext } from "../shared/AnkiFieldsContext";
+import { useConfigContext } from "../shared/ConfigContext";
+import { useGeneralContext } from "../shared/GeneralContext";
 import Sentence from "./Sentence";
 
 export default function BackBody(props: {
   onDefinitionPictureClick?: (picture: string) => void;
 }) {
   let definitionEl: HTMLDivElement | undefined;
-  const { ankiFields } = useAnkiField<"back">();
-  const [config] = useConfig();
+  const { ankiFields } = useAnkiFieldContext<"back">();
+  const [$config] = useConfigContext();
   const [definitionPage, setDefinitionPage] = createSignal(
     ankiFields.SelectionText ? 0 : 1,
   );
@@ -76,11 +77,11 @@ export default function BackBody(props: {
     <div
       class="flex sm:flex-col gap-8 animate-fade-in"
       classList={{
-        "flex-col-reverse": config.swapSentenceAndDefinitionOnMobile,
-        "flex-col": !config.swapSentenceAndDefinitionOnMobile,
+        "flex-col-reverse": $config.swapSentenceAndDefinitionOnMobile,
+        "flex-col": !$config.swapSentenceAndDefinitionOnMobile,
       }}
     >
-      <div class="flex justify-between gap-2 items-center text-center">
+      <div class="flex flex-col justify-center gap-2 items-center text-center">
         <Sentence />
       </div>
       {pagesWithContent.length > 0 && (
@@ -125,12 +126,15 @@ export default function BackBody(props: {
 }
 
 function ExternalLinks() {
-  const { ankiFields } = useAnkiField<"back">();
-  const [plugin] = usePlugin();
+  const { ankiFields } = useAnkiFieldContext<"back">();
+  const [$general] = useGeneralContext();
 
   return (
     <ErrorBoundary fallback={<DefaultExternalLinks />}>
-      <Show when={plugin()?.ExternalLinks} fallback={<DefaultExternalLinks />}>
+      <Show
+        when={$general.plugin?.ExternalLinks}
+        fallback={<DefaultExternalLinks />}
+      >
         {(get) => {
           const ExternalLinks = get();
           return (
@@ -150,7 +154,7 @@ function ExternalLinks() {
 }
 
 function DefaultExternalLinks() {
-  const { ankiFields } = useAnkiField<"back">();
+  const { ankiFields } = useAnkiFieldContext<"back">();
 
   return (
     <>

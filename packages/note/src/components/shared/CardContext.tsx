@@ -9,6 +9,11 @@ import {
 } from "#/types";
 import type { WorkerClient } from "#/worker/client";
 
+export type KanjiData = {
+  shared: AnkiNote[];
+  similar: Record<string, AnkiNote[]>;
+};
+
 type CardStore = {
   side: "front" | "back";
   layoutRef?: HTMLDivElement;
@@ -27,19 +32,13 @@ type CardStore = {
   toastType: "success" | "error";
   imageModal?: string;
   isNsfw: boolean;
-  kanji: Record<
-    string,
-    {
-      shared: AnkiNote[];
-      similar: Record<string, AnkiNote[]>;
-    }
-  >;
+  kanji: Record<string, KanjiData>;
   kanjiStatus: "success" | "error" | "loading";
   selectedSimilarKanji: string | undefined;
+  sameReadingNote: AnkiNote[] | undefined;
   nestedAnkiFields: AnkiFields;
   nested: boolean;
   manifest: KikuNotesManifest | undefined;
-  worker: WorkerClient | undefined;
   ankiConnectAvailable: boolean;
 };
 
@@ -52,7 +51,7 @@ export function CardStoreContextProvider(props: {
   side: "front" | "back";
 }) {
   let timeout: number;
-  const [card, setCard] = createStore<CardStore>({
+  const [$card, $setCard] = createStore<CardStore>({
     side: props.side,
     layoutRef: undefined,
     contentRef: undefined,
@@ -65,18 +64,18 @@ export function CardStoreContextProvider(props: {
     toast: {
       success: (message: string) => {
         if (timeout) clearTimeout(timeout);
-        setCard("toastType", "success");
-        setCard("toastMessage", message);
+        $setCard("toastType", "success");
+        $setCard("toastMessage", message);
         timeout = setTimeout(() => {
-          setCard("toastMessage", undefined);
+          $setCard("toastMessage", undefined);
         }, 3000);
       },
       error: (message: string) => {
         if (timeout) clearTimeout(timeout);
-        setCard("toastType", "error");
-        setCard("toastMessage", message);
+        $setCard("toastType", "error");
+        $setCard("toastMessage", message);
         timeout = setTimeout(() => {
-          setCard("toastMessage", undefined);
+          $setCard("toastMessage", undefined);
         }, 3000);
       },
     },
@@ -87,21 +86,21 @@ export function CardStoreContextProvider(props: {
     kanji: {},
     kanjiStatus: "loading",
     selectedSimilarKanji: undefined,
+    sameReadingNote: undefined,
     nestedAnkiFields: ankiFieldsSkeleton,
     nested: props.nested ?? false,
     manifest: undefined,
-    worker: undefined,
     ankiConnectAvailable: false,
   });
 
   return (
-    <CardStoreContext.Provider value={[card, setCard]}>
+    <CardStoreContext.Provider value={[$card, $setCard]}>
       {props.children}
     </CardStoreContext.Provider>
   );
 }
 
-export function useCardStore() {
+export function useCardContext() {
   const cardStore = useContext(CardStoreContext);
   if (!cardStore) throw new Error("Missing CardStoreContext");
   return cardStore;

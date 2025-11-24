@@ -2,7 +2,6 @@ import { type WebFont, webFonts } from "./fonts";
 import { type DaisyUITheme, daisyUIThemes } from "./theme";
 
 export type KikuConfig = {
-  kikuRoot: "true";
   theme: DaisyUITheme;
   webFontPrimary: WebFont;
   systemFontPrimary: string;
@@ -17,6 +16,7 @@ export type KikuConfig = {
   ankiDroidReverseSwipeDirection: boolean;
   volume: number;
   swapSentenceAndDefinitionOnMobile: boolean;
+  preferAnkiConnect: boolean;
   fontSizeBaseExpression: TailwindSize;
   fontSizeBasePitch: TailwindSize;
   fontSizeBaseSentence: TailwindSize;
@@ -31,7 +31,6 @@ export type KikuConfig = {
 
 // biome-ignore format: this looks nicer
 export const defaultConfig: KikuConfig = {
-  kikuRoot: "true",
   theme: "light",
   webFontPrimary: "Klee One",
   systemFontPrimary: "'Inter', 'SF Pro Display', 'Liberation Sans', 'Segoe UI', 'Hiragino Kaku Gothic ProN', 'Noto Sans CJK JP', 'Noto Sans JP', 'Meiryo', HanaMinA, HanaMinB, sans-serif",
@@ -46,6 +45,7 @@ export const defaultConfig: KikuConfig = {
   ankiDroidReverseSwipeDirection: false,
   volume: 100,
   swapSentenceAndDefinitionOnMobile: true,
+  preferAnkiConnect: false,
   fontSizeBaseExpression: "5xl",
   fontSizeBasePitch: "xl",
   fontSizeBaseSentence: "2xl",
@@ -78,7 +78,7 @@ export const tailwindFontSizeVar = {
   "9xl": { fontSize: "var(--text-9xl)", lineHeight: "var(--text-9xl--line-height)", },
 } as const;
 
-const rootDatasetArray = ["kikuRoot", "theme"] as const;
+const rootDatasetArray = ["theme"] as const;
 export type RootDatasetKey = (typeof rootDatasetArray)[number];
 export type RootDataset = Partial<Record<RootDatasetKey, string>>;
 export const rootDatasetConfigWhitelist = new Set<RootDatasetKey>(
@@ -97,7 +97,6 @@ export function validateConfig(config: KikuConfig): KikuConfig {
 
     // biome-ignore format: this looks nicer
     const valid: KikuConfig = {
-      kikuRoot: "true",
       theme: daisyUIThemes.includes(config.theme) ? config.theme : defaultConfig.theme,
       webFontPrimary: webFonts.includes(config.webFontPrimary) ? config.webFontPrimary : defaultConfig.webFontPrimary,
       systemFontPrimary: typeof config.systemFontPrimary === "string" ? config.systemFontPrimary : defaultConfig.systemFontPrimary,
@@ -112,6 +111,7 @@ export function validateConfig(config: KikuConfig): KikuConfig {
       ankiDroidReverseSwipeDirection: typeof config.ankiDroidReverseSwipeDirection === "boolean" ? config.ankiDroidReverseSwipeDirection : defaultConfig.ankiDroidReverseSwipeDirection,
       volume: typeof config.volume === "number" && config.volume >= 0 && config.volume <= 100 ? config.volume : defaultConfig.volume,
       swapSentenceAndDefinitionOnMobile: typeof config.swapSentenceAndDefinitionOnMobile === "boolean" ? config.swapSentenceAndDefinitionOnMobile : defaultConfig.swapSentenceAndDefinitionOnMobile,
+      preferAnkiConnect: typeof config.preferAnkiConnect === "boolean" ? config.preferAnkiConnect : defaultConfig.preferAnkiConnect,
       fontSizeBaseExpression: tailwindSize.includes(config.fontSizeBaseExpression) ? config.fontSizeBaseExpression : defaultConfig.fontSizeBaseExpression,
       fontSizeBasePitch: tailwindSize.includes(config.fontSizeBasePitch) ? config.fontSizeBasePitch : defaultConfig.fontSizeBasePitch,
       fontSizeBaseSentence: tailwindSize.includes(config.fontSizeBaseSentence) ? config.fontSizeBaseSentence : defaultConfig.fontSizeBaseSentence,
@@ -159,7 +159,6 @@ export type CssVar = {
 
 // biome-ignore format: this looks nicer
 export type Dataset = {
-  "data-kiku-root": "true" | "false";
   "data-theme": string;
   //
   "data-field": string;
@@ -169,6 +168,7 @@ export type Dataset = {
   "data-is-even": "true" | "false";
   "data-has-pitch": string
   "data-has-hint": string
+  "data-has-picture": string
 };
 
 export type DatasetProp = Partial<Dataset>;

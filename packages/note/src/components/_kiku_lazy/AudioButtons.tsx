@@ -1,15 +1,17 @@
 import { createEffect, For, Show } from "solid-js";
 import { Portal } from "solid-js/web";
-import { useCardStore } from "#/components/shared/CardContext";
-import { useAnkiField, useBreakpoint, useConfig } from "../shared/Context";
-import { useFieldGroup } from "../shared/FieldGroupContext";
+import { useCardContext } from "#/components/shared/CardContext";
+import { useAnkiFieldContext } from "../shared/AnkiFieldsContext";
+import { useBreakpointContext } from "../shared/BreakpointContext";
+import { useConfigContext } from "../shared/ConfigContext";
+import { useFieldGroupContext } from "../shared/FieldGroupContext";
 import { PlayIcon } from "./Icons";
 
 function AudioTag(props: { text: string }) {
   // Find all `[sound:filename.mp3]` occurrences
   const matches = () => [...props.text.matchAll(/\[sound:([^\]]+)\]/g)];
   const sounds = () => matches().map((m) => m[1]);
-  KIKU_STATE.logger.info("Using sounds:", sounds);
+  KIKU_STATE.logger.info("Using sounds:", sounds().join(", "));
 
   return (
     <Show when={sounds().length > 0}>
@@ -42,11 +44,11 @@ export function NotePlayIcon(props: {
 }
 
 export default function AudioButtons(props: { position: 1 | 2 }) {
-  const { ankiFields } = useAnkiField<"back">();
-  const [card, setCard] = useCardStore();
-  const { group } = useFieldGroup();
-  const [config] = useConfig();
-  const bp = useBreakpoint();
+  const { ankiFields } = useAnkiFieldContext<"back">();
+  const [$card, $setCard] = useCardContext();
+  const { $group } = useFieldGroupContext();
+  const [$config] = useConfigContext();
+  const bp = useBreakpointContext();
   const hiddenStyle = {
     width: "0",
     height: "0",
@@ -55,10 +57,10 @@ export default function AudioButtons(props: { position: 1 | 2 }) {
   } as const;
 
   createEffect(() => {
-    group.sentenceAudioField;
-    const anchors = card.sentenceAudioRef?.querySelectorAll("a");
+    $group.sentenceAudioField;
+    const anchors = $card.sentenceAudioRef?.querySelectorAll("a");
     if (anchors?.length) {
-      setCard("sentenceAudios", Array.from(anchors));
+      $setCard("sentenceAudios", Array.from(anchors));
       let anchorsHtml = "";
       anchors.forEach((a) => {
         anchorsHtml += a.outerHTML;
@@ -66,9 +68,9 @@ export default function AudioButtons(props: { position: 1 | 2 }) {
       KIKU_STATE.logger.info("Anchors in sentence audios:", anchorsHtml);
     }
 
-    const audios = card.sentenceAudioRef?.querySelectorAll("audio");
+    const audios = $card.sentenceAudioRef?.querySelectorAll("audio");
     if (audios?.length) {
-      setCard("sentenceAudios", Array.from(audios));
+      $setCard("sentenceAudios", Array.from(audios));
       let audiosHtml = "";
       audios.forEach((a) => {
         audiosHtml += a.outerHTML;
@@ -79,21 +81,21 @@ export default function AudioButtons(props: { position: 1 | 2 }) {
 
   let autoPlay = true;
   createEffect(() => {
-    group.sentenceAudioField;
-    card.expressionAudioRef?.querySelectorAll("audio").forEach((el) => {
-      el.volume = bp.isAtLeast("sm") ? config.volume / 100 : 1;
+    $group.sentenceAudioField;
+    $card.expressionAudioRef?.querySelectorAll("audio").forEach((el) => {
+      el.volume = bp.isAtLeast("sm") ? $config.volume / 100 : 1;
     });
-    card.sentenceAudioRef?.querySelectorAll("audio").forEach((el) => {
-      el.volume = bp.isAtLeast("sm") ? config.volume / 100 : 1;
+    $card.sentenceAudioRef?.querySelectorAll("audio").forEach((el) => {
+      el.volume = bp.isAtLeast("sm") ? $config.volume / 100 : 1;
     });
 
-    if (card.nested && autoPlay) {
+    if ($card.nested && autoPlay) {
       autoPlay = false;
-      const audio = card.expressionAudioRef?.querySelector("audio");
+      const audio = $card.expressionAudioRef?.querySelector("audio");
       if (audio) {
         audio.play();
         audio.onpause = () => {
-          const audio = card.sentenceAudioRef?.querySelectorAll("audio")[0];
+          const audio = $card.sentenceAudioRef?.querySelectorAll("audio")[0];
           if (audio) {
             audio.play();
           }
@@ -109,12 +111,12 @@ export default function AudioButtons(props: { position: 1 | 2 }) {
           <NotePlayIcon
             color="primary"
             on:click={() => {
-              card.expressionAudioRef?.querySelector("a")?.click();
-              card.expressionAudioRef?.querySelector("audio")?.play();
+              $card.expressionAudioRef?.querySelector("a")?.click();
+              $card.expressionAudioRef?.querySelector("audio")?.play();
             }}
           ></NotePlayIcon>
         )}
-        {card.sentenceAudios?.map((el) => {
+        {$card.sentenceAudios?.map((el) => {
           return (
             <NotePlayIcon
               color="secondary"
@@ -134,17 +136,17 @@ export default function AudioButtons(props: { position: 1 | 2 }) {
       <>
         <div
           style={hiddenStyle}
-          ref={(ref) => setCard("expressionAudioRef", ref)}
-          innerHTML={card.nested ? undefined : ankiFields.ExpressionAudio}
+          ref={(ref) => $setCard("expressionAudioRef", ref)}
+          innerHTML={$card.nested ? undefined : ankiFields.ExpressionAudio}
         >
-          {card.nested && <AudioTag text={ankiFields.ExpressionAudio} />}
+          {$card.nested && <AudioTag text={ankiFields.ExpressionAudio} />}
         </div>
         <div
           style={hiddenStyle}
-          ref={(ref) => setCard("sentenceAudioRef", ref)}
-          innerHTML={card.nested ? undefined : group.sentenceAudioField}
+          ref={(ref) => $setCard("sentenceAudioRef", ref)}
+          innerHTML={$card.nested ? undefined : $group.sentenceAudioField}
         >
-          {card.nested && <AudioTag text={group.sentenceAudioField} />}
+          {$card.nested && <AudioTag text={$group.sentenceAudioField} />}
         </div>
         <NotePlayIcons />
       </>
