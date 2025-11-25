@@ -62,13 +62,13 @@ export default function Header(props: {
               on:touchend={(e) => e.stopPropagation()}
             >
               <PaintbrushIcon class="size-5 cursor-pointer text-base-content-soft"></PaintbrushIcon>
-              <div class="text-base-content-soft text-sm">
+              <div class="text-base-content-soft text-xs sm:text-sm">
                 {capitalize($config.theme)}
               </div>
             </div>
           </Show>
           <Show when={$config.showStartupTime}>
-            <div class="text-base-content-soft bg-warning/10 rounded-sm px-1 text-sm">
+            <div class="text-base-content-soft bg-warning/10 rounded-sm px-px sm:px-1 text-xs sm:text-sm">
               {startupTime()}
               {startupTime() && "ms"}
             </div>
@@ -123,9 +123,9 @@ function KanjiPageIndicator() {
         <div class="flex gap-px sm:gap-0.5 items-start">
           <span>{kanji}</span>
           <span
-            class="bg-base-200 leading-none text-xs sm:text-sm rounded-sm"
+            class="bg-base-200 leading-none text-xs sm:text-sm rounded-xs"
             classList={{
-              "p-0.5": length() <= 4,
+              "p-px": length() <= 4,
               "p-0": length() > 4,
             }}
           >
@@ -141,9 +141,9 @@ function KanjiPageIndicator() {
       <div class="flex gap-px sm:gap-0.5 items-start">
         <span>読</span>
         <span
-          class="bg-base-200 leading-none text-xs sm:text-sm rounded-sm"
+          class="bg-base-200 leading-none text-xs sm:text-sm rounded-xs"
           classList={{
-            "p-0.5": length() <= 4,
+            "p-px": length() <= 4,
             "p-0": length() > 4,
           }}
         >
