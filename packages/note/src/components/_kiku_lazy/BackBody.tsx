@@ -87,7 +87,9 @@ export default function BackBody(props: {
       {pagesWithContent.length > 0 && (
         <div>
           {pagesWithContent.length > 1 && (
-            <div class="text-end text-base-content-soft">{pageType()}</div>
+            <div class="text-end text-base-content-soft text-sm">
+              {pageType()}
+            </div>
           )}
           <div class="relative bg-base-200 p-4 border-s-4 border-primary text-base sm:text-xl rounded-lg [&_ol]:list-inside [&_ul]:list-inside">
             <div class="overflow-auto" ref={definitionEl}>

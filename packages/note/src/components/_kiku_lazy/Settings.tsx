@@ -230,7 +230,13 @@ function GeneralSettings() {
         </fieldset>
         <fieldset class="fieldset py-0">
           <legend class="fieldset-legend">
-            Swap Sentence and Definition on Mobile
+            Mobile Layout Alt
+            <div
+              class="tooltip"
+              data-tip="Swap Sentence and Definition position on mobile"
+            >
+              <InfoIcon class="size-4 text-base-content-calm" />
+            </div>
           </legend>
           <label class="label">
             <input
