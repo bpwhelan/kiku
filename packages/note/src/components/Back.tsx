@@ -206,9 +206,7 @@ export function Back(props: { onExitNested?: () => void }) {
               </div>
               <PictureSection />
             </div>
-            <div class="flex justify-between text-base-content-soft items-center gap-2 animate-fade-in h-5 sm:h-8">
-              {$card.ready && <Lazy.PicturePagination />}
-            </div>
+            {$card.ready && <PicturePaginationSection />}
           </div>
           {$card.ready && (
             <Lazy.BackBody
@@ -232,6 +230,21 @@ export function Back(props: { onExitNested?: () => void }) {
         />
       )}
     </Layout>
+  );
+}
+
+function PicturePaginationSection() {
+  const { $group } = useFieldGroupContext();
+
+  return (
+    <div
+      class="flex justify-between text-base-content-soft items-center gap-2 animate-fade-in h-5 sm:h-8"
+      classList={{
+        hidden: $group.ids.length <= 1,
+      }}
+    >
+      <Lazy.PicturePagination />
+    </div>
   );
 }
 
