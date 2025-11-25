@@ -10,17 +10,15 @@ export const plugin = {
     const h = props.ctx.h;
 
     function SentenceTranslation() {
-      const translation = document.getElementById(
-        "SentenceTranslation",
-      )?.innerText;
+      const translation =
+        //@ts-expect-error we have extra fields
+        props.ctx.ankiFields?.SentenceTranslation ||
+        document.getElementById("SentenceTranslation")?.innerHTML;
       if (!translation) return null;
-      return h(
-        "div",
-        {
-          class: "text-lg text-base-content-calm",
-        },
-        translation,
-      )();
+      return h("div", {
+        class: "text-lg text-base-content-calm",
+        innerHTML: translation,
+      })();
     }
 
     return [props.DefaultSentence(), SentenceTranslation()];
