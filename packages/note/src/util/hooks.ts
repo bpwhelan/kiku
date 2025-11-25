@@ -4,6 +4,7 @@ import { useAnkiFieldContext } from "#/components/shared/AnkiFieldsContext";
 import { useBreakpointContext } from "#/components/shared/BreakpointContext";
 import { useCardContext } from "#/components/shared/CardContext";
 import { useConfigContext } from "#/components/shared/ConfigContext";
+import { useGeneralContext } from "#/components/shared/GeneralContext";
 import { WorkerClient } from "#/worker/client";
 import { env, extractKanji } from "./general";
 import type { DaisyUITheme } from "./theme";
@@ -85,6 +86,7 @@ export function useKanji() {
   const [$config] = useConfigContext();
   const [$card, $setCard] = useCardContext();
   const { ankiFields } = useAnkiFieldContext<"back">();
+  const [$general] = useGeneralContext();
 
   let set = false;
   async function setKanji() {
@@ -111,6 +113,7 @@ export function useKanji() {
         readingList,
         ankiFields,
       });
+      if ($general.aborter.signal.aborted) return;
 
       $setCard("kanji", kanjiResult);
       $setCard("sameReadingNote", readingResult[ankiFields.ExpressionReading]);

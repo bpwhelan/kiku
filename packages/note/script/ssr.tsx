@@ -18,11 +18,12 @@ const logger = new Logger();
 globalThis.KIKU_STATE = {
   assetsPath: "",
   logger,
+  aborter: new AbortController(),
 };
 
 export function getSsrTemplate() {
   const frontSsrTemplate = renderToString(() => (
-    <GeneralContextProvider>
+    <GeneralContextProvider aborter={globalThis.KIKU_STATE.aborter}>
       <AnkiFieldContextProvider>
         <CardStoreContextProvider side="front">
           <BreakpointContextProvider>
@@ -37,7 +38,7 @@ export function getSsrTemplate() {
     </GeneralContextProvider>
   ));
   const backSsrTemplate = renderToString(() => (
-    <GeneralContextProvider>
+    <GeneralContextProvider aborter={globalThis.KIKU_STATE.aborter}>
       <AnkiFieldContextProvider>
         <CardStoreContextProvider side="back">
           <BreakpointContextProvider>

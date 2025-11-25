@@ -25,6 +25,7 @@ globalThis.KIKU_STATE = {
   logger: new Logger(),
   isAnkiDesktop: typeof pycmd !== "undefined",
   worker: globalThis.KIKU_STATE?.worker,
+  aborter: globalThis.KIKU_STATE?.aborter ?? new AbortController(),
 };
 
 export async function init({
@@ -37,11 +38,13 @@ export async function init({
   const now = performance.now();
   KIKU_STATE.side = side;
   KIKU_STATE.ssr = ssr;
-  await setup();
+  KIKU_STATE.aborter.abort();
+  KIKU_STATE.aborter = new AbortController();
+  await setup({ aborter: KIKU_STATE.aborter });
   KIKU_STATE.startupTime = performance.now() - now;
 }
 
-async function setup() {
+async function setup({ aborter }: { aborter: AbortController }) {
   const { side, ssr } = KIKU_STATE;
   try {
     if (!side) throw new Error("Side not set");
@@ -61,7 +64,7 @@ async function setup() {
     const root = document.getElementById("kiku-root");
     if (!root) {
       const shadowParent = document.querySelector("#kiku-shadow-parent");
-      if (shadowParent) return;
+      if (shadowParent || aborter.signal.aborted) return;
       throw new Error("root not found");
     }
     root.part.add("root-part");
@@ -101,6 +104,7 @@ async function setup() {
             await fetch(env.KIKU_CONFIG_FILE, { cache: "no-store" })
           ).json(),
         );
+        if (aborter.signal.aborted) return;
         sessionStorage.setItem(
           env.KIKU_CONFIG_SESSION_STORAGE_KEY,
           JSON.stringify(config$),
@@ -118,7 +122,7 @@ async function setup() {
 
     if (side === "front") {
       const App = () => (
-        <GeneralContextProvider>
+        <GeneralContextProvider aborter={aborter}>
           <AnkiFieldContextProvider>
             <CardStoreContextProvider side="front">
               <BreakpointContextProvider>
@@ -136,7 +140,7 @@ async function setup() {
       render(App, root);
     } else if (side === "back") {
       const App = () => (
-        <GeneralContextProvider>
+        <GeneralContextProvider aborter={aborter}>
           <AnkiFieldContextProvider>
             <CardStoreContextProvider side="back">
               <BreakpointContextProvider>

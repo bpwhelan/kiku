@@ -249,6 +249,7 @@ declare global {
     worker?: WorkerClient;
     side?: "front" | "back";
     ssr?: boolean;
+    aborter: AbortController;
   };
   var pycmd: () => void;
   var AnkiDroidJS: {

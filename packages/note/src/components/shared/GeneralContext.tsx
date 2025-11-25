@@ -5,12 +5,19 @@ import { isServer } from "solid-js/web";
 import type { KikuPlugin } from "#/plugins/pluginTypes";
 import { env } from "#/util/general";
 
-type GeneralStore = { plugin: KikuPlugin | undefined; isThemeChanged: boolean };
+type GeneralStore = {
+  plugin: KikuPlugin | undefined;
+  isThemeChanged: boolean;
+  aborter: AbortController;
+};
 
 const GeneralContext =
   createContext<[Store<GeneralStore>, SetStoreFunction<GeneralStore>]>();
 
-export function GeneralContextProvider(props: { children: JSX.Element }) {
+export function GeneralContextProvider(props: {
+  children: JSX.Element;
+  aborter: AbortController;
+}) {
   const [$general, $setGeneral] = createStore<GeneralStore>({
     plugin: undefined,
     isThemeChanged: isServer
@@ -20,6 +27,7 @@ export function GeneralContextProvider(props: { children: JSX.Element }) {
             env.KIKU_IS_THEME_CHANGED_SESSION_STORAGE_KEY,
           ) ?? "false",
         ),
+    aborter: props.aborter,
   });
 
   return (
