@@ -160,8 +160,8 @@ export class Nex {
 
       const manifest = await this.manifest();
 
-      const kanjiSet = kanjiList ? new Set(kanjiList) : null;
-      const readingSet = readingList ? new Set(readingList) : null;
+      const kanjiSet = new Set(kanjiList);
+      const readingSet = new Set(readingList);
 
       for (const chunk of manifest.chunks) {
         const res = await fetch(`${this.assetsPath}/${chunk.file}`);

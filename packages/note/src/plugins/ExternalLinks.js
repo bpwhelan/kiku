@@ -47,6 +47,7 @@ export const plugin = {
       props.DefaultExternalLinks(),
       NadeshikoLink(),
       AnkiDroidBrowseButton(),
+      // you can create as many links as you want
     ];
   },
 };
