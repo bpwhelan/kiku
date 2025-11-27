@@ -147,6 +147,10 @@
     @apply [&_*:not(img)]:contents;
     @apply [&_:not(:first-child)]:hidden;
     @apply relative h-48 sm:h-56 cursor-pointer [&_img]:h-full [&_img]:object-contain [&_img]:hover:filter-none;
+    /* @apply relative h-full cursor-pointer;
+    @apply [&_img]:w-full [&_img]:h-auto;
+    @apply sm:[&_img]:h-full sm:[&_img]:object-contain sm:[&_img]:mx-auto;
+    @apply [&_img]:hover:filter-none; */
     &[data-nsfw="true"],
     &[data-tags~="nsfw"],
     &[data-tags~="NSFW"],
