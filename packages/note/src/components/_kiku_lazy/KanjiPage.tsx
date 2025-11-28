@@ -19,20 +19,6 @@ export default function KanjiPage(props: { onBackClick: () => void }) {
   const { ankiFields } = useAnkiFieldContext<"back">();
   const [$general, $setGeneral] = useGeneralContext();
 
-  const ExpressionFurigana = () => {
-    if (ankiFields.Expression && ankiFields.ExpressionReading) {
-      return (
-        <ruby>
-          {ankiFields.Expression}
-          <rt>{ankiFields.ExpressionReading}</rt>
-        </ruby>
-      );
-    }
-    return ankiFields.ExpressionReading
-      ? ankiFields.ExpressionReading
-      : ankiFields.Expression;
-  };
-
   return (
     <>
       <div class="flex flex-row justify-between items-center animate-fade-in">
@@ -75,32 +61,7 @@ export default function KanjiPage(props: { onBackClick: () => void }) {
             $card.query.sameReading.length > 0
           }
         >
-          <div class="collapse bg-base-200 border border-base-300 animate-fade-in">
-            <input type="checkbox" checked={true} />
-            <div class="collapse-title justify-between flex items-center ps-2 sm:ps-4 pe-2 sm:pe-4 py-2 sm:py-4">
-              <span class="text-lg sm:text-2xl">
-                <span class="text-base-content-calm">Same Reading</span>{" "}
-                <span class="font-secondary">
-                  (
-                  <ExpressionFurigana />)
-                </span>
-              </span>
-            </div>
-            <div class="collapse-content text-sm px-2 sm:px-4 pb-2 sm:pb-4">
-              <ul class="list bg-base-100 rounded-box shadow-md">
-                <For each={$card.query.sameReading ?? []}>
-                  {(data) => {
-                    return (
-                      <AnkiNoteItem
-                        data={data}
-                        reading={ankiFields.ExpressionReading}
-                      />
-                    );
-                  }}
-                </For>
-              </ul>
-            </div>
-          </div>
+          <SameReadingCollapsible />
         </Show>
       </div>
 
@@ -138,7 +99,7 @@ function KanjiCollapsible(props: {
   onMount(() => {
     if (ref) {
       if (focus() === kanji()) {
-        ref.scrollIntoView();
+        ref.scrollIntoView({ block: "nearest" });
       }
     }
   });
@@ -160,6 +121,7 @@ function KanjiCollapsible(props: {
           <div
             class="flex gap-2 items-center btn btn-sm sm:btn-md z-10"
             on:click={() => {
+              $setCard("focus", { kanjiPage: kanji() });
               navigate(
                 () => $setCard("query", { selectedSimilarKanji: kanji() }),
                 "forward",
@@ -184,10 +146,76 @@ function KanjiCollapsible(props: {
   );
 }
 
+function SameReadingCollapsible() {
+  const [$card, $setCard] = useCardContext();
+  const { ankiFields } = useAnkiFieldContext<"back">();
+
+  const ExpressionFurigana = () => {
+    if (ankiFields.Expression && ankiFields.ExpressionReading) {
+      return (
+        <ruby>
+          {ankiFields.Expression}
+          <rt>{ankiFields.ExpressionReading}</rt>
+        </ruby>
+      );
+    }
+    return ankiFields.ExpressionReading
+      ? ankiFields.ExpressionReading
+      : ankiFields.Expression;
+  };
+
+  let ref: HTMLDivElement | undefined;
+
+  onMount(() => {
+    if (ref) {
+      if ($card.focus.kanjiPage === $card.focus.SAME_READING) {
+        ref.scrollIntoView({ block: "nearest" });
+      }
+    }
+  });
+
+  return (
+    <div
+      class="collapse bg-base-200 border border-base-300 animate-fade-in"
+      ref={ref}
+    >
+      <input
+        type="checkbox"
+        checked={$card.focus.kanjiPage === $card.focus.SAME_READING}
+      />
+      <div class="collapse-title justify-between flex items-center ps-2 sm:ps-4 pe-2 sm:pe-4 py-2 sm:py-4">
+        <span class="text-lg sm:text-2xl">
+          <span class="text-base-content-calm">Same Reading</span>{" "}
+          <span class="font-secondary">
+            (
+            <ExpressionFurigana />)
+          </span>
+        </span>
+      </div>
+      <div class="collapse-content text-sm px-2 sm:px-4 pb-2 sm:pb-4">
+        <ul class="list bg-base-100 rounded-box shadow-md">
+          <For each={$card.query.sameReading ?? []}>
+            {(data) => {
+              return (
+                <AnkiNoteItem
+                  data={data}
+                  reading={ankiFields.ExpressionReading}
+                  sameReadingSection
+                />
+              );
+            }}
+          </For>
+        </ul>
+      </div>
+    </div>
+  );
+}
+
 function AnkiNoteItem(props: {
   data: AnkiNote;
   kanji?: string;
   reading?: string;
+  sameReadingSection?: boolean;
 }) {
   const data = () => props.data;
   const kanji = () => props.kanji;
@@ -256,6 +284,14 @@ function AnkiNoteItem(props: {
       ),
       Tags: note.tags.join(" "),
     };
+
+    if (props.sameReadingSection) {
+      $setCard("focus", { kanjiPage: $card.focus.SAME_READING });
+    } else if ($card.query.selectedSimilarKanji) {
+      $setCard("focus", { similarKanjiPage: kanji() });
+    } else {
+      $setCard("focus", { kanjiPage: kanji() });
+    }
 
     $setCard("nestedAnkiFields", ankiFields);
     navigate("nested", "forward");

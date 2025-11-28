@@ -9,8 +9,10 @@ import {
   exampleFields6,
   exampleFields7,
   exampleFields8,
+  exampleFields9,
   exampleFields10,
   exampleFields11,
+  exampleFields12,
 } from "./examples";
 
 // biome-ignore format: this looks nicer
@@ -73,7 +75,7 @@ export function getAnkiFields() {
     ? undefined
     : document.querySelectorAll("#anki-fields > div");
   if (import.meta.env.DEV && !isServer) {
-    divs = Object.entries(exampleFields).map(([key, value]) => {
+    divs = Object.entries(exampleFields12).map(([key, value]) => {
       const div = document.createElement("div");
       div.dataset.field = key;
       div.innerHTML = value;
