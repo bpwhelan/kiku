@@ -44,6 +44,7 @@ export function Front() {
     ) {
       $card.sentenceFieldRef.innerHTML =
         $card.sentenceFieldRef.innerHTML.replaceAll(
+          //TODO: this doesn't handle conjugation
           ankiFields.Expression,
           "<span class='text-base-content-primary'>[...]<span>",
         );
@@ -113,23 +114,17 @@ export function Front() {
             </div>
           </div>
         </div>
-        <div
-          class="justify-between text-base-content-soft items-center gap-2 animate-fade-in h-5 sm:h-8 flex"
-          classList={{
-            hidden: hidden(),
-          }}
-        >
-          {$card.ready && <Lazy.PicturePagination />}
+        <div class="justify-between text-base-content-soft items-center gap-2 animate-fade-in h-5 sm:h-8 flex">
+          {$card.ready && !hidden() && <Lazy.PicturePagination />}
         </div>
       </div>
       <div
         class="flex flex-col gap-4 items-center text-center justify-center"
         classList={{
-          hidden: hidden(),
           "transition-opacity duration-[1000ms] opacity-0": hideExpression(),
         }}
       >
-        {$card.ready && <Lazy.Sentence />}
+        {$card.ready && !hidden() && <Lazy.Sentence />}
       </div>
       {$card.ready && ankiFields.IsAudioCard && (
         <div class="flex gap-2 justify-center animate-fade-in-sm">
