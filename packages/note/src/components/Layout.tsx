@@ -1,4 +1,5 @@
 import type { JSX } from "solid-js";
+import { Portal } from "solid-js/web";
 import { useCardContext } from "#/components/shared/CardContext";
 import UseAnkiWeb from "./UseAnkiWeb";
 
@@ -19,19 +20,21 @@ export function Layout(props: { children: JSX.Element }) {
       >
         {props.children}
       </div>
-      {$card.toast.message && (
-        <div class="toast toast-top toast-center">
-          <div
-            class="alert"
-            classList={{
-              "alert-error": $card.toast.type === "error",
-              "alert-success": $card.toast.type === "success",
-            }}
-          >
-            <span>{$card.toast.message}</span>
+      <Portal mount={KIKU_STATE.root}>
+        {$card.toast.message && (
+          <div class="toast toast-top toast-center">
+            <div
+              class="alert"
+              classList={{
+                "alert-error": $card.toast.type === "error",
+                "alert-success": $card.toast.type === "success",
+              }}
+            >
+              <span>{$card.toast.message}</span>
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </Portal>
     </div>
   );
 }

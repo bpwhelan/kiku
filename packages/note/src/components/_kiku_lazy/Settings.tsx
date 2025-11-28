@@ -153,7 +153,15 @@ function GeneralSettings() {
           />
         </fieldset>
         <fieldset class="fieldset py-0">
-          <legend class="fieldset-legend">Blur NSFW</legend>
+          <legend class="fieldset-legend">
+            Blur NSFW
+            <div
+              class="tooltip"
+              data-tip="If you change this settings, a quick flash of blurred/unblurred picture may occur until you click Save and restart Anki."
+            >
+              <InfoIcon class="size-4 text-base-content-calm" />
+            </div>
+          </legend>
           <label class="label">
             <input
               type="checkbox"
