@@ -19,16 +19,16 @@ export function Layout(props: { children: JSX.Element }) {
       >
         {props.children}
       </div>
-      {$card.toastMessage && (
+      {$card.toast.message && (
         <div class="toast toast-top toast-center">
           <div
             class="alert"
             classList={{
-              "alert-error": $card.toastType === "error",
-              "alert-success": $card.toastType === "success",
+              "alert-error": $card.toast.type === "error",
+              "alert-success": $card.toast.type === "success",
             }}
           >
-            <span>{$card.toastMessage}</span>
+            <span>{$card.toast.message}</span>
           </div>
         </div>
       )}

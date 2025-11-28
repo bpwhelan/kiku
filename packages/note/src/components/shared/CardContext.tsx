@@ -8,24 +8,26 @@ export type KanjiData = {
   similar: Record<string, AnkiNote[]>;
 };
 
+type Toast = {
+  success: (message: string) => void;
+  error: (message: string) => void;
+  message: string | undefined;
+  type: "success" | "error";
+};
+
 type CardStore = {
   side: "front" | "back";
+  page: "main" | "settings" | "kanji" | "nested";
+  ready: boolean;
+  isNsfw: boolean;
   layoutRef?: HTMLDivElement;
   contentRef?: HTMLDivElement;
   expressionAudioRef?: HTMLDivElement;
   sentenceFieldRef?: HTMLDivElement;
   sentenceAudioRef?: HTMLDivElement;
   sentenceAudios?: HTMLAnchorElement[] | HTMLAudioElement[];
-  page: "main" | "settings" | "kanji" | "nested";
-  ready: boolean;
-  toast: {
-    success: (message: string) => void;
-    error: (message: string) => void;
-  };
-  toastMessage: string | undefined;
-  toastType: "success" | "error";
-  imageModal?: string;
-  isNsfw: boolean;
+  pictureModal?: string;
+  toast: Toast;
   kanji: Record<string, KanjiData>;
   kanjiStatus: "success" | "error" | "loading";
   selectedSimilarKanji: string | undefined;
@@ -43,38 +45,35 @@ export function CardStoreContextProvider(props: {
   side: "front" | "back";
 }) {
   let timeout: number;
+
+  const success = (message: string) => {
+    if (timeout) clearTimeout(timeout);
+    $setCard("toast", { message, type: "success" });
+    timeout = setTimeout(() => {
+      $setCard("toast", { message: undefined, type: "success" });
+    }, 3000);
+  };
+  const error = (message: string) => {
+    if (timeout) clearTimeout(timeout);
+    $setCard("toast", { message, type: "error" });
+    timeout = setTimeout(() => {
+      $setCard("toast", { message: undefined, type: "error" });
+    }, 3000);
+  };
+
   const [$card, $setCard] = createStore<CardStore>({
     side: props.side,
+    page: "main",
+    ready: false,
+    isNsfw: false,
     layoutRef: undefined,
     contentRef: undefined,
     expressionAudioRef: undefined,
     sentenceFieldRef: undefined,
     sentenceAudioRef: undefined,
     sentenceAudios: undefined,
-    page: "main",
-    ready: false,
-    toast: {
-      success: (message: string) => {
-        if (timeout) clearTimeout(timeout);
-        $setCard("toastType", "success");
-        $setCard("toastMessage", message);
-        timeout = setTimeout(() => {
-          $setCard("toastMessage", undefined);
-        }, 3000);
-      },
-      error: (message: string) => {
-        if (timeout) clearTimeout(timeout);
-        $setCard("toastType", "error");
-        $setCard("toastMessage", message);
-        timeout = setTimeout(() => {
-          $setCard("toastMessage", undefined);
-        }, 3000);
-      },
-    },
-    toastMessage: undefined,
-    toastType: "success",
-    imageModal: undefined,
-    isNsfw: false,
+    pictureModal: undefined,
+    toast: { success, error, message: undefined, type: "success" },
     kanji: {},
     kanjiStatus: "loading",
     selectedSimilarKanji: undefined,

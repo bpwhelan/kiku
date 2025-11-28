@@ -211,7 +211,7 @@ export function Back(props: { onExitNested?: () => void }) {
           {$card.ready && (
             <Lazy.BackBody
               onDefinitionPictureClick={(picture) => {
-                $setCard("imageModal", picture);
+                $setCard("pictureModal", picture);
               }}
             />
           )}
@@ -225,8 +225,8 @@ export function Back(props: { onExitNested?: () => void }) {
       </Switch>
       {$card.ready && (
         <Lazy.PictureModal
-          img={$card.imageModal}
-          on:click={() => $setCard("imageModal", undefined)}
+          img={$card.pictureModal}
+          on:click={() => $setCard("pictureModal", undefined)}
         />
       )}
     </Layout>
@@ -281,7 +281,7 @@ function PictureSection() {
       <div
         class="picture-field"
         on:click={() => {
-          $setCard("imageModal", $group.pictureField);
+          $setCard("pictureModal", $group.pictureField);
         }}
         {...pictureFieldDataset()}
         innerHTML={isServer ? undefined : $group.pictureField}
