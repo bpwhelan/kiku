@@ -15,7 +15,8 @@
     "copyDist": "turbo run copyDist",
     "updateNoteType": "turbo run updateNoteType",
     "generateTemplate": "turbo run generateTemplate",
-    "apply": "turbo run apply"
+    "apply": "turbo run apply",
+    "apply:force": "turbo run apply --force"
   },
   "devDependencies": {
     "@biomejs/biome": "2.3.2",

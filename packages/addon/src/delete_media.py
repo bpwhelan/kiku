@@ -3,7 +3,47 @@ from aqt.utils import showInfo, askUserDialog
 import os
 
 
-def confirm_and_delete_kiku_media(files_to_delete: list[str]):
+KIKU_WHITELIST = {
+    "_kiku_config.json",
+    "_kiku_plugin.js",
+}
+
+KIKU_EXCEPTIONS = {
+    "_kiku.js",
+    "_kiku.css",
+}
+
+
+def get_kiku_files() -> list[str]:
+    """
+    Returns a sorted list of Kiku-related files in collection.media.
+    Only files starting with "_kiku_" are included, plus explicit exceptions.
+    Whitelisted files are excluded.
+    """
+    col = mw.col
+    if not col:
+        raise Exception("No collection open.")
+
+    media_dir = col.media.dir()
+    all_files = os.listdir(media_dir)
+
+    kiku_files = []
+
+    for name in all_files:
+        if name in KIKU_WHITELIST:
+            continue  # skip safe files
+
+        if name in KIKU_EXCEPTIONS:
+            kiku_files.append(name)
+            continue
+
+        if name.startswith("_kiku_"):
+            kiku_files.append(name)
+
+    return sorted(kiku_files)
+
+
+def confirm_and_delete_media(files_to_delete: list[str]):
     """
     Shows a confirmation dialog listing files to delete.
     Deletes them only if the user confirms.
@@ -21,11 +61,11 @@ def confirm_and_delete_kiku_media(files_to_delete: list[str]):
     file_list_str = "\n".join(f"- {name}" for name in sorted(files_to_delete))
 
     message = (
-        "<b>The following Kiku files will be deleted:</b><br><br>"
+        "<b>The following files will be deleted:</b><br><br>"
         f"<pre>{file_list_str}</pre>"
         "<br>"
         "<b>⚠ Important:</b><br>"
-        "After deleting these files, Kiku note types will be <b>broken</b><br>"
+        "After deleting these files, Kiku will be <b>broken</b><br>"
         "until you re-import the new <code>Kiku_v*.apkg</code>.<br><br>"
         "Do you want to continue?"
     )
@@ -55,3 +95,8 @@ def confirm_and_delete_kiku_media(files_to_delete: list[str]):
     )
 
     showInfo(summary)
+
+
+def confirm_and_delete_kiku_media():
+    files_to_delete = get_kiku_files()
+    confirm_and_delete_media(files_to_delete)
