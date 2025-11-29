@@ -50,7 +50,7 @@ def confirm_and_delete_media(files_to_delete: list[str]):
     """
 
     if not files_to_delete:
-        showInfo("No Kiku media files detected.")
+        showInfo("No files to be deleted")
         return
     col = mw.col
     if not col:
