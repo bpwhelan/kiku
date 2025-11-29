@@ -6,6 +6,7 @@ import { CardStoreContextProvider } from "#/components/shared/CardContext";
 import { ConfigContextProvider } from "#/components/shared/ConfigContext";
 import { FieldGroupContextProvider } from "#/components/shared/FieldGroupContext";
 import { GeneralContextProvider } from "#/components/shared/GeneralContext";
+import { debug } from "#/util/debug";
 import { Logger } from "#/util/logger";
 import { Back } from "../src/components/Back";
 import { BreakpointContextProvider } from "../src/components/shared/BreakpointContext";
@@ -19,6 +20,7 @@ globalThis.KIKU_STATE = {
   assetsPath: "",
   logger,
   aborter: new AbortController(),
+  debug,
 };
 
 export function getSsrTemplate() {

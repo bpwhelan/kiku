@@ -17,7 +17,7 @@ export class Logger {
     "fatal",
   ];
 
-  private logs: string[] = [];
+  logs: string[] = [];
   private minLevelIndex: number;
   private onUpdate?: (text: string) => void;
 

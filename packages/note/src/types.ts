@@ -1,3 +1,4 @@
+import type { Debug } from "./util/debug";
 import type { Logger } from "./util/logger";
 import type { NexClient } from "./worker/client";
 
@@ -250,6 +251,7 @@ declare global {
     side?: "front" | "back";
     ssr?: boolean;
     aborter: AbortController;
+    debug: Debug;
   };
   var pycmd: () => void;
   var AnkiDroidJS: {
