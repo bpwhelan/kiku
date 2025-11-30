@@ -6,7 +6,7 @@
  * @type { KikuPlugin }
  */
 export const plugin = {
-  onSettingsMount: ({ ctx }) => {
+  onSettingsMount: () => {
     sessionStorage.setItem("settings-mounted", "true");
   },
 };

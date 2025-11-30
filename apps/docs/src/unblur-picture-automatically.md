@@ -8,17 +8,19 @@ Using `_kiku_plugin.js`
 
 ```js
 export const plugin = {
-  onSettingsMount: ({ ctx }) => {
+  onSettingsMount: () => {
     sessionStorage.setItem("settings-mounted", "true");
   },
-  onPluginLoad: ({ ctx }) => {
-    const [$config, $setConfig] = ctx.useConfigContext();
+  onPluginLoad: () => {
+    const root = KIKU_STATE.root;
     const settingsMounted = sessionStorage.getItem("settings-mounted");
     // stop if settings has ever been mounted
     if (settingsMounted) return;
 
     // unblur NSFW automatically if it's not work time
-    if (!isWorkTime()) $setConfig("blurNsfw", false);
+    if (!isWorkTime() && root) {
+      root.dataset.blurNsfw = "false";
+    }
   },
 };
 
