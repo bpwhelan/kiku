@@ -1,4 +1,12 @@
-import { lazy, Match, onMount, Suspense, Switch } from "solid-js";
+import {
+  getOwner,
+  lazy,
+  Match,
+  onMount,
+  runWithOwner,
+  Suspense,
+  Switch,
+} from "solid-js";
 import { isServer, Portal } from "solid-js/web";
 import {
   CardStoreContextProvider,
@@ -12,7 +20,7 @@ import {
   AnkiFieldContextProvider,
   useAnkiFieldContext,
 } from "./shared/AnkiFieldsContext";
-import { CtxContextProvider } from "./shared/CtxContext";
+import { CtxContextProvider, useCtxContext } from "./shared/CtxContext";
 import {
   FieldGroupContextProvider,
   useFieldGroupContext,
@@ -38,15 +46,23 @@ export function Back(props: { onExitNested?: () => void }) {
   const [$card, $setCard] = useCardContext();
   const { ankiFields } = useAnkiFieldContext<"back">();
   const [$general, $setGeneral] = useGeneralContext();
+  const ctx = useCtxContext();
 
   const tags = ankiFields.Tags.split(" ");
-
   useKanji();
+
+  const owner = getOwner();
   onMount(() => {
     setTimeout(() => {
       $setCard("ready", true);
       KIKU_STATE.relax = true;
+
       getPlugin().then((plugin) => {
+        try {
+          runWithOwner(owner, () => {
+            plugin?.onPluginLoad?.({ ctx });
+          });
+        } catch {}
         $setGeneral("plugin", plugin);
       });
     }, 100);

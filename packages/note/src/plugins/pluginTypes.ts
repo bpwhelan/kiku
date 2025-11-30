@@ -10,4 +10,6 @@ export type KikuPlugin = {
     DefaultSentence: () => JSX.Element;
     ctx: Ctx;
   }) => JSX.Element | JSX.Element[];
+  onPluginLoad?: (props: { ctx: Ctx }) => void;
+  onSettingsMount?: (props: { ctx: Ctx }) => void;
 };

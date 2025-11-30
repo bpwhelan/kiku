@@ -24,6 +24,7 @@ import { useNavigationTransition, useThemeTransition } from "#/util/hooks";
 import { daisyUIThemes } from "#/util/theme";
 import { useAnkiFieldContext } from "../shared/AnkiFieldsContext";
 import { useConfigContext } from "../shared/ConfigContext";
+import { useCtxContext } from "../shared/CtxContext";
 import { useGeneralContext } from "../shared/GeneralContext";
 import { ClipboardCopyIcon, InfoIcon, RefreshCwIcon, UndoIcon } from "./Icons";
 import { AnkiConnect } from "./util/ankiConnect";
@@ -73,6 +74,13 @@ export default function Settings() {
       );
     }
   };
+
+  const ctx = useCtxContext();
+  onMount(() => {
+    try {
+      $general.plugin?.onSettingsMount?.({ ctx });
+    } catch {}
+  });
 
   return (
     <div>
