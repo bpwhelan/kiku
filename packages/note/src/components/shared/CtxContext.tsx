@@ -1,6 +1,24 @@
-import { createContext, type JSX, useContext } from "solid-js";
+import {
+  createComputed,
+  createContext,
+  createEffect,
+  createMemo,
+  createResource,
+  createSignal,
+  ErrorBoundary,
+  For,
+  getOwner,
+  type JSX,
+  lazy,
+  onCleanup,
+  onMount,
+  runWithOwner,
+  untrack,
+  useContext,
+} from "solid-js";
 import h from "solid-js/h";
-import type { HyperScript } from "solid-js/h/types/hyperscript.js";
+import { createStore } from "solid-js/store";
+import { Match, Portal, Show, Suspense, Switch } from "solid-js/web";
 import type { AnkiBackFields, AnkiDroidAPI, AnkiFrontFields } from "#/types";
 import {
   type UseAnkiFieldContext,
@@ -14,7 +32,29 @@ import { type UseCardContext, useCardContext } from "./CardContext";
 import { type UseConfigContext, useConfigContext } from "./ConfigContext";
 
 export type Ctx = {
-  h: HyperScript;
+  h: typeof h;
+  createSignal: typeof createSignal;
+  createEffect: typeof createEffect;
+  createMemo: typeof createMemo;
+  createResource: typeof createResource;
+  createComputed: typeof createComputed;
+  onMount: typeof onMount;
+  onCleanup: typeof onCleanup;
+  createContext: typeof createContext;
+  useContext: typeof useContext;
+  lazy: typeof lazy;
+  ErrorBoundary: typeof ErrorBoundary;
+  For: typeof For;
+  Portal: typeof Portal;
+  Show: typeof Show;
+  Suspense: typeof Suspense;
+  Switch: typeof Switch;
+  Match: typeof Match;
+  untrack: typeof untrack;
+  runWithOwner: typeof runWithOwner;
+  getOwner: typeof getOwner;
+  createStore: typeof createStore;
+  //
   ankiFields: AnkiFrontFields | AnkiBackFields;
   ankiDroidAPI: () => AnkiDroidAPI | undefined;
   useAnkiFieldContext: UseAnkiFieldContext;
@@ -29,6 +69,28 @@ export function CtxContextProvider(props: { children: JSX.Element }) {
   const { ankiFields } = useAnkiFieldContext();
   const ctx: Ctx = {
     h,
+    createSignal,
+    createEffect,
+    createMemo,
+    createResource,
+    createComputed,
+    onMount,
+    onCleanup,
+    createContext,
+    useContext,
+    lazy,
+    ErrorBoundary,
+    For,
+    Portal,
+    Show,
+    Suspense,
+    Switch,
+    Match,
+    untrack,
+    runWithOwner,
+    getOwner,
+    createStore,
+    //
     ankiFields,
     ankiDroidAPI: () => KIKU_STATE.ankiDroidAPI,
     useAnkiFieldContext,
