@@ -5,7 +5,6 @@ import {
   onMount,
   Show,
 } from "solid-js";
-import h from "solid-js/h";
 import { useAnkiFieldContext } from "../shared/AnkiFieldsContext";
 import { useConfigContext } from "../shared/ConfigContext";
 import { useCtxContext } from "../shared/CtxContext";
@@ -76,7 +75,7 @@ export default function BackBody(props: {
 
   return (
     <div
-      class="flex sm:flex-col gap-8 animate-fade-in"
+      class="flex sm:flex-col gap-8"
       classList={{
         "flex-col-reverse": $config.swapSentenceAndDefinitionOnMobile,
         "flex-col": !$config.swapSentenceAndDefinitionOnMobile,
@@ -86,7 +85,7 @@ export default function BackBody(props: {
         <Sentence />
       </div>
       {pagesWithContent.length > 0 && (
-        <div>
+        <div class="animate-fade-in">
           {pagesWithContent.length > 1 && (
             <div class="text-end text-base-content-soft text-sm">
               {pageType()}
