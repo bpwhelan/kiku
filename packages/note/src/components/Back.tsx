@@ -16,16 +16,14 @@ import type { DatasetProp } from "#/util/config";
 import { useKanji, useNavigationTransition } from "#/util/hooks";
 import { getPlugin } from "#/util/plugin";
 import { Layout } from "./Layout";
+import { PicturePaginationSection } from "./PicturePaginationSection";
 import { PictureSection } from "./PictureSection";
 import {
   AnkiFieldContextProvider,
   useAnkiFieldContext,
 } from "./shared/AnkiFieldsContext";
 import { CtxContextProvider, useCtxContext } from "./shared/CtxContext";
-import {
-  FieldGroupContextProvider,
-  useFieldGroupContext,
-} from "./shared/FieldGroupContext";
+import { FieldGroupContextProvider } from "./shared/FieldGroupContext";
 import { useGeneralContext } from "./shared/GeneralContext";
 
 // biome-ignore format: this looks nicer
@@ -37,7 +35,6 @@ const Lazy = {
   PictureModal: lazy(async () => ({ default: (await import("./_kiku_lazy")).PictureModal, })),
   BackBody: lazy(async () => ({ default: (await import("./_kiku_lazy")).BackBody, })),
   Pitches: lazy(async () => ({ default: (await import("./_kiku_lazy")).Pitches, })),
-  PicturePagination: lazy(async () => ({ default: (await import("./_kiku_lazy")).PicturePagination, })),
   KanjiPage: lazy(async () => ({ default: (await import("./_kiku_lazy")).KanjiPage, })),
   UseAnkiDroid: lazy(async () => ({ default: (await import("./_kiku_lazy")).UseAnkiDroid, })),
 };
@@ -188,20 +185,5 @@ export function Back(props: { onExitNested?: () => void }) {
         />
       )}
     </Layout>
-  );
-}
-
-function PicturePaginationSection() {
-  const { $group } = useFieldGroupContext();
-
-  return (
-    <div
-      class="flex justify-between text-base-content-soft items-center gap-2 animate-fade-in h-5 sm:h-8"
-      classList={{
-        hidden: $group.ids.length <= 1,
-      }}
-    >
-      <Lazy.PicturePagination />
-    </div>
   );
 }

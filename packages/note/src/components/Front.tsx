@@ -3,6 +3,7 @@ import { isServer, Portal } from "solid-js/web";
 import { useCardContext } from "#/components/shared/CardContext";
 import type { DatasetProp } from "#/util/config";
 import { Layout } from "./Layout";
+import { PicturePaginationSection } from "./PicturePaginationSection";
 import { PictureSection } from "./PictureSection";
 import { useAnkiFieldContext } from "./shared/AnkiFieldsContext";
 import { useConfigContext } from "./shared/ConfigContext";
@@ -120,9 +121,7 @@ export function Front() {
 
           <PictureSection />
         </div>
-        <div class="justify-between text-base-content-soft items-center gap-2 animate-fade-in h-5 sm:h-8 flex">
-          {$card.ready && !hidden() && <Lazy.PicturePagination />}
-        </div>
+        {$card.ready && !hidden() && <PicturePaginationSection />}
       </div>
       <div
         class="flex flex-col gap-4 items-center text-center justify-center"
