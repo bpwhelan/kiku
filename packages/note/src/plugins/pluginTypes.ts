@@ -17,7 +17,7 @@ export type KikuPlugin = {
     DefaultPitch: (props: {
       pitchInfo: PitchInfo;
       index: number;
-      ref?: HTMLDivElement;
+      ref?: (ref: HTMLDivElement) => void;
     }) => JSX.Element;
     ctx: Ctx;
   }) => JSX.Element | JSX.Element[];

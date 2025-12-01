@@ -51,7 +51,7 @@ function Pitch(props: { pitchInfo: PitchInfo; index: number }) {
               ctx={ctx}
               index={props.index}
               pitchInfo={props.pitchInfo}
-              DefaultPitch={() => <DefaultPitch {...props} />}
+              DefaultPitch={(props) => <DefaultPitch {...props} />}
             />
           );
         }}
@@ -63,7 +63,7 @@ function Pitch(props: { pitchInfo: PitchInfo; index: number }) {
 export function DefaultPitch(props: {
   pitchInfo: PitchInfo;
   index: number;
-  ref?: HTMLDivElement;
+  ref?: (ref: HTMLDivElement) => void;
 }) {
   const pitchInfo = props.pitchInfo;
   const isEven = props.index % 2 === 0;
