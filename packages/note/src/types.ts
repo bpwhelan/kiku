@@ -1,5 +1,6 @@
+import type { Debug } from "./util/debug";
 import type { Logger } from "./util/logger";
-import type { WorkerClient } from "./worker/client";
+import type { NexClient } from "./worker/client";
 
 export type AnkiFields = {
   Expression: string;
@@ -86,6 +87,7 @@ const frontKeys = [
   "ExpressionAudio",
   "Hint",
   "Picture",
+  "Tags",
 ] satisfies readonly (keyof AnkiFields)[];
 
 type ExtractUsedFields<T, U extends readonly (keyof T)[]> = Pick<T, U[number]>;
@@ -246,10 +248,11 @@ declare global {
     logger: Logger;
     ankiDroidAPI?: AnkiDroidAPI;
     isAnkiDesktop?: boolean;
-    worker?: WorkerClient;
+    nexClient?: NexClient;
     side?: "front" | "back";
     ssr?: boolean;
     aborter: AbortController;
+    debug: Debug;
   };
   var pycmd: () => void;
   var AnkiDroidJS: {

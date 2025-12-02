@@ -41,9 +41,9 @@ export const AnkiConnect = {
     });
 
     const [frontRes, backRes, styleRes] = await Promise.all([
-      fetch(env.KIKU_FRONT_FILE),
-      fetch(env.KIKU_BACK_FILE),
-      fetch(env.KIKU_STYLE_FILE),
+      fetch(env.KIKU_FRONT_FILE, { cache: "no-store" }),
+      fetch(env.KIKU_BACK_FILE, { cache: "no-store" }),
+      fetch(env.KIKU_STYLE_FILE, { cache: "no-store" }),
     ]);
 
     if (!frontRes.ok || !backRes.ok || !styleRes.ok) {
@@ -64,8 +64,18 @@ export const AnkiConnect = {
       styleRes.text(),
     ]);
 
-    const frontTemplate = frontSrc.replace("__DATA_THEME__", config.theme);
-    const backTemplate = backSrc.replace("__DATA_THEME__", config.theme);
+    //biome-ignore format: this looks nicer
+    const frontTemplate = frontSrc
+      .replace("__DATA_THEME__", config.theme)
+      .replace("__DATA_BLUR_NSFW__", config.blurNsfw ? "true" : "false")
+      .replace("__DATA_PICTURE_ON_FRONT__", config.pictureOnFront ? "true" : "false")
+      .replace("__DATA_MOD_VERTICAL__", config.modVertical ? "true" : "false");
+    //biome-ignore format: this looks nicer
+    const backTemplate = backSrc
+      .replace("__DATA_THEME__", config.theme)
+      .replace("__DATA_BLUR_NSFW__", config.blurNsfw ? "true" : "false")
+      .replace("__DATA_PICTURE_ON_FRONT__", config.pictureOnFront ? "true" : "false")
+      .replace("__DATA_MOD_VERTICAL__", config.modVertical ? "true" : "false");
     const cssVar = getCssVar(config);
     const cssVarTemplate = generateCssVars(cssVar);
     const styleTemplate = styleSrc.replace(

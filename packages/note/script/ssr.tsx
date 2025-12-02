@@ -4,12 +4,14 @@ import { Front } from "#/components/Front";
 import { AnkiFieldContextProvider } from "#/components/shared/AnkiFieldsContext";
 import { CardStoreContextProvider } from "#/components/shared/CardContext";
 import { ConfigContextProvider } from "#/components/shared/ConfigContext";
+import { CtxContextProvider } from "#/components/shared/CtxContext";
 import { FieldGroupContextProvider } from "#/components/shared/FieldGroupContext";
 import { GeneralContextProvider } from "#/components/shared/GeneralContext";
+import { debug } from "#/util/debug";
 import { Logger } from "#/util/logger";
 import { Back } from "../src/components/Back";
 import { BreakpointContextProvider } from "../src/components/shared/BreakpointContext";
-import { defaultConfig } from "../src/util/config";
+import { defaultConfig } from "../src/util/defaulConfig";
 
 const [config, setConfig] = createStore(defaultConfig);
 
@@ -19,6 +21,7 @@ globalThis.KIKU_STATE = {
   assetsPath: "",
   logger,
   aborter: new AbortController(),
+  debug,
 };
 
 export function getSsrTemplate() {
@@ -29,7 +32,9 @@ export function getSsrTemplate() {
           <BreakpointContextProvider>
             <ConfigContextProvider value={[config, setConfig]}>
               <FieldGroupContextProvider>
-                <Front />
+                <CtxContextProvider>
+                  <Front />
+                </CtxContextProvider>
               </FieldGroupContextProvider>
             </ConfigContextProvider>
           </BreakpointContextProvider>
@@ -44,7 +49,9 @@ export function getSsrTemplate() {
           <BreakpointContextProvider>
             <ConfigContextProvider value={[config, setConfig]}>
               <FieldGroupContextProvider>
-                <Back />
+                <CtxContextProvider>
+                  <Back />
+                </CtxContextProvider>
               </FieldGroupContextProvider>
             </ConfigContextProvider>
           </BreakpointContextProvider>

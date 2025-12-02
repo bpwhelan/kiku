@@ -5,18 +5,20 @@ import { Back } from "./components/Back.tsx";
 import { Front } from "./components/Front.tsx";
 import { BreakpointContextProvider } from "./components/shared/BreakpointContext.tsx";
 import {
-  defaultConfig,
   type KikuConfig,
   updateConfigState,
   validateConfig,
 } from "./util/config.ts";
+import { defaultConfig } from "./util/defaulConfig";
 import { env } from "./util/general.ts";
 import "./styles/tailwind.css";
 import { AnkiFieldContextProvider } from "./components/shared/AnkiFieldsContext.tsx";
 import { CardStoreContextProvider } from "./components/shared/CardContext.tsx";
 import { ConfigContextProvider } from "./components/shared/ConfigContext.tsx";
+import { CtxContextProvider } from "./components/shared/CtxContext.tsx";
 import { FieldGroupContextProvider } from "./components/shared/FieldGroupContext.tsx";
 import { GeneralContextProvider } from "./components/shared/GeneralContext.tsx";
+import { debug } from "./util/debug.ts";
 import { Logger } from "./util/logger.ts";
 
 globalThis.KIKU_STATE = {
@@ -24,8 +26,9 @@ globalThis.KIKU_STATE = {
   assetsPath: window.location.origin,
   logger: new Logger(),
   isAnkiDesktop: typeof pycmd !== "undefined",
-  worker: globalThis.KIKU_STATE?.worker,
+  nexClient: globalThis.KIKU_STATE?.nexClient,
   aborter: globalThis.KIKU_STATE?.aborter ?? new AbortController(),
+  debug,
 };
 
 export async function init({
@@ -128,7 +131,9 @@ async function setup({ aborter }: { aborter: AbortController }) {
               <BreakpointContextProvider>
                 <ConfigContextProvider value={[config, setConfig]}>
                   <FieldGroupContextProvider>
-                    <Front />
+                    <CtxContextProvider>
+                      <Front />
+                    </CtxContextProvider>
                   </FieldGroupContextProvider>
                 </ConfigContextProvider>
               </BreakpointContextProvider>
@@ -146,7 +151,9 @@ async function setup({ aborter }: { aborter: AbortController }) {
               <BreakpointContextProvider>
                 <ConfigContextProvider value={[config, setConfig]}>
                   <FieldGroupContextProvider>
-                    <Back />
+                    <CtxContextProvider>
+                      <Back />
+                    </CtxContextProvider>
                   </FieldGroupContextProvider>
                 </ConfigContextProvider>
               </BreakpointContextProvider>
@@ -197,5 +204,7 @@ if (import.meta.env.DEV) {
   });
   // @ts-expect-error
   const side = params.side;
-  init({ side: side ?? "back" });
+  init({ side: side ?? "back" }).then(() => {
+    if (KIKU_STATE.root) KIKU_STATE.root.dataset.side = side;
+  });
 }

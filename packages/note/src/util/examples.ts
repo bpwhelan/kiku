@@ -362,3 +362,36 @@ export const exampleFields11: AnkiFields = {
   "furigana:SentenceFurigana": "（<ruby><rb>部員</rb><rt>ぶいん</rt></ruby>）なんか<ruby><rb>腹</rb><rt>はら</rt></ruby><b><ruby><rb>減</rb><rt>へ</rt></ruby>った</b>",
   "kana:SentenceFurigana": "（ぶいん）なんかはら<b>へった</b>"
 }
+
+//biome-ignore format: this looks nicer
+export const exampleFields12: AnkiFields = {
+  "Expression": "過度",
+  "ExpressionFurigana": "過度[かど]",
+  "ExpressionReading": "かど",
+  "ExpressionAudio": "<a class=\"replay-button soundLink\" href=\"#\" onclick=\"pycmd('play:a:0'); return false;\">\n    <svg class=\"playImage\" viewBox=\"0 0 64 64\" version=\"1.1\">\n        <circle cx=\"32\" cy=\"32\" r=\"29\"></circle>\n        <path d=\"M56.502,32.301l-37.502,20.101l0.329,-40.804l37.173,20.703Z\"></path>\n    </svg>\n</a>",
+  "SelectionText": "",
+  "MainDefinition": "<div style=\"text-align: left;\" class=\"yomitan-glossary\"><i>(★, Jitendex.org [2025-06-01])</i> <span><div><span data-sc-code=\"adj-na\" title=\"adjectival nouns or quasi-adjectives (keiyodoshi)\" style=\"font-weight: bold; font-size: 0.8em; color: white; background-color: rgb(86, 86, 86); vertical-align: text-bottom; border-radius: 0.3em; margin-right: 0.25em; padding: 0.2em 0.3em; word-break: keep-all; cursor: help;\">na-adj</span><span data-sc-code=\"adj-no\" title=\"nouns which may take the genitive case particle 'no'\" style=\"font-weight: bold; font-size: 0.8em; color: white; background-color: rgb(86, 86, 86); vertical-align: text-bottom; border-radius: 0.3em; margin-right: 0.25em; padding: 0.2em 0.3em; word-break: keep-all; cursor: help;\">no-adj</span><span data-sc-code=\"n\" title=\"noun (common) (futsuumeishi)\" style=\"font-weight: bold; font-size: 0.8em; color: white; background-color: rgb(86, 86, 86); vertical-align: text-bottom; border-radius: 0.3em; margin-right: 0.25em; padding: 0.2em 0.3em; word-break: keep-all; cursor: help;\">noun</span><div><ul data-sc-content=\"glossary\"><li>excessive</li><li>immoderate</li></ul><div data-sc-content=\"extra-info\" style=\"margin-left: 0.5em;\"><div><div data-sc-content=\"example-sentence\" data-sc-source=\"186476\" style=\"background-color: color-mix(in srgb, var(--text-color, var(--fg, #333)) 5%, transparent); border-color: var(--text-color, var(--fg, #333)); border-style: none none none solid; border-radius: 0.4rem; border-width: calc(3em / var(--font-size-no-units, 14)); margin-top: 0.5rem; margin-bottom: 0.5rem; padding: 0.5rem;\"><div data-sc-content=\"example-sentence-a\" lang=\"ja\" style=\"font-size: 1.3em;\"><span lang=\"ja\" style=\"color: color-mix(in srgb, lime, var(--text-color, var(--fg, #333)));\">過度の</span>運動は身体のためというよりむしろ害になる。</div><div data-sc-content=\"example-sentence-b\" style=\"font-size: 0.8em;\">Too much exercise does more harm than good.</div></div></div></div></div></div><div data-sc-content=\"attribution\" style=\"font-size: 0.7em; text-align: right;\"><a href=\"https://www.edrdg.org/jmwsgi/entr.py?svc=jmdict&amp;q=1196310\"><span>JMdict</span><span style=\"display:none;\"></span></a> | <a href=\"https://tatoeba.org/en/sentences/show/186476\"><span>Tatoeba</span><span style=\"display:none;\"></span></a></div></span></div>",
+  "DefinitionPicture": "",
+  "Sentence": "（夜明）<br>被験者への<b>過度</b>な干渉はＮＧ",
+  "SentenceFurigana": "",
+  "SentenceAudio": "<a class=\"replay-button soundLink\" href=\"#\" onclick=\"pycmd('play:a:1'); return false;\">\n    <svg class=\"playImage\" viewBox=\"0 0 64 64\" version=\"1.1\">\n        <circle cx=\"32\" cy=\"32\" r=\"29\"></circle>\n        <path d=\"M56.502,32.301l-37.502,20.101l0.329,-40.804l37.173,20.703Z\"></path>\n    </svg>\n</a>",
+  "Picture": "<img src=\"_Anime_Time__ReLIFE_-_06_988094_roWg0j6r.jpeg\">",
+  "Glossary": "<div style=\"text-align: left;\" class=\"yomitan-glossary\"><i>(★, Jitendex.org [2025-06-01])</i> <span><div><span data-sc-code=\"adj-na\" title=\"adjectival nouns or quasi-adjectives (keiyodoshi)\" style=\"font-weight: bold; font-size: 0.8em; color: white; background-color: rgb(86, 86, 86); vertical-align: text-bottom; border-radius: 0.3em; margin-right: 0.25em; padding: 0.2em 0.3em; word-break: keep-all; cursor: help;\">na-adj</span><span data-sc-code=\"adj-no\" title=\"nouns which may take the genitive case particle 'no'\" style=\"font-weight: bold; font-size: 0.8em; color: white; background-color: rgb(86, 86, 86); vertical-align: text-bottom; border-radius: 0.3em; margin-right: 0.25em; padding: 0.2em 0.3em; word-break: keep-all; cursor: help;\">no-adj</span><span data-sc-code=\"n\" title=\"noun (common) (futsuumeishi)\" style=\"font-weight: bold; font-size: 0.8em; color: white; background-color: rgb(86, 86, 86); vertical-align: text-bottom; border-radius: 0.3em; margin-right: 0.25em; padding: 0.2em 0.3em; word-break: keep-all; cursor: help;\">noun</span><div><ul data-sc-content=\"glossary\"><li>excessive</li><li>immoderate</li></ul><div data-sc-content=\"extra-info\" style=\"margin-left: 0.5em;\"><div><div data-sc-content=\"example-sentence\" data-sc-source=\"186476\" style=\"background-color: color-mix(in srgb, var(--text-color, var(--fg, #333)) 5%, transparent); border-color: var(--text-color, var(--fg, #333)); border-style: none none none solid; border-radius: 0.4rem; border-width: calc(3em / var(--font-size-no-units, 14)); margin-top: 0.5rem; margin-bottom: 0.5rem; padding: 0.5rem;\"><div data-sc-content=\"example-sentence-a\" lang=\"ja\" style=\"font-size: 1.3em;\"><span lang=\"ja\" style=\"color: color-mix(in srgb, lime, var(--text-color, var(--fg, #333)));\">過度の</span>運動は身体のためというよりむしろ害になる。</div><div data-sc-content=\"example-sentence-b\" style=\"font-size: 0.8em;\">Too much exercise does more harm than good.</div></div></div></div></div></div><div data-sc-content=\"attribution\" style=\"font-size: 0.7em; text-align: right;\"><a href=\"https://www.edrdg.org/jmwsgi/entr.py?svc=jmdict&amp;q=1196310\"><span>JMdict</span><span style=\"display:none;\"></span></a> | <a href=\"https://tatoeba.org/en/sentences/show/186476\"><span>Tatoeba</span><span style=\"display:none;\"></span></a></div></span></div>",
+  "Hint": "",
+  "IsWordAndSentenceCard": "",
+  "IsClickCard": "",
+  "IsSentenceCard": "",
+  "IsAudioCard": "",
+  "PitchPosition": "",
+  "PitchCategories": "",
+  "Frequency": "<ul style=\"text-align: left;\"><li>SoL: 16114</li><li>Shonen: 28132</li><li>Netflix Freq: ★★ (17657)</li><li>Anime &amp; J-drama: 30342</li><li>Youtube: 10230</li><li>VN: 10547</li><li>ICR: 15086</li><li>Narou: 11356</li><li>CC100: 5921</li><li>BCCWJ: 6560</li><li>BCCWJ: 8316</li><li>JPDBv2㋕: 13666</li><li>JPDBv2㋕: 249857㋕</li><li>H Freq: 9485-9668</li></ul>",
+  "FreqSort": "11604",
+  "MiscInfo": "[Anime Time] ReLIFE - 06.ja.srt (16m28s)",
+  "Tags": "yomitan",
+  "furigana:ExpressionFurigana": "<ruby><rb>過度</rb><rt>かど</rt></ruby>",
+  "kana:ExpressionFurigana": "かど",
+  "furigana:Sentence": "（夜明）<br>被験者への<b>過度</b>な干渉はＮＧ",
+  "kanji:Sentence": "（夜明）<br>被験者への<b>過度</b>な干渉はＮＧ",
+  "furigana:SentenceFurigana": "",
+  "kana:SentenceFurigana": ""
+}

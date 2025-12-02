@@ -130,13 +130,6 @@
     background-color: var(--color-secondary); /* match text/border color */
   }
 
-  .picture-field-container {
-    display: none;
-    &:not([data-has-picture=""]) {
-      display: flex;
-    }
-  }
-
   .picture-field-background {
     @apply [&_*:not(img)]:contents;
     @apply [&_:not(:first-child)]:hidden;
@@ -162,6 +155,26 @@
     }
   }
 
+  [data-blur-nsfw="false"] .picture-field {
+    @apply [&_img]:filter-none;
+  }
+
+  .picture-field-container {
+    display: none;
+    &:not([data-has-picture=""]) {
+      display: flex;
+    }
+  }
+
+  [data-side="front"][data-picture-on-front="false"] .picture-field-container {
+    display: none;
+  }
+
+  [data-side="front"] .picture-field,
+  [data-side="front"] .picture-field-background {
+    @apply opacity-0;
+  }
+
   .picture-field:hover {
     @apply [&_img]:filter-none;
   }
@@ -180,13 +193,8 @@
     }
   }
 
-  .no-scrollbar::-webkit-scrollbar {
-    display: none;
-  }
-
-  .no-scrollbar {
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
+  [data-mod-vertical="true"] .vertical-rl {
+    writing-mode: vertical-rl;
   }
 }
 
@@ -240,6 +248,14 @@ body {
 
 *::-webkit-scrollbar-thumb:hover {
   background-color: var(--color-base-content-subtle-300) !important;
+}
+
+.invisible-scrollbar.invisible-scrollbar::-webkit-scrollbar {
+  background-color: transparent !important;
+}
+
+.invisible-scrollbar.invisible-scrollbar::-webkit-scrollbar-thumb {
+  background-color: transparent !important;
 }
 
 @media (min-width: 40rem) {

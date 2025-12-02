@@ -1,7 +1,7 @@
 # Kiku
 ![Downloads](https://img.shields.io/github/downloads/youyoumu/kiku/total.svg?label=Downloads)
 ![Release](https://img.shields.io/github/v/release/youyoumu/kiku?label=Latest%20Version)
-![Addon](https://img.shields.io/badge/Addon-2025--11--18-blue?logo=anki&link=https%3A%2F%2Fankiweb.net%2Fshared%2Finfo%2F408592650%3Fcb%3D1763445474367)
+![Addon](https://img.shields.io/badge/Addon-v1.1.0-blue?logo=anki&link=https%3A%2F%2Fankiweb.net%2Fshared%2Finfo%2F408592650%3Fcb%3D1763445474367)
 ![Anki](https://img.shields.io/badge/Anki-25.02.05_|_25.09.2-blue?logo=anki)
 ![Platform](https://img.shields.io/badge/Platform-Desktop%20%2B%20Mobile-green)
 ![License](https://img.shields.io/github/license/youyoumu/kiku?label=License)
@@ -46,3 +46,8 @@ Please [open an issue here](https://github.com/youyoumu/kiku/issues).
 
 - [Lapis](https://github.com/donkuri/lapis), [JPMN](https://github.com/Aquafina-water-bottle/jp-mining-note), and [Senren](https://github.com/BrenoAqua/Senren) for inspiration.
 - [Wanikani Userscript](https://github.com/mwil/wanikani-userscripts) for the excellent database.
+
+## Support Me
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/U6U81PEJF0)
+
+You can also support me on [GitHub Sponsors](https://github.com/sponsors/youyoumu) 😄

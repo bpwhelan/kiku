@@ -1,10 +1,7 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
-import {
-  defaultConfig,
-  generateCssVars,
-  getCssVar,
-} from "../src/util/config.js";
+import { generateCssVars, getCssVar } from "../src/util/config.js";
+import { defaultConfig } from "../src/util/defaulConfig.js";
 import { AnkiConnect } from "./util.js";
 
 async function main() {
@@ -21,8 +18,16 @@ async function main() {
     readFile(stylePath, "utf8"),
   ]);
 
-  const frontTemplate = frontSrc.replace("__DATA_THEME__", "light");
-  const backTemplate = backSrc.replace("__DATA_THEME__", "light");
+  const frontTemplate = frontSrc
+    .replace("__DATA_THEME__", "light")
+    .replace("__DATA_BLUR_NSFW__", "true")
+    .replace("__DATA_PICTURE_ON_FRONT__", "false")
+    .replace("__DATA_MOD_VERTICAL__", "false");
+  const backTemplate = backSrc
+    .replace("__DATA_THEME__", "light")
+    .replace("__DATA_BLUR_NSFW__", "true")
+    .replace("__DATA_PICTURE_ON_FRONT__", "false")
+    .replace("__DATA_MOD_VERTICAL__", "false");
 
   // Send them to AnkiConnect
   const result = await AnkiConnect.call("updateModelTemplates", {

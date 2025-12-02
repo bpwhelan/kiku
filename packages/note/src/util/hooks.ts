@@ -5,7 +5,7 @@ import { useBreakpointContext } from "#/components/shared/BreakpointContext";
 import { useCardContext } from "#/components/shared/CardContext";
 import { useConfigContext } from "#/components/shared/ConfigContext";
 import { useGeneralContext } from "#/components/shared/GeneralContext";
-import { WorkerClient } from "#/worker/client";
+import { NexClient } from "#/worker/client";
 import { env, extractKanji } from "./general";
 import type { DaisyUITheme } from "./theme";
 
@@ -67,7 +67,7 @@ export function useThemeTransition() {
   const [$card, $setCard] = useCardContext();
 
   function changeTheme(theme: DaisyUITheme) {
-    if ($card.kanjiStatus === "loading") {
+    if ($card.query.status === "loading") {
       $setConfig("theme", theme);
     } else {
       startViewTransition(() => $setConfig("theme", theme), {
@@ -86,7 +86,7 @@ export function useKanji() {
   const [$config] = useConfigContext();
   const [$card, $setCard] = useCardContext();
   const { ankiFields } = useAnkiFieldContext<"back">();
-  const [$general] = useGeneralContext();
+  const [$general, $setGeneral] = useGeneralContext();
 
   let set = false;
   async function setKanji() {
@@ -100,7 +100,7 @@ export function useKanji() {
       const readingList = ankiFields.ExpressionReading
         ? [ankiFields.ExpressionReading]
         : [];
-      const worker = new WorkerClient({
+      const worker = new NexClient({
         env: env,
         config: unwrap($config),
         assetsPath: import.meta.env.DEV ? "" : KIKU_STATE.assetsPath,
@@ -115,20 +115,21 @@ export function useKanji() {
       });
       if ($general.aborter.signal.aborted) return;
 
-      $setCard("kanji", kanjiResult);
-      $setCard("sameReadingNote", readingResult[ankiFields.ExpressionReading]);
-      $setCard("kanjiStatus", "success");
-      if (KIKU_STATE.worker) KIKU_STATE.worker.worker.terminate();
-      KIKU_STATE.worker = worker;
+      $setCard("query", {
+        status: "success",
+        kanji: kanjiResult,
+        sameReading: readingResult[ankiFields.ExpressionReading],
+      });
+      KIKU_STATE.nexClient = worker;
 
       nex
         .manifest()
-        .then((manifest) => $setCard("manifest", manifest))
+        .then((manifest) => $setGeneral("manifest", manifest))
         .catch(() => {
           KIKU_STATE.logger.warn("Failed to load manifest");
         });
     } catch (e) {
-      $setCard("kanjiStatus", "error");
+      $setCard("query", { status: "error" });
       KIKU_STATE.logger.error(
         "Failed to load kanji information:",
         e instanceof Error ? e.message : "",

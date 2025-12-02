@@ -54,6 +54,18 @@ export default defineConfig({
             link: "/display-extra-fields",
           },
           {
+            text: "Unblur Picture Automatically",
+            link: "/unblur-picture-automatically",
+          },
+          {
+            text: "Random Font",
+            link: "/random-font",
+          },
+          {
+            text: "Custom Pitch Color",
+            link: "/custom-pitch-color",
+          },
+          {
             text: "Custom Theme",
             link: "/custom-theme",
           },

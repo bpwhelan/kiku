@@ -1,10 +1,23 @@
-import { createEffect, createSignal, lazy, onMount } from "solid-js";
-import { isServer } from "solid-js/web";
+import {
+  createEffect,
+  createSignal,
+  getOwner,
+  lazy,
+  onMount,
+  runWithOwner,
+} from "solid-js";
+import { isServer, Portal } from "solid-js/web";
 import { useCardContext } from "#/components/shared/CardContext";
 import type { DatasetProp } from "#/util/config";
+import { getPlugin } from "#/util/plugin";
 import { Layout } from "./Layout";
+import { PicturePaginationSection } from "./PicturePaginationSection";
+import { PictureSection } from "./PictureSection";
 import { useAnkiFieldContext } from "./shared/AnkiFieldsContext";
+import { useConfigContext } from "./shared/ConfigContext";
+import { useCtxContext } from "./shared/CtxContext";
 import { useFieldGroupContext } from "./shared/FieldGroupContext";
+import { useGeneralContext } from "./shared/GeneralContext";
 
 // biome-ignore format: this looks nicer
 const Lazy = {
@@ -19,12 +32,35 @@ export function Front() {
   const [$card, $setCard] = useCardContext();
   const { ankiFields } = useAnkiFieldContext<"front">();
   const [clicked, setClicked] = createSignal(false);
+  const [hideExpression, setHideExpression] = createSignal(false);
   const { $group } = useFieldGroupContext();
+  const [$config] = useConfigContext();
+  const [$general, $setGeneral] = useGeneralContext();
+  const ctx = useCtxContext();
 
+  const owner = getOwner();
   onMount(() => {
     setTimeout(() => {
       $setCard("ready", true);
-    }, 100);
+
+      getPlugin().then((plugin) => {
+        try {
+          runWithOwner(owner, () => {
+            plugin?.onPluginLoad?.({ ctx });
+          });
+        } catch {}
+        $setGeneral("plugin", plugin);
+      });
+    }, 0);
+
+    const tags = ankiFields.Tags.split(" ");
+    $setCard("isNsfw", tags.map((tag) => tag.toLowerCase()).includes("nsfw"));
+
+    if ($config.modHidden) {
+      setTimeout(() => {
+        setHideExpression(true);
+      }, $config.modHiddenDuration);
+    }
   });
 
   createEffect(() => {
@@ -35,6 +71,7 @@ export function Front() {
     ) {
       $card.sentenceFieldRef.innerHTML =
         $card.sentenceFieldRef.innerHTML.replaceAll(
+          //TODO: this doesn't handle conjugation
           ankiFields.Expression,
           "<span class='text-base-content-primary'>[...]<span>",
         );
@@ -67,23 +104,28 @@ export function Front() {
   return (
     <Layout>
       {$card.ready && !$card.nested && <Lazy.UseAnkiDroid />}
-      <div class="flex justify-between flex-row h-5 min-h-5">
-        {$card.ready && <Lazy.Header side="front" />}
-      </div>
+      {$card.ready && (
+        <Portal mount={KIKU_STATE.root}>
+          <Lazy.Header />
+        </Portal>
+      )}
       <div class="flex flex-col gap-4">
         <div
-          class="flex rounded-lg gap-4 sm:h-56 flex-col sm:flex-row"
+          class="flex rounded-lg gap-4 flex-col sm:flex-row"
           on:click={() => {
             setClicked((prev) => !prev);
+            setHideExpression(false);
           }}
           on:touchend={(e) => e.stopPropagation()}
         >
-          <div class="flex-1 bg-base-200 p-4 rounded-lg flex flex-col items-center justify-center">
+          <div class="flex-1 bg-base-200 p-4 rounded-lg flex flex-col items-center justify-center min-h-40 sm:min-h-56">
             <div
-              class="expression font-secondary"
+              class="expression font-secondary text-center vertical-rl"
               classList={{
                 "border-b-2 border-dotted border-base-content-soft":
                   !!ankiFields.IsClickCard,
+                "transition-opacity duration-[1000ms] opacity-0":
+                  hideExpression(),
               }}
               innerHTML={
                 isServer
@@ -98,32 +140,24 @@ export function Front() {
                 : undefined}
             </div>
           </div>
-        </div>
-        <div
-          class="justify-between text-base-content-soft items-center gap-2 animate-fade-in h-5 sm:h-8 flex"
-          classList={{
-            hidden: hidden(),
-          }}
-        >
-          {$card.ready && <Lazy.PicturePagination />}
-        </div>
-      </div>
 
+          <PictureSection />
+        </div>
+        {$card.ready && !hidden() && <PicturePaginationSection />}
+      </div>
       <div
         class="flex flex-col gap-4 items-center text-center justify-center"
         classList={{
-          hidden: hidden(),
+          "transition-opacity duration-[1000ms] opacity-0": hideExpression(),
         }}
       >
-        {$card.ready && <Lazy.Sentence />}
+        {$card.ready && !hidden() && <Lazy.Sentence />}
       </div>
-
       {$card.ready && ankiFields.IsAudioCard && (
         <div class="flex gap-2 justify-center animate-fade-in-sm">
           <Lazy.AudioButtons position={1} />
         </div>
       )}
-
       <div
         class={`flex gap-2 items-center justify-center text-center border-t-1 hint text-base-content-calm hint-field border-base-content-soft p-2`}
         {...hintFieldDataset()}

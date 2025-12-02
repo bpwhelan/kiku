@@ -9,8 +9,10 @@ import {
   exampleFields6,
   exampleFields7,
   exampleFields8,
+  exampleFields9,
   exampleFields10,
   exampleFields11,
+  exampleFields12,
 } from "./examples";
 
 // biome-ignore format: this looks nicer
@@ -32,7 +34,7 @@ export const env = {
   KIKU_DB_SIMILAR_KANJI_WK_NIAI_NOTO: "_kiku_db_similar_kanji_wk_niai_noto.json.gz",
   KIKU_DB_SIMILAR_KANJI_YL_RADICAL: "_kiku_db_similar_kanji_yl_radical.json.gz",
   KIKU_PLUGIN_MODULE: "_kiku_plugin.js",
-  KIKU_VERSION: "1.3.0",
+  KIKU_VERSION: "1.4.0",
   KIKU_IMPORTANT_FILES: [
     "_kiku.js",
     "_kiku_libs.js",
@@ -73,7 +75,7 @@ export function getAnkiFields() {
     ? undefined
     : document.querySelectorAll("#anki-fields > div");
   if (import.meta.env.DEV && !isServer) {
-    divs = Object.entries(exampleFields10).map(([key, value]) => {
+    divs = Object.entries(exampleFields4).map(([key, value]) => {
       const div = document.createElement("div");
       div.dataset.field = key;
       div.innerHTML = value;

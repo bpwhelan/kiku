@@ -5,9 +5,9 @@ import {
   onMount,
   Show,
 } from "solid-js";
-import h from "solid-js/h";
 import { useAnkiFieldContext } from "../shared/AnkiFieldsContext";
 import { useConfigContext } from "../shared/ConfigContext";
+import { useCtxContext } from "../shared/CtxContext";
 import { useGeneralContext } from "../shared/GeneralContext";
 import Sentence from "./Sentence";
 
@@ -75,7 +75,7 @@ export default function BackBody(props: {
 
   return (
     <div
-      class="flex sm:flex-col gap-8 animate-fade-in"
+      class="flex sm:flex-col gap-8"
       classList={{
         "flex-col-reverse": $config.swapSentenceAndDefinitionOnMobile,
         "flex-col": !$config.swapSentenceAndDefinitionOnMobile,
@@ -85,7 +85,7 @@ export default function BackBody(props: {
         <Sentence />
       </div>
       {pagesWithContent.length > 0 && (
-        <div>
+        <div class="animate-fade-in">
           {pagesWithContent.length > 1 && (
             <div class="text-end text-base-content-soft text-sm">
               {pageType()}
@@ -128,8 +128,8 @@ export default function BackBody(props: {
 }
 
 function ExternalLinks() {
-  const { ankiFields } = useAnkiFieldContext<"back">();
   const [$general] = useGeneralContext();
+  const ctx = useCtxContext();
 
   return (
     <ErrorBoundary fallback={<DefaultExternalLinks />}>
@@ -141,11 +141,7 @@ function ExternalLinks() {
           const ExternalLinks = get();
           return (
             <ExternalLinks
-              ctx={{
-                h,
-                ankiFields,
-                ankiDroidAPI: () => KIKU_STATE.ankiDroidAPI,
-              }}
+              ctx={ctx}
               DefaultExternalLinks={DefaultExternalLinks}
             />
           );

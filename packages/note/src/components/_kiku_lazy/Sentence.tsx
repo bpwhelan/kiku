@@ -1,7 +1,7 @@
 import { createEffect, ErrorBoundary, Show } from "solid-js";
-import h from "solid-js/h";
 import { useCardContext } from "#/components/shared/CardContext";
 import { useAnkiFieldContext } from "../shared/AnkiFieldsContext";
+import { useCtxContext } from "../shared/CtxContext";
 import { useFieldGroupContext } from "../shared/FieldGroupContext";
 import { useGeneralContext } from "../shared/GeneralContext";
 
@@ -9,7 +9,8 @@ export default function Sentence() {
   const [$card, $setCard] = useCardContext();
   const { $group } = useFieldGroupContext();
   const [$general] = useGeneralContext();
-  const { ankiFields } = useAnkiFieldContext();
+  const { ankiFields } = useAnkiFieldContext<"back">();
+  const ctx = useCtxContext();
 
   createEffect(() => {
     if ($card.sentenceFieldRef && $group.sentenceField) {
@@ -20,10 +21,27 @@ export default function Sentence() {
     }
   });
 
+  const animateFadeIn = () => {
+    if ($card.side === "back") {
+      if (
+        ankiFields.IsAudioCard ||
+        ankiFields.IsSentenceCard ||
+        ankiFields.IsClickCard ||
+        ankiFields.IsWordAndSentenceCard
+      ) {
+        return false;
+      }
+    }
+    return true;
+  };
+
   function DefaultSentence() {
     return (
       <div
-        class={`[&_b]:text-base-content-primary sentence font-secondary animate-fade-in`}
+        class={`[&_b]:text-base-content-primary sentence font-secondary`}
+        classList={{
+          "animate-fade-in": animateFadeIn(),
+        }}
         ref={(ref) => $setCard("sentenceFieldRef", ref)}
         innerHTML={$group.sentenceField}
       ></div>
@@ -35,16 +53,7 @@ export default function Sentence() {
       <Show when={$general.plugin?.Sentence} fallback={<DefaultSentence />}>
         {(get) => {
           const Sentence = get();
-          return (
-            <Sentence
-              ctx={{
-                h,
-                ankiFields,
-                ankiDroidAPI: () => KIKU_STATE.ankiDroidAPI,
-              }}
-              DefaultSentence={DefaultSentence}
-            />
-          );
+          return <Sentence ctx={ctx} DefaultSentence={DefaultSentence} />;
         }}
       </Show>
     </ErrorBoundary>

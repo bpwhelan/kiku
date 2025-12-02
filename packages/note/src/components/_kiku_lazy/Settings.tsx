@@ -9,7 +9,6 @@ import {
 import { Portal } from "solid-js/web";
 import { useCardContext } from "#/components/shared/CardContext";
 import {
-  defaultConfig,
   getCssVar,
   type KikuConfig,
   type RootDatasetKey,
@@ -18,21 +17,16 @@ import {
   tailwindFontSizeVar,
   tailwindSize,
 } from "#/util/config";
+import { defaultConfig } from "#/util/defaulConfig";
 import { type WebFont, webFonts } from "#/util/fonts";
 import { env } from "#/util/general";
-import { useThemeTransition } from "#/util/hooks";
+import { useNavigationTransition, useThemeTransition } from "#/util/hooks";
 import { daisyUIThemes } from "#/util/theme";
 import { useAnkiFieldContext } from "../shared/AnkiFieldsContext";
-import { useBreakpointContext } from "../shared/BreakpointContext";
 import { useConfigContext } from "../shared/ConfigContext";
+import { useCtxContext } from "../shared/CtxContext";
 import { useGeneralContext } from "../shared/GeneralContext";
-import {
-  ArrowLeftIcon,
-  ClipboardCopyIcon,
-  InfoIcon,
-  RefreshCwIcon,
-  UndoIcon,
-} from "./Icons";
+import { ClipboardCopyIcon, InfoIcon, RefreshCwIcon, UndoIcon } from "./Icons";
 import { AnkiConnect } from "./util/ankiConnect";
 import { capitalize } from "./util/general";
 
@@ -63,29 +57,11 @@ function toCssVarString(obj: Record<string, string>) {
   return txt;
 }
 
-export default function Settings(props: {
-  onBackClick?: () => void;
-  onCancelClick?: () => void;
-}) {
-  const bp = useBreakpointContext();
+export default function Settings() {
   const [$config] = useConfigContext();
-  const [$card, $setCard] = useCardContext();
-
-  onMount(async () => {
-    //NOTE: move this to somewhere higher
-    AnkiConnect.changePort(Number($config.ankiConnectPort));
-
-    if (!bp.isAtLeast("sm")) return;
-    await checkAnkiConnect();
-  });
-
-  async function checkAnkiConnect() {
-    const version = await AnkiConnect.getVersion();
-    if (version) {
-      KIKU_STATE.logger.info("AnkiConnect version:", version);
-      $setCard("ankiConnectAvailable", true);
-    }
-  }
+  const [$card, _$setCard] = useCardContext();
+  const [$general, $setGeneral] = useGeneralContext();
+  const navigate = useNavigationTransition();
 
   const saveConfig = async () => {
     try {
@@ -99,81 +75,52 @@ export default function Settings(props: {
     }
   };
 
+  const ctx = useCtxContext();
+  onMount(() => {
+    try {
+      $general.plugin?.onSettingsMount?.({ ctx });
+    } catch {}
+  });
+
   return (
-    <>
-      <div class="flex flex-row justify-between items-center animate-fade-in">
-        <div class="h-5">
-          <ArrowLeftIcon
-            class="h-full w-full cursor-pointer text-base-content-soft"
-            on:click={props.onBackClick}
-          ></ArrowLeftIcon>
-        </div>
-        <div class="flex flex-row gap-2 items-center">
-          {$card.ankiConnectAvailable && (
-            <>
-              <div class="text-sm text-base-content-calm">
-                AnkiConnect is available
-              </div>
-              <div class="status status-success"></div>
-            </>
-          )}
-          {!$card.ankiConnectAvailable && (
-            <>
-              <RefreshCwIcon
-                class="size-4 cursor-pointer text-base-content-soft"
-                on:click={async () => {
-                  try {
-                    await checkAnkiConnect();
-                  } catch {
-                    $card.toast.error("AnkiConnect is not available");
-                  }
-                }}
-              />
-              <div class="text-sm text-base-content-calm">
-                AnkiConnect is not available
-              </div>
-              <div class="status status-error animate-ping"></div>
-            </>
-          )}
-        </div>
-      </div>
-      <div>
-        <GeneralSettings />
-        <div class="divider"></div>
-        <ThemeSettings />
-        <div class="divider"></div>
-        <FontSettings />
-        <div class="divider"></div>
-        <FontSizeSettings />
-        <div class="divider"></div>
-        <AnkiDroidSettings />
-        <div class="divider"></div>
-        <DebugSettings />
-        <div class="divider"></div>
-        <div class="pb-16"></div>
-        <Portal mount={KIKU_STATE.root}>
-          <div class="max-w-4xl mx-auto w-full relative">
-            <div class="flex flex-row gap-2 justify-end animate-fade-in absolute bottom-0 right-0 mx-4 mb-4">
-              <button class="btn" on:click={props.onCancelClick}>
-                Back
-              </button>
-              <button
-                class="btn"
-                classList={{
-                  "btn-primary": $card.ankiConnectAvailable,
-                  "btn-disabled bg-base-300 text-base-content-faint":
-                    !$card.ankiConnectAvailable,
-                }}
-                disabled={!$card.ankiConnectAvailable}
-                on:click={saveConfig}
-              >
-                Save
-              </button>
-            </div>
+    <div>
+      <GeneralSettings />
+      <div class="divider"></div>
+      <ModSettings />
+      <div class="divider"></div>
+      <ThemeSettings />
+      <div class="divider"></div>
+      <FontSettings />
+      <div class="divider"></div>
+      <FontSizeSettings />
+      <div class="divider"></div>
+      <AnkiDroidSettings />
+      <div class="divider"></div>
+      <DebugSettings />
+      <div class="divider"></div>
+      <div class="pb-16"></div>
+      <Portal mount={KIKU_STATE.root}>
+        <div class="max-w-4xl mx-auto w-full relative">
+          <div class="flex flex-row gap-2 justify-end animate-fade-in absolute bottom-0 right-0 mx-4 mb-4">
+            <button class="btn" on:click={() => navigate("main", "back")}>
+              Back
+            </button>
+            <button
+              class="btn"
+              classList={{
+                "btn-primary": $general.isAnkiConnectAvailable,
+                "btn-disabled bg-base-300 text-base-content-faint":
+                  !$general.isAnkiConnectAvailable,
+              }}
+              disabled={!$general.isAnkiConnectAvailable}
+              on:click={saveConfig}
+            >
+              Save
+            </button>
           </div>
-        </Portal>
-      </div>
-    </>
+        </div>
+      </Portal>
+    </div>
   );
 }
 
@@ -190,7 +137,7 @@ function GeneralSettings() {
       <div class="flex gap-2 items-center justify-between">
         <div class="text-2xl font-bold">General</div>
       </div>
-      <div class="grid grid-cols-[repeat(auto-fit,minmax(20rem,1fr))] rounded-box gap-4 p-2">
+      <div class="grid grid-cols-[repeat(auto-fit,minmax(20rem,1fr))] rounded-box gap-4">
         <fieldset class="fieldset">
           <legend class="fieldset-legend">
             Volume
@@ -211,9 +158,35 @@ function GeneralSettings() {
             min="0"
             max={"100"}
             value={$config.volume.toString()}
-            class="range w-full "
+            class="range w-full range-sm"
             step="1"
           />
+        </fieldset>
+        <fieldset class="fieldset py-0">
+          <legend class="fieldset-legend">Blur NSFW</legend>
+          <label class="label">
+            <input
+              type="checkbox"
+              checked={$config.blurNsfw}
+              class="toggle"
+              on:change={(e) => {
+                $setConfig("blurNsfw", e.target.checked);
+              }}
+            />
+          </label>
+        </fieldset>
+        <fieldset class="fieldset py-0">
+          <legend class="fieldset-legend">Picture on Front</legend>
+          <label class="label">
+            <input
+              type="checkbox"
+              checked={$config.pictureOnFront}
+              class="toggle"
+              on:change={(e) => {
+                $setConfig("pictureOnFront", e.target.checked);
+              }}
+            />
+          </label>
         </fieldset>
         <fieldset class="fieldset py-0">
           <legend class="fieldset-legend">Show Theme</legend>
@@ -278,9 +251,100 @@ function GeneralSettings() {
   );
 }
 
+function ModSettings() {
+  const [$config, $setConfig] = useConfigContext();
+
+  return (
+    <div class="flex flex-col gap-4 animate-fade-in relative">
+      <div class="flex gap-2 items-center justify-between">
+        <div class="text-2xl font-bold">Mod</div>
+      </div>
+
+      <div>
+        <div class="text-lg font-bold flex gap-2 items-center">
+          Hidden
+          <div class="tooltip" data-tip="Expression fade out after timeout">
+            <InfoIcon class="size-4 text-base-content-calm" />
+          </div>
+        </div>
+        <div class="grid grid-cols-[repeat(auto-fit,minmax(20rem,1fr))] rounded-box gap-4">
+          <fieldset class="fieldset py-0">
+            <legend class="fieldset-legend">Enable</legend>
+            <label class="label">
+              <input
+                type="checkbox"
+                checked={$config.modHidden}
+                class="toggle"
+                on:change={(e) => {
+                  $setConfig("modHidden", e.target.checked);
+                }}
+              />
+            </label>
+          </fieldset>
+          <fieldset class="fieldset">
+            <legend class="fieldset-legend">Timeout</legend>
+            <input
+              on:change={(e) => {
+                const value = e.target.value;
+                $setConfig("modHiddenDuration", Number(value));
+              }}
+              type="range"
+              min="1000"
+              max={"5000"}
+              value={$config.modHiddenDuration.toString()}
+              class="range w-full range-sm"
+              step="1000"
+            />
+            <div class="flex justify-between px-2.5 text-xs">
+              <span>|</span>
+              <span>|</span>
+              <span>|</span>
+              <span>|</span>
+              <span>|</span>
+            </div>
+            <div class="flex justify-between px-2.5 text-xs">
+              <span>1s</span>
+              <span>2s</span>
+              <span>3s</span>
+              <span>4s</span>
+              <span>5s</span>
+            </div>
+          </fieldset>
+        </div>
+      </div>
+      <div>
+        <div class="text-lg font-bold flex gap-2 items-center">
+          Vertical
+          <div
+            class="tooltip"
+            data-tip="Expression appears in the vertical direction"
+          >
+            <InfoIcon class="size-4 text-base-content-calm" />
+          </div>
+        </div>
+        <div class="grid grid-cols-[repeat(auto-fit,minmax(20rem,1fr))] rounded-box gap-4">
+          <fieldset class="fieldset py-0">
+            <legend class="fieldset-legend">Enable</legend>
+            <label class="label">
+              <input
+                type="checkbox"
+                checked={$config.modVertical}
+                class="toggle"
+                on:change={(e) => {
+                  $setConfig("modVertical", e.target.checked);
+                }}
+              />
+            </label>
+          </fieldset>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function ThemeSettings() {
   const [$general] = useGeneralContext();
-  const [$config, $setConfig] = useConfigContext();
+  const [$config, _$setConfig] = useConfigContext();
   const changeTheme = useThemeTransition();
 
   return (
@@ -680,9 +744,10 @@ function DebugSettings() {
   const { ankiFields } = useAnkiFieldContext<"back">();
   const [kikuFiles, setKikuFiles] = createSignal<string>();
   const [missingFiles, setMissingFiles] = createSignal<string>();
+  const [$general, _$setGeneral] = useGeneralContext();
 
   createEffect(async () => {
-    if ($card.ankiConnectAvailable) {
+    if ($general.isAnkiConnectAvailable) {
       const files = await AnkiConnect.getKikuFiles();
       setKikuFiles(JSON.stringify(files, null, 2));
       const missing = env.KIKU_IMPORTANT_FILES.filter((file) => {

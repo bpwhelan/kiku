@@ -3,15 +3,127 @@ import {
   type KanjiData,
   useCardContext,
 } from "#/components/shared/CardContext";
-import type { AnkiNote, Kanji } from "#/types";
+import {
+  type AnkiFields,
+  type AnkiNote,
+  ankiFieldsSkeleton,
+  type Kanji,
+} from "#/types";
 import { useNavigationTransition } from "#/util/hooks";
 import { useAnkiFieldContext } from "../shared/AnkiFieldsContext";
+import { useGeneralContext } from "../shared/GeneralContext";
 import { ArrowLeftIcon } from "./Icons";
 
-export default function KanjiPage(props: {
-  onBackClick: () => void;
-  onNextClick: (noteId: number) => void;
+export default function KanjiPage() {
+  const [$card, $setCard] = useCardContext();
+  const [$general, $setGeneral] = useGeneralContext();
+
+  return (
+    <>
+      <Show when={$card.query.selectedSimilarKanji}>
+        <div class="flex flex-col items-center gap-2">
+          <div class="text-lg text-base-content-calm">Similar Kanji</div>
+          <div class="flex justify-center text-7xl font-secondary ">
+            {$card.query.selectedSimilarKanji}
+          </div>
+        </div>
+      </Show>
+
+      <div class="flex flex-col gap-2 sm:gap-4 ">
+        <For
+          each={(() => {
+            return $card.query.selectedSimilarKanji
+              ? Object.entries(
+                  $card.query.kanji[$card.query.selectedSimilarKanji].similar,
+                )
+              : Object.entries($card.query.kanji);
+          })()}
+        >
+          {([kanji, data]) => {
+            return <KanjiCollapsible kanji={kanji} data={data} />;
+          }}
+        </For>
+        <Show
+          when={
+            !$card.query.selectedSimilarKanji &&
+            $card.query.sameReading &&
+            $card.query.sameReading.length > 0
+          }
+        >
+          <SameReadingCollapsible />
+        </Show>
+      </div>
+
+      <div class="flex justify-center items-center">
+        <Show when={$general.manifest}>
+          <div class="text-base-content-faint text-sm">
+            Updated at{" "}
+            {new Date($general.manifest?.generatedAt ?? 0).toLocaleDateString()}
+          </div>
+        </Show>
+      </div>
+    </>
+  );
+}
+
+function KanjiCollapsible(props: {
+  kanji: string;
+  data: KanjiData | AnkiNote[];
 }) {
+  const [$card, $setCard] = useCardContext();
+  const kanji = () => props.kanji;
+  const data = () => props.data;
+  const navigate = useNavigationTransition();
+
+  const theData = () => {
+    const data$ = data();
+    return Array.isArray(data$) ? data$ : data$.shared;
+  };
+  const focus = () => {
+    if ($card.query.selectedSimilarKanji) return $card.focus.similarKanjiPage;
+    return $card.focus.kanjiPage;
+  };
+
+  return (
+    <div class="collapse bg-base-200 border border-base-300 animate-fade-in">
+      <input type="checkbox" checked={focus() === kanji()} />
+      <div class="collapse-title justify-between flex items-center ps-2 sm:ps-4 pe-2 sm:pe-4 py-2 sm:py-4">
+        <KanjiText kanji={kanji()} />
+        <Show
+          when={
+            !$card.query.selectedSimilarKanji &&
+            Object.keys($card.query.kanji[kanji()].similar).length > 0
+          }
+        >
+          <div
+            class="flex gap-2 items-center btn btn-sm sm:btn-md z-10"
+            on:click={() => {
+              $setCard("focus", { kanjiPage: kanji(), noteId: undefined });
+              navigate(
+                () => $setCard("query", { selectedSimilarKanji: kanji() }),
+                "forward",
+              );
+            }}
+          >
+            <div class="text-base-content-calm">Similar</div>
+            <ArrowLeftIcon class="size-5 sm:size-8 text-base-content-soft rotate-180 cursor-pointer"></ArrowLeftIcon>
+          </div>
+        </Show>
+      </div>
+      <div class="collapse-content text-sm px-2 sm:px-4 pb-2 sm:pb-4">
+        <ul class="list bg-base-100 rounded-box shadow-md">
+          <For each={theData()}>
+            {(data) => {
+              return <AnkiNoteItem data={data} kanji={kanji()} />;
+            }}
+          </For>
+        </ul>
+      </div>
+    </div>
+  );
+}
+
+function SameReadingCollapsible() {
   const [$card, $setCard] = useCardContext();
   const { ankiFields } = useAnkiFieldContext<"back">();
 
@@ -29,143 +141,44 @@ export default function KanjiPage(props: {
       : ankiFields.Expression;
   };
 
-  return (
-    <>
-      <div class="flex flex-row justify-between items-center animate-fade-in">
-        <div class="h-5">
-          <ArrowLeftIcon
-            class="h-full w-full cursor-pointer text-base-content-soft"
-            on:click={props.onBackClick}
-          ></ArrowLeftIcon>
-        </div>
-        <div class="flex flex-row gap-2 items-center"></div>
-      </div>
-
-      <Show when={$card.selectedSimilarKanji}>
-        <div class="flex flex-col items-center gap-2">
-          <div class="text-lg text-base-content-calm">Similar Kanji</div>
-          <div class="flex justify-center text-7xl font-secondary ">
-            {$card.selectedSimilarKanji}
-          </div>
-        </div>
-      </Show>
-
-      <div class="flex flex-col gap-2 sm:gap-4 ">
-        <For
-          each={(() => {
-            return $card.selectedSimilarKanji
-              ? Object.entries($card.kanji[$card.selectedSimilarKanji].similar)
-              : Object.entries($card.kanji);
-          })()}
-        >
-          {([kanji, data]) => {
-            return (
-              <KanjiCollapsible
-                kanji={kanji}
-                data={data}
-                onNextClick={props.onNextClick}
-              />
-            );
-          }}
-        </For>
-        <Show
-          when={
-            !$card.selectedSimilarKanji &&
-            $card.sameReadingNote &&
-            $card.sameReadingNote.length > 0
-          }
-        >
-          <div class="collapse bg-base-200 border border-base-300 animate-fade-in">
-            <input type="checkbox" checked={true} />
-            <div class="collapse-title justify-between flex items-center ps-2 sm:ps-4 pe-2 sm:pe-4 py-2 sm:py-4">
-              <span class="text-lg sm:text-2xl">
-                <span class="text-base-content-calm">Same Reading</span>{" "}
-                <span class="font-secondary">
-                  (
-                  <ExpressionFurigana />)
-                </span>
-              </span>
-            </div>
-            <div class="collapse-content text-sm px-2 sm:px-4 pb-2 sm:pb-4">
-              <ul class="list bg-base-100 rounded-box shadow-md">
-                <For each={$card.sameReadingNote ?? []}>
-                  {(data) => {
-                    return (
-                      <AnkiNoteItem
-                        data={data}
-                        onNextClick={props.onNextClick}
-                        reading={ankiFields.ExpressionReading}
-                      />
-                    );
-                  }}
-                </For>
-              </ul>
-            </div>
-          </div>
-        </Show>
-      </div>
-
-      <div class="flex justify-center items-center">
-        <Show when={$card.manifest}>
-          <div class="text-base-content-faint text-sm">
-            Updated at{" "}
-            {new Date($card.manifest?.generatedAt ?? 0).toLocaleDateString()}
-          </div>
-        </Show>
-      </div>
-    </>
-  );
-}
-
-function KanjiCollapsible(props: {
-  kanji: string;
-  onNextClick: (noteId: number) => void;
-  data: KanjiData | AnkiNote[];
-}) {
-  const [$card, $setCard] = useCardContext();
-  const kanji = () => props.kanji;
-  const data = () => props.data;
-  const navigate = useNavigationTransition();
-
-  const theData = () => {
-    const data$ = data();
-    return Array.isArray(data$) ? data$ : data$.shared;
-  };
+  let ref: HTMLDivElement | undefined;
+  onMount(() => {
+    if (ref) {
+      if (
+        $card.focus.kanjiPage === $card.focus.SAME_READING &&
+        !$card.focus.noteId
+      ) {
+        ref.scrollIntoView({ block: "center" });
+      }
+    }
+  });
 
   return (
     <div class="collapse bg-base-200 border border-base-300 animate-fade-in">
-      <input type="checkbox" checked={!$card.selectedSimilarKanji} />
+      <input
+        type="checkbox"
+        checked={$card.focus.kanjiPage === $card.focus.SAME_READING}
+      />
       <div class="collapse-title justify-between flex items-center ps-2 sm:ps-4 pe-2 sm:pe-4 py-2 sm:py-4">
-        <KanjiText kanji={kanji()} />
-        <Show
-          when={
-            !$card.selectedSimilarKanji &&
-            Object.keys($card.kanji[kanji()].similar).length > 0
-          }
-        >
-          <div
-            class="flex gap-2 items-center btn btn-sm sm:btn-md z-10"
-            on:click={() => {
-              navigate(
-                () => $setCard("selectedSimilarKanji", kanji()),
-                "forward",
-              );
-            }}
-          >
-            <div class="text-base-content-calm">Similar</div>
-            <ArrowLeftIcon class="size-5 sm:size-8 text-base-content-soft rotate-180 cursor-pointer"></ArrowLeftIcon>
-          </div>
-        </Show>
+        <span class="text-lg sm:text-2xl">
+          <span class="text-base-content-calm" ref={ref}>
+            Same Reading
+          </span>{" "}
+          <span class="font-secondary">
+            (
+            <ExpressionFurigana />)
+          </span>
+        </span>
       </div>
       <div class="collapse-content text-sm px-2 sm:px-4 pb-2 sm:pb-4">
         <ul class="list bg-base-100 rounded-box shadow-md">
-          <For each={theData()}>
+          <For each={$card.query.sameReading ?? []}>
             {(data) => {
               return (
                 <AnkiNoteItem
                   data={data}
-                  kanji={kanji()}
-                  onNextClick={props.onNextClick}
+                  reading={ankiFields.ExpressionReading}
+                  sameReadingSection
                 />
               );
             }}
@@ -180,11 +193,13 @@ function AnkiNoteItem(props: {
   data: AnkiNote;
   kanji?: string;
   reading?: string;
-  onNextClick: (noteId: number) => void;
+  sameReadingSection?: boolean;
 }) {
   const data = () => props.data;
   const kanji = () => props.kanji;
   const reading = () => props.reading;
+  const navigate = useNavigationTransition();
+  const [$card, $setCard] = useCardContext();
 
   const leech = data().tags.includes("leech");
   const expressionInnerHtml = () => {
@@ -227,6 +242,46 @@ function AnkiNoteItem(props: {
     );
   };
 
+  const onNextClick = (noteId: number) => {
+    const shared = Object.values($card.query.kanji).flatMap(
+      (data) => data.shared,
+    );
+    const similar = Object.values($card.query.kanji).flatMap((data) =>
+      Object.values(data.similar).flat(),
+    );
+    const sameReading = $card.query.sameReading ?? [];
+    const notes = [...shared, ...similar, ...sameReading];
+    const note = notes.find((note) => note.noteId === noteId);
+    if (!note) throw new Error("Note not found");
+    const ankiFields: AnkiFields = {
+      ...ankiFieldsSkeleton,
+      ...Object.fromEntries(
+        Object.entries(note.fields).map(([key, value]) => {
+          return [key, value.value];
+        }),
+      ),
+      Tags: note.tags.join(" "),
+    };
+
+    if (props.sameReadingSection) {
+      $setCard("focus", { kanjiPage: $card.focus.SAME_READING });
+    } else if ($card.query.selectedSimilarKanji) {
+      $setCard("focus", { similarKanjiPage: kanji() });
+    } else {
+      $setCard("focus", { kanjiPage: kanji() });
+    }
+    $setCard("focus", { noteId: note.noteId });
+    $setCard("nestedAnkiFields", ankiFields);
+    navigate("nested", "forward");
+  };
+
+  let ref: HTMLDivElement | undefined;
+  onMount(() => {
+    if (ref && $card.focus.noteId === props.data.noteId) {
+      ref.scrollIntoView({ block: "center" });
+    }
+  });
+
   return (
     <>
       <li class="p-4 pb-0 tracking-wide flex gap-2 items-start justify-between">
@@ -234,6 +289,7 @@ function AnkiNoteItem(props: {
           <div
             class=" font-secondary sentence"
             innerHTML={expressionInnerHtmlColorized()}
+            ref={ref}
           ></div>
           <div class="text-base-content-calm">
             {new Date(data().noteId).toLocaleDateString()}
@@ -252,7 +308,7 @@ function AnkiNoteItem(props: {
           <ArrowLeftIcon
             class="size-5 sm:size-8 text-base-content-soft rotate-180 cursor-pointer"
             on:click={() => {
-              props.onNextClick?.(data().noteId);
+              onNextClick(data().noteId);
             }}
           ></ArrowLeftIcon>
         </div>
@@ -263,18 +319,32 @@ function AnkiNoteItem(props: {
 
 function KanjiText(props: { kanji: string }) {
   const [kanji, setKanji] = createSignal<Kanji>();
+  const [$card, $setCard] = useCardContext();
 
   onMount(async () => {
-    const nex = await KIKU_STATE.worker?.nex;
+    const nex = await KIKU_STATE.nexClient?.nex;
     if (nex) {
       const lookup = await nex.lookup(props.kanji);
       setKanji(lookup);
     }
   });
 
+  const focus = () => {
+    if ($card.query.selectedSimilarKanji) return $card.focus.similarKanjiPage;
+    return $card.focus.kanjiPage;
+  };
+  let ref: HTMLDivElement | undefined;
+  onMount(() => {
+    if (ref && focus() === props.kanji && !$card.focus.noteId) {
+      ref.scrollIntoView({ block: "center" });
+    }
+  });
+
   return (
     <div class="flex gap-2 sm:gap-4 ">
-      <div class="font-secondary expression">{props.kanji}</div>
+      <div class="font-secondary expression" ref={ref}>
+        {props.kanji}
+      </div>
       <div class="flex flex-col text-xs sm:text-sm text-base-content-calm leading-tight">
         <div
           classList={{

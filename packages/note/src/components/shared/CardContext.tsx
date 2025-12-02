@@ -1,45 +1,49 @@
 import { createContext, useContext } from "solid-js";
 import type { JSX } from "solid-js/jsx-runtime";
 import { createStore, type SetStoreFunction, type Store } from "solid-js/store";
-import {
-  type AnkiFields,
-  type AnkiNote,
-  ankiFieldsSkeleton,
-  type KikuNotesManifest,
-} from "#/types";
-import type { WorkerClient } from "#/worker/client";
+import { type AnkiFields, type AnkiNote, ankiFieldsSkeleton } from "#/types";
 
 export type KanjiData = {
   shared: AnkiNote[];
   similar: Record<string, AnkiNote[]>;
 };
 
+type Toast = {
+  success: (message: string) => void;
+  error: (message: string) => void;
+  message: string | undefined;
+  type: "success" | "error";
+};
+
+type Query = {
+  status: "loading" | "success" | "error";
+  kanji: Record<string, KanjiData>;
+  sameReading: AnkiNote[] | undefined;
+  selectedSimilarKanji: string | undefined;
+};
+
 type CardStore = {
   side: "front" | "back";
+  page: "main" | "settings" | "kanji" | "nested";
+  ready: boolean;
+  isNsfw: boolean;
   layoutRef?: HTMLDivElement;
   contentRef?: HTMLDivElement;
   expressionAudioRef?: HTMLDivElement;
   sentenceFieldRef?: HTMLDivElement;
   sentenceAudioRef?: HTMLDivElement;
   sentenceAudios?: HTMLAnchorElement[] | HTMLAudioElement[];
-  page: "main" | "settings" | "kanji" | "nested";
-  ready: boolean;
-  toast: {
-    success: (message: string) => void;
-    error: (message: string) => void;
+  pictureModal?: string;
+  toast: Toast;
+  query: Query;
+  focus: {
+    SAME_READING: symbol;
+    kanjiPage: string | symbol | undefined;
+    similarKanjiPage: string | symbol | undefined;
+    noteId: number | undefined;
   };
-  toastMessage: string | undefined;
-  toastType: "success" | "error";
-  imageModal?: string;
-  isNsfw: boolean;
-  kanji: Record<string, KanjiData>;
-  kanjiStatus: "success" | "error" | "loading";
-  selectedSimilarKanji: string | undefined;
-  sameReadingNote: AnkiNote[] | undefined;
   nestedAnkiFields: AnkiFields;
   nested: boolean;
-  manifest: KikuNotesManifest | undefined;
-  ankiConnectAvailable: boolean;
 };
 
 const CardStoreContext =
@@ -51,46 +55,49 @@ export function CardStoreContextProvider(props: {
   side: "front" | "back";
 }) {
   let timeout: number;
+
+  const success = (message: string) => {
+    if (timeout) clearTimeout(timeout);
+    $setCard("toast", { message, type: "success" });
+    timeout = setTimeout(() => {
+      $setCard("toast", { message: undefined, type: "success" });
+    }, 3000);
+  };
+  const error = (message: string) => {
+    if (timeout) clearTimeout(timeout);
+    $setCard("toast", { message, type: "error" });
+    timeout = setTimeout(() => {
+      $setCard("toast", { message: undefined, type: "error" });
+    }, 3000);
+  };
+
   const [$card, $setCard] = createStore<CardStore>({
     side: props.side,
+    page: "main",
+    ready: false,
+    isNsfw: false,
     layoutRef: undefined,
     contentRef: undefined,
     expressionAudioRef: undefined,
     sentenceFieldRef: undefined,
     sentenceAudioRef: undefined,
     sentenceAudios: undefined,
-    page: "main",
-    ready: false,
-    toast: {
-      success: (message: string) => {
-        if (timeout) clearTimeout(timeout);
-        $setCard("toastType", "success");
-        $setCard("toastMessage", message);
-        timeout = setTimeout(() => {
-          $setCard("toastMessage", undefined);
-        }, 3000);
-      },
-      error: (message: string) => {
-        if (timeout) clearTimeout(timeout);
-        $setCard("toastType", "error");
-        $setCard("toastMessage", message);
-        timeout = setTimeout(() => {
-          $setCard("toastMessage", undefined);
-        }, 3000);
-      },
+    pictureModal: undefined,
+    toast: { success, error, message: undefined, type: "success" },
+    query: {
+      status: "loading",
+      kanji: {},
+      sameReading: undefined,
+      selectedSimilarKanji: undefined,
     },
-    toastMessage: undefined,
-    toastType: "success",
-    imageModal: undefined,
-    isNsfw: false,
-    kanji: {},
-    kanjiStatus: "loading",
-    selectedSimilarKanji: undefined,
-    sameReadingNote: undefined,
+    focus: {
+      SAME_READING: Symbol.for("SAME_READING"),
+      kanjiPage: undefined,
+      similarKanjiPage: undefined,
+      noteId: undefined,
+    },
     nestedAnkiFields: ankiFieldsSkeleton,
     nested: props.nested ?? false,
-    manifest: undefined,
-    ankiConnectAvailable: false,
   });
 
   return (
@@ -105,3 +112,5 @@ export function useCardContext() {
   if (!cardStore) throw new Error("Missing CardStoreContext");
   return cardStore;
 }
+
+export type UseCardContext = typeof useCardContext;
